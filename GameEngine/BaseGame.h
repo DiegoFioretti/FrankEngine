@@ -23,5 +23,6 @@ public:
 	bool Init(const char* name, int width, int height);
 	bool StopEngine();
 	void GameLoop();
+	bool Stop();
 };
 #endif

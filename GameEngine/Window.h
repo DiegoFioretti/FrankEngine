@@ -19,5 +19,6 @@ public:
 	bool ShouldClose();
 	const void* GetWindowPTR() { return (const void*)_window; }
 	void PollEvents();
+	bool Stop();
 };
 #endif

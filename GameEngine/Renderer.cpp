@@ -46,3 +46,18 @@ void Renderer::SwapBuffers()
 {
 	glfwSwapBuffers((GLFWwindow*)_window);
 }
+
+void Renderer::ClearScreen() {
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+void Renderer::SetColor(float r, float g, float b, float a) {
+	glClearColor(r, g, b, a);
+}
+
+bool Renderer::Stop()
+{
+	if (VertexArrayID >= 0)
+		glDeleteVertexArrays(1, &VertexArrayID);
+
+	return true;
+}

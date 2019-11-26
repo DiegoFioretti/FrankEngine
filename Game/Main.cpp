@@ -7,5 +7,6 @@ int main() {
 
 	thisGame->GameLoop();
 
+	thisGame->Stop();
 	return 0;
 }

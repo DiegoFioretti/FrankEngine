@@ -27,6 +27,9 @@ public:
 	void LoadIdentityMatrix();
 	void SetModelMatrix(glm::mat4 mat);
 	void MultiplyModelMatrix(glm::mat4 mat);
+	void ClearScreen();
+	void SetColor(float r, float g, float b, float a);
+	bool Stop();
 	glm::mat4& GetMVP() { return mvp; }
 
 	void SwapBuffers();

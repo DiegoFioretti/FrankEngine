@@ -59,3 +59,15 @@ GLFWwindow* Window::window()
 void Window::PollEvents() {
 	glfwPollEvents();
 }
+
+bool Window::Stop()
+{
+	if (_window != NULL)
+		glfwDestroyWindow(_window);
+
+	_window = NULL;
+
+	glfwTerminate();
+
+	return true;
+}
