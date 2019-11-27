@@ -3,11 +3,11 @@
 Renderer::Renderer()
 {
 }
-
 Renderer::~Renderer()
 {
 }
 
+// Inicializador y final
 bool Renderer::Init(Window* window) 
 {
 	_window = window;
@@ -36,28 +36,76 @@ bool Renderer::Init(Window* window)
 
 	return true;
 }
-
-void Renderer::UpdateMVP()
-{
-	mvp = projection * view * model;
-}
-
-void Renderer::SwapBuffers()
-{
-	glfwSwapBuffers((GLFWwindow*)_window);
-}
-
-void Renderer::ClearScreen() {
-	glClear(GL_COLOR_BUFFER_BIT);
-}
-void Renderer::SetColor(float r, float g, float b, float a) {
-	glClearColor(r, g, b, a);
-}
-
 bool Renderer::Stop()
 {
 	if (VertexArrayID >= 0)
 		glDeleteVertexArrays(1, &VertexArrayID);
 
 	return true;
+}
+
+// Matriz de modelo
+void Renderer::LoadIdentityMatrix()
+{
+
+}
+void Renderer::SetModelMatrix(glm::mat4 mat)
+{
+
+}
+void Renderer::MultiplyModelMatrix(glm::mat4 mat)
+{
+
+}
+
+// Generacion y destruccion de buffers
+unsigned int Renderer::GenerateBuffer(float* buffer, int size)
+{
+	unsigned int vertexbuffer;
+	glGenBuffers(1, &vertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, size, buffer, GL_STATIC_DRAW);
+
+	return vertexbuffer;
+}
+void Renderer::DestroyBuffer(unsigned int buffer)
+{
+	glDeleteBuffers(1, &buffer);
+}
+
+// Funciones de ventana
+void Renderer::ClearScreen() {
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+void Renderer::SetColor(float r, float g, float b, float a) {
+	glClearColor(r, g, b, a);
+}
+void Renderer::SwapBuffers()
+{
+	glfwSwapBuffers((GLFWwindow*)_window);
+}
+
+// Model view projection
+void Renderer::UpdateMVP()
+{
+	mvp = projection * view * model;
+}
+
+// Dibujado
+void Renderer::BeginDraww(unsigned int attribID)
+{
+	glEnableVertexAttribArray(attribID);
+}
+void Renderer::BindBuffer(unsigned int vertexBuffer, unsigned int attribID) 
+{
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glVertexAttribPointer(attribID,3,GL_FLOAT,GL_FALSE,0,(void*)0);
+}
+void Renderer::DrawBuffer(int size)
+{
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, size);
+}
+void Renderer::EndDraw(unsigned int attribID)
+{
+	glDisableVertexAttribArray(attribID);
 }

@@ -22,16 +22,26 @@ private:
 public:
 	Renderer();
 	~Renderer();
-
+// Inicializador y final
 	bool Init(Window* window);
+	bool Stop();
+// Matriz de modelo
 	void LoadIdentityMatrix();
 	void SetModelMatrix(glm::mat4 mat);
 	void MultiplyModelMatrix(glm::mat4 mat);
+// Generacion y destruccion de buffers
+	unsigned int GenerateBuffer(float* buffer, int size);
+	void DestroyBuffer(unsigned int buffer);
+// Funciones de ventana
 	void ClearScreen();
 	void SetColor(float r, float g, float b, float a);
-	bool Stop();
-	glm::mat4& GetMVP() { return mvp; }
-
 	void SwapBuffers();
+// Model view projection
+	glm::mat4& GetMVP() { return mvp; }
+// Dibujado
+	void BeginDraww(unsigned int attribID);
+	void BindBuffer(unsigned int vertexBuffer, unsigned int attribID);
+	void DrawBuffer(int size);
+	void EndDraw(unsigned int attribID);
 };
 #endif
