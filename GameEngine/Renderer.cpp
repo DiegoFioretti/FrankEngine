@@ -1,111 +1,150 @@
 #include "Renderer.h"
+#include <GL\glew.h>
+#include <GLFW\glfw3.h>
+using namespace std;
 
-Renderer::Renderer()
-{
-}
-Renderer::~Renderer()
-{
-}
+bool Renderer::Start(Window* wnd) {
+	cout << "Renderer::Start()" << endl;
+	win = wnd;
+	glfwMakeContextCurrent((GLFWwindow*)wnd->GetWindowPtr());
 
-// Inicializador y final
-bool Renderer::Init(Window* window) 
-{
-	_window = window;
+	if (glewInit() != GLEW_OK) {
+		cout << "Falló al inicializar GLEW\n" << endl;
+		return -1;
+	}
 
-	// Initialize GLEW
-	glewExperimental = GL_TRUE;
-	glewInit();
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	// Creo vertex array
 	glGenVertexArrays(1, &VertexArrayID);
 	glBindVertexArray(VertexArrayID);
+	ProjectionMatrix = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.0f, 100.f);
 
-	projection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.0f, 100.0f);
-	view = glm::lookAt(
-		glm::vec3(0, 0, 3), // Camara esta en (4,3,3) en el espacio de mundo
-		glm::vec3(0, 0, 0), // esta mira al origen
-		glm::vec3(0, 1, 0)	// La cabeza esta por arriba (0,-1,0 para hacia mirar abajo)
+	ViewMatrix = glm::lookAt(
+		glm::vec3(0, 0, 3),
+		glm::vec3(0, 0, 0),
+		glm::vec3(0, 1, 0)
 	);
 
-	model = glm::mat4(1.0f);
+	WorldMatrix = glm::mat4(1.0f);
 
-	UpdateMVP();
-
-	return true;
-}
-bool Renderer::Stop()
-{
-	if (VertexArrayID >= 0)
-		glDeleteVertexArrays(1, &VertexArrayID);
+	UpdateWVP();
 
 	return true;
 }
 
-// Matriz de modelo
-void Renderer::LoadIdentityMatrix()
-{
-
-}
-void Renderer::SetModelMatrix(glm::mat4 mat)
-{
-
-}
-void Renderer::MultiplyModelMatrix(glm::mat4 mat)
-{
-
+bool Renderer::Stop() {
+	cout << "Renderer::Stop()" << endl;
+	return true;
 }
 
-// Generacion y destruccion de buffers
-unsigned int Renderer::GenerateBuffer(float* buffer, int size)
+void Renderer::setClearScreenColor(float r, float g, float b, float a) {
+	glClearColor(r, g, b, a);
+}
+
+unsigned int Renderer::GenBuffer(float * buffer, int size)
 {
-	unsigned int vertexbuffer;
-	glGenBuffers(1, &vertexbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	unsigned int vertexBuffer;
+	glGenBuffers(1, &vertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, size, buffer, GL_STATIC_DRAW);
-
-	return vertexbuffer;
+	return vertexBuffer;
 }
+
+
+void Renderer::BeginDraw(unsigned int atribID) {
+	glEnableVertexAttribArray(atribID);
+}
+
+void Renderer::EndDraw(unsigned int atribID) {
+	glDisableVertexAttribArray(atribID);
+}
+
+void Renderer::BindBuffer(unsigned int atribID, unsigned int vtxBuffer, unsigned int size) {
+	glBindBuffer(GL_ARRAY_BUFFER, vtxBuffer);
+	glVertexAttribPointer(
+		atribID,            // debe corresponder en el shader.
+		size,                  // tamaño
+		GL_FLOAT,           // tipo
+		GL_FALSE,           // normalizado?
+		0,                  // Paso
+		(void*)0            // desfase del buffer
+	);
+}
+
+unsigned int Renderer::ChargeTexture(unsigned int width, unsigned int height, unsigned char * data)
+{
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+
+
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, data);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	return textureID;
+}
+
+void Renderer::BindTexture(unsigned int texture, unsigned int textureID)
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glUniform1i(textureID, 0);
+}
+
+void Renderer::DrawBuffer(int size, int typeDraw)
+{
+	glDrawArrays(typeDraw, 0, size);
+}
+
 void Renderer::DestroyBuffer(unsigned int buffer)
 {
 	glDeleteBuffers(1, &buffer);
 }
 
-// Funciones de ventana
 void Renderer::ClearScreen() {
 	glClear(GL_COLOR_BUFFER_BIT);
 }
-void Renderer::SetColor(float r, float g, float b, float a) {
-	glClearColor(r, g, b, a);
-}
-void Renderer::SwapBuffers()
-{
-	glfwSwapBuffers((GLFWwindow*)_window);
+
+void Renderer::SwapBuffer() {
+	glfwSwapBuffers((GLFWwindow*)win->GetWindowPtr());
 }
 
-// Model view projection
-void Renderer::UpdateMVP()
+void Renderer::UpdateWVP()
 {
-	mvp = projection * view * model;
+	WVP = ProjectionMatrix * ViewMatrix * WorldMatrix;
 }
 
-// Dibujado
-void Renderer::BeginDraww(unsigned int attribID)
+glm::mat4 & Renderer::GetWVP()
 {
-	glEnableVertexAttribArray(attribID);
+	return WVP;
 }
-void Renderer::BindBuffer(unsigned int vertexBuffer, unsigned int attribID) 
+
+void Renderer::LoadIMatrix()
 {
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glVertexAttribPointer(attribID,3,GL_FLOAT,GL_FALSE,0,(void*)0);
+	WorldMatrix = glm::mat4(1.0f);
 }
-void Renderer::DrawBuffer(int size)
+
+void Renderer::SetWMatrix(glm::mat4 matrix)
 {
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, size);
+	WorldMatrix = matrix;
+	UpdateWVP();
 }
-void Renderer::EndDraw(unsigned int attribID)
+
+void Renderer::MultiplyWMatrix(glm::mat4 matrix)
 {
-	glDisableVertexAttribArray(attribID);
+	WorldMatrix *= matrix;
+	UpdateWVP();
+}
+
+Renderer::Renderer() {
+}
+
+
+Renderer::~Renderer() {
 }

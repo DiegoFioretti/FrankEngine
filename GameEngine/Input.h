@@ -1,19 +1,15 @@
-#ifndef INPUT_H
-#define INPUT_H
-
-#include <GLFW/glfw3.h>
-
 #pragma once
-class Input
+#include "Exports.h"
+#include "Window.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+class FRANKENGINE_API Input
 {
 private:
-	double timer = 0;
-public:
-	Input();
-	~Input();
-	bool keyCall(GLFWwindow* window, int key, int num);
+	Window *win;
 	bool keyReleased[30];
-	bool keyPress();
+public:
+	Input(Window *window);
+	bool keyCall(int key, int num);
 };
 
-#endif INPUT_H

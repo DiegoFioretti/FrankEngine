@@ -1,15 +1,32 @@
-#ifndef GAME_H
-#define GAME_H
-#pragma once
-#include <BaseGame.h>
-class BASEGAMELIB Game : public BaseGame
-{
+#include "Gamebase.h"
+#include "Triangle.h"
+#include "Material.h"
+#include "TextureImporter.h"
+#include "Sprite.h"
+#include "CollisionManager.h"
+#include "Input.h"
+#include <iostream>
+
+class Game : public GameBase {
+private:
+	int i;
+	Sprite * pollo;
+	Sprite * muchacho;
+	Sprite * cuadradito;
+
+	Triangle* triangle;
+
+	Material * material1;
+	Material * material3;
+
+	Input * inp;
+	
 public:
 	Game();
 	~Game();
-	bool Start();
-	bool Stop();
-	bool Update();
-	void Draw();
+protected:
+	bool OnStart() override;
+	bool OnStop() override;
+	bool OnUpdate() override;
+	void OnDraw() override;
 };
-#endif

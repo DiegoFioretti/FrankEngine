@@ -1,24 +1,22 @@
-#ifndef WINDOW_H
-#define WINDOW_H
 #pragma once
-#define WIDTH 640
-#define HEIGHT 480
-
+#include "Exports.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
-
-class Window
+#include <glm/glm.hpp>
+class FRANKENGINE_API Window
 {
-private:
-	GLFWwindow* _window;
+private: 
+	void * window;
 public:
 	Window();
-	Window(const char* name, int width, int height);
 	~Window();
-	GLFWwindow* window();
-	bool ShouldClose();
-	const void* GetWindowPTR() { return (const void*)_window; }
-	void PollEvents();
+	bool Start(int width, int height, const char* name);
 	bool Stop();
+	const void* GetWindowPtr() { return (const void*)window; }
+	bool ShouldClose();
+	void PollEvents();	
+	void* GetWindow();
 };
-#endif
+

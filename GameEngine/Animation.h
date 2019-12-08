@@ -1,10 +1,21 @@
-#ifndef ANIMATION_H
-#define ANIMATION_H
 #pragma once
-class Animation
+#include "Exports.h"
+#include "SpriteSheet.h"
+
+class FRANKENGINE_API Animation
 {
+private:
+	SpriteSheet* sprSheet;
+	int initialFrame;
+	int currentFrame;
+	int lastFrame;
+
+	float timePerFrame;
+	float currentTime;
+
 public:
-	Animation();
+	Animation(int column, int rows);
 	~Animation();
+	void SetAnimation(int initF, int finalF, float timePerF);
+	float * UpdateAnimation(float deltaTime);
 };
-#endif
