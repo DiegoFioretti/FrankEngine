@@ -8,11 +8,14 @@ private:
 	GLuint tileWidth;	//ancho de tiles en pixeles
 	GLuint tileHeight;	//alto de tiles en pixeles
 	
-	Tile* pasto;
-	Tile* caja;
+	//Tile* pasto;
+	//Tile* caja;
+
+	Tile* mapa[5][5];
 public:
 	Tilemap(Renderer* render, Material* material, const char* bmpFile, int columns, int rows);
 	~Tilemap();
 	void DrawTiles();
+	void UpdateTilesAnim(float time);
 };
 

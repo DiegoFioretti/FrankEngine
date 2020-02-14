@@ -39,7 +39,7 @@ bool Game::OnStart()
 	cuadradito->SetPos(1, -8, 0);
 	cuadradito->SetBoundingBox(2.0f, 2.0f);
 
-	myLevel = new Tilemap(render, material1, "Sin_titulo-1.bmp", 1, 1);
+	myLevel = new Tilemap(render, material1, "NewTile.bmp", 2, 2);
 
 	triangle = new Triangle(render);
 	triangle->SetMaterial(material3);
@@ -88,6 +88,7 @@ bool Game::OnUpdate() {
 //Esto es lo que determina que va a dibujarse
 void Game::OnDraw(){
 	myLevel->DrawTiles();
+	myLevel->UpdateTilesAnim(0.05f);
 	cuadradito->Draw();
 	pollo->Draw();
 	muchacho->Draw();	
