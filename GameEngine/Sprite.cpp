@@ -3,12 +3,11 @@
 // Para dibujar con textura 
 Sprite::Sprite(Renderer * render, int columns, int rows) : Shape(render) {
 	onCollision = false;
-	vertex = new float[12]
-	{
+	vertex = new float[12]{
 		-1.0f, -1.0f, 0.f,
 		-1.0f,  1.0f, 0.f,
-		1.0f, -1.0f, 0.f,
-		1.0f,  1.0f, 0.f
+		 1.0f, -1.0f, 0.f,
+		 1.0f,  1.0f, 0.f
 	};
 	SetVertices(vertex, 4);
 

@@ -31,6 +31,8 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="TextureImporter.cpp" />
+    <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="Tilemap.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -48,6 +50,8 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="TextureImporter.h" />
+    <ClInclude Include="Tile.h" />
+    <ClInclude Include="Tilemap.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

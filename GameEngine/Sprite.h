@@ -3,9 +3,11 @@
 #include "Shape.h"
 #include "TextureImporter.h"
 #include "Animation.h"
+
 class FRANKENGINE_API Sprite :
 	public Shape
 {
+
 private:
 
 	BMPheader texture;
@@ -14,8 +16,8 @@ private:
 	unsigned int textureID;
 	int uvVtxCount;
 	Animation * anim;
-
 	bool onCollision;
+
 public:
 	void Draw() override;
 	void DrawMeshWithTexture(int typeDraw);
