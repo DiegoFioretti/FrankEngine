@@ -1,8 +1,8 @@
 #include "Tile.h"
 
-Tile::Tile(Renderer* render, int columns, int rows, bool walkable): Sprite( render,  columns, rows)
+Tile::Tile(Renderer* render, int columns, int rows/*, bool walkable*/): Sprite( render,  columns, rows)
 {
-	_walkable = false;
+	_walkable = true;
 }
 
 

@@ -3,6 +3,7 @@
 #include "Material.h"
 #include "TextureImporter.h"
 #include "Sprite.h"
+#include "Tilemap.h"
 #include "CollisionManager.h"
 #include "Input.h"
 #include <iostream>
@@ -10,9 +11,11 @@
 class Game : public GameBase {
 private:
 	int i;
-	Sprite * pollo;
-	Sprite * muchacho;
-	Sprite * cuadradito;
+	Sprite* pollo;
+	Sprite* muchacho;
+	Sprite* cuadradito;
+
+	Tilemap* myLevel;
 
 	Triangle* triangle;
 

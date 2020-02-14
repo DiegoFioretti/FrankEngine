@@ -3,13 +3,16 @@
 class FRANKENGINE_API Tilemap
 {
 private:
-	GLuint width;  //ancho en tiles
-	GLuint height; //alto en tile
-	GLuint tileWidth;//ancho del tile
-	GLuint tileHeight;//alto del tile
+	GLuint width;		//ancho de mapa en tiles
+	GLuint height;		//alto de mapa en tiles
+	GLuint tileWidth;	//ancho de tiles en pixeles
+	GLuint tileHeight;	//alto de tiles en pixeles
 	
+	Tile* pasto;
+	Tile* caja;
 public:
-	Tilemap();
+	Tilemap(Renderer* render, Material* material, const char* bmpFile, int columns, int rows);
 	~Tilemap();
+	void DrawTiles();
 };
 
