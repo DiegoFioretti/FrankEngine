@@ -92,10 +92,10 @@ bool Game::OnUpdate() {
 void Game::OnDraw(){
 	myLevel->DrawTiles();
 	myLevel->UpdateTilesAnim(0.05f);
-	cuadradito->Draw();
+	//cuadradito->Draw();
 	pollo->Draw();
 	muchacho->Draw();	
-	triangle->Draw();
+	//triangle->Draw();
 }
 
 
@@ -103,6 +103,8 @@ bool Game::OnStop() {
 
 	delete material1;
 	delete material3;
+
+	delete myLevel;
 
 	delete triangle;
 

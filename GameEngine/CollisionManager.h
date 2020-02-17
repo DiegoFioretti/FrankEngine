@@ -20,7 +20,6 @@ private:
 	void HorizontalCollision(Sprite * SpriteA, Sprite * SpriteB,
 		BoundingBox * A, BoundingBox * B, float penetrateX);
 
-	
 	CollisionManager();
 	static CollisionManager * Instance;
 public:

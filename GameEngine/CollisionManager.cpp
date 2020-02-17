@@ -71,12 +71,12 @@ void CollisionManager::CheckColision(Sprite* a, Sprite* b) {
 
 void CollisionManager::CheckTileColision(Sprite* a, Tilemap* level, int tileID)
 {
-	for (size_t i = 0; i < level->_tileAmount; i++)
+	for (size_t i = 0; i < level->GetTileAmount(); i++)
 	{
-		if (level->_tileArchive[i]->getTileID() == tileID)
+		if (level->GetTileInfo(tileID)->getTileID() == tileID)
 		{
 			BoundingBox* A = a->GetBoundingBox();
-			BoundingBox* B = level->_tileArchive[i]->GetBoundingBox();
+			BoundingBox* B = level->GetTileInfo(tileID)->GetBoundingBox();
 			vec2 dif = A->GetPos() - B->GetPos();
 			float diffX = abs(dif.x);
 			float diffY = abs(dif.y);
@@ -89,11 +89,11 @@ void CollisionManager::CheckTileColision(Sprite* a, Tilemap* level, int tileID)
 
 				if (penetrateX > penetrateY) {
 
-					VerticalCollision(a, level->_tileArchive[i], A, B, penetrateY);
+					VerticalCollision(a, level->GetTileInfo(tileID), A, B, penetrateY);
 				}
 				else {
 
-					HorizontalCollision(a, level->_tileArchive[i], A, B, penetrateX);
+					HorizontalCollision(a, level->GetTileInfo(tileID), A, B, penetrateX);
 				}
 			}
 		}
