@@ -39,7 +39,9 @@ bool Game::OnStart()
 	cuadradito->SetPos(1, -8, 0);
 	cuadradito->SetBoundingBox(2.0f, 2.0f);
 
-	myLevel = new Tilemap(render, material1, "NewTile.bmp", 2, 2);
+	myLevel = new Tilemap( -10 , 10, 0);
+	myLevel->loadBMPTileset(render, material1, "FinalTile.bmp", 2, 2);
+	myLevel->loatTXTTilemap("Tilemap.txt", 10, 10);
 
 	triangle = new Triangle(render);
 	triangle->SetMaterial(material3);
@@ -54,6 +56,7 @@ bool Game::OnUpdate() {
 	i++;
 	//chequea las colisiones entre 2 sprites
 	CollisionManager::GetInstance()->CheckColision(pollo,muchacho);
+	CollisionManager::GetInstance()->CheckTileColision(pollo, myLevel, 2);
 	//CollisionManager::GetInstance()->CheckColision(pollo,caja);
 
 	//esto es cada cuanto suma la animacion, en un futuro sera un DeltaTime

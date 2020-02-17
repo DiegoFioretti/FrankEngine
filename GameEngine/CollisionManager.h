@@ -2,6 +2,7 @@
 #include<list>
 #include<vector>
 #include"Sprite.h"
+#include "Tilemap.h"
 #include"BoundingBox.h"
 #include<glm/glm.hpp>
 #include<glm/gtc/matrix_transform.hpp>
@@ -26,5 +27,6 @@ public:
 	static CollisionManager * GetInstance();
 	
 	void CheckColision(Sprite* a, Sprite* b);
+	void CheckTileColision(Sprite* a, Tilemap* level, int tileID);
 	~CollisionManager();
 };

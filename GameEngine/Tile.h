@@ -6,11 +6,11 @@ class FRANKENGINE_API Tile:
 {
 private:
 	bool _walkable;
-	
+	int _id;
 public:
-	Tile(Renderer* render, int columns, int rows/*,bool walkable*/);
+	Tile(Renderer* render, int columns, int rows, int id/*,bool walkable*/);
 	~Tile();
 	bool isWalkable();
 	void setWalkable(bool walk);
-
+	int getTileID();
 };
