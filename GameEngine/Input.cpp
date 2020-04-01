@@ -1,6 +1,8 @@
 #include "Input.h"
 #include <GLFW\glfw3.h>
 
+
+
 Input::Input(Window *window)
 {
 	win = window;
@@ -725,5 +727,3 @@ bool Input::keyCall(int key, int num) {
 	a++;
 	return false;
 }
-
-

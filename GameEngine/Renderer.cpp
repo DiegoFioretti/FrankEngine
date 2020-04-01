@@ -15,12 +15,18 @@ bool Renderer::Start(Window* wnd) {
 
 	glGenVertexArrays(1, &VertexArrayID);
 	glBindVertexArray(VertexArrayID);
-	ProjectionMatrix = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.0f, 100.f);
+	ProjectionMatrix = glm::perspectiveFov(1.570796f, wnd->GetWndWidth(), wnd->GetWndHeight(), 1.0f, 100.0f);
+
+	// **RECORDATORIO** Para pasar un valor X de Grados a Radianes -=- 2*PI*(X/360);
+
+	//glm::perspective(30.0f, wnd->GetAspectRatio(), 0.1f, 100.0f);
+	//glm::perspectiveFov(15.1f, 1024.0f, 768.0f, 1.0f, 100.0f);
+	//glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.0f, 100.f);
 
 	ViewMatrix = glm::lookAt(
-		glm::vec3(0, 0, 3),
-		glm::vec3(0, 0, 0),
-		glm::vec3(0, 1, 0)
+		win->GetCameraPos(),	// Position Vector
+		win->GetCameraPos() + normalize(win->GetCameraDir()),	// Direction Vector
+		win->GetCameraUp()// Up Vector
 	);
 
 	WorldMatrix = glm::mat4(1.0f);
@@ -117,6 +123,11 @@ void Renderer::SwapBuffer() {
 
 void Renderer::UpdateWVP()
 {
+	ViewMatrix = glm::lookAt(
+		win->GetCameraPos(),	// Position Vector
+		win->GetCameraPos() + normalize(win->GetCameraDir()),	// Direction Vector
+		win->GetCameraUp()	// Up Vector
+	);
 	WVP = ProjectionMatrix * ViewMatrix * WorldMatrix;
 }
 

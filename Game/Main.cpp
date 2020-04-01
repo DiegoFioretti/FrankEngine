@@ -5,7 +5,7 @@ int main()
 {
 	Game* game = new Game();
 
-	if (game->Start(768,1024,(char*)&"Coso Engine!"))
+	if (game->Start(600,800,(char*)&"Coso Engine!"))
 	{
 		game->Loop();
 	}
