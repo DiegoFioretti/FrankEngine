@@ -65,12 +65,8 @@ bool Game::OnUpdate() {
 	triangle->SetRot(0.0f, 0.0f, i / 5);
 
 	//Inputs (letra a tocar, 0 const y 1 una sola vez)
-	if (inp->keyCall('x', 0)) {
-		window->CameraTranslate(0.0f,0.0f,-0.5f);
-	}
 	if (inp->keyCall('c', 0)) {
-		window->CameraMoveForward(0.5f);
-		//window->CameraTranslate(0.0f,0.0f,0.5f);
+		render->MainCamera()->CameraMoveForward(0.5f);
 	}
 	if (inp->keyCall('a', 0)) {
 		pollo->SetAnim(0, 2, 0.1f);

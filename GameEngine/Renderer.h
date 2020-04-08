@@ -1,16 +1,21 @@
 #pragma once
 #include "Exports.h"
 #include "Window.h"
+#include "Camera.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLFW/glfw3.h>
+
 #include <iostream>
 using namespace std;
 using namespace glm;
+
 class FRANKENGINE_API Renderer
 {
 private:
 	Window* win;
+	Camera* cam;
+
 	unsigned int VertexArrayID;
 	unsigned int ColorVertexArrayID;
 	glm::mat4 WorldMatrix;
@@ -37,6 +42,7 @@ public:
 	void LoadIMatrix();
 	void SetWMatrix(glm::mat4 matrix);
 	void MultiplyWMatrix(glm::mat4 matrix);
+	Camera* MainCamera();
 
 	Renderer();
 	~Renderer();
