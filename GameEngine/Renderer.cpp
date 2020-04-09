@@ -17,7 +17,7 @@ bool Renderer::Start(Window* wnd) {
 
 	glGenVertexArrays(1, &VertexArrayID);
 	glBindVertexArray(VertexArrayID);
-	ProjectionMatrix = glm::perspective(45.0f, wnd->GetAspectRatio(), 1.0f, 100.0f);
+	ProjectionMatrix = glm::perspective(glm::radians(45.0f), wnd->GetAspectRatio(), 1.0f, 100.0f);
 
 	// **RECORDATORIO** Para pasar un valor X de Grados a Radianes -=- 2*PI*(X/360);
 
@@ -115,7 +115,7 @@ void Renderer::SwapBuffer() {
 
 void Renderer::UpdateWVP()
 {
-	WVP = ProjectionMatrix * cam->GetViewMatrix() * WorldMatrix;
+	WVP = cam->GetProjectionMatrix() *cam->GetViewMatrix()* WorldMatrix;
 }
 
 glm::mat4 & Renderer::GetWVP()

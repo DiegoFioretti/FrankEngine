@@ -69,27 +69,36 @@ bool Game::OnUpdate() {
 		render->MainCamera()->CameraMoveForward(0.5f);
 		//window->CameraTranslate(0.0f,0.0f,0.5f);
 	}
+
+	
+	//Mov camara
 	if (inp->keyCall('a', 0)) {
-		pollo->SetAnim(0, 2, 0.1f);
-		pollo->Translate(-0.1f, 0.0f, 0.0f);
+		render->MainCamera()->CameraTranslateX(-0.5f);
 	}
 	if (inp->keyCall('d', 0)) {
-		pollo->SetAnim(3, 5, 0.1f);
-		pollo->Translate(0.1f, 0.0f, 0.0f);
+		render->MainCamera()->CameraTranslateX(0.5f);
 	}
 	if (inp->keyCall('w', 0)) {
-		pollo->Translate(0, 0.1f, 0);
+		render->MainCamera()->CameraTranslateZ(-0.5f);
 	}
 	if (inp->keyCall('s', 0)) {
-		pollo->Translate(0, -0.1f, 0);
+		render->MainCamera()->CameraTranslateZ(0.5f);
 	}
-	if (inp->keyCall('g', 0)) {
-		pollo->SetScale(pollo->GetScale().x+0.01f,1.0f,0);
+	if (inp->keyCall('q', 0)) {
+		render->MainCamera()->CameraTranslateY(-0.5f);
 	}
+	if (inp->keyCall('e', 0)) {
+		render->MainCamera()->CameraTranslateY(0.5f);
+	}
+
+
 	if (inp->keyCall('r', 0)) {
 		render->setClearScreenColor(0.8f,0.42,0.23f,1.0f);
 	}
 	return true;
+
+/*pollo->SetAnim(3, 5, 0.1f);
+		pollo->Translate(0.1f, 0.0f, 0.0f);*/
 }
 
 //Esto es lo que determina que va a dibujarse

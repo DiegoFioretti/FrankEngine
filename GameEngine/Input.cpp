@@ -727,3 +727,4 @@ bool Input::keyCall(int key, int num) {
 	a++;
 	return false;
 }
+

@@ -1,4 +1,8 @@
 #include "Camera.h"
+#include <string>
+#include <iostream>
+
+
 
 bool _firstMouse;
 float _lastX;
@@ -8,12 +12,15 @@ float _yoffset;
 float _sensitivity = 0.5f;
 float _yaw;
 float _pitch;
+float fov;
+float _getAspectRatio;
 
 vec3 _cameraPos;
 vec3 _cameraDir;
 vec3 _cameraUp;
 
 mat4 _viewMatrix;
+mat4 _projectionMatrix;
 
 void mouse_callback(GLFWwindow* win, double xpos, double ypos)
 {
@@ -51,11 +58,29 @@ void mouse_callback(GLFWwindow* win, double xpos, double ypos)
 	);
 }
 
+void scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
+{
+	if (fov > 1.0f && fov < 90.0f)
+		fov -= yoffset;
+	else if (fov <= 1.0f)
+		fov = 2.0f;
+	else if (fov >= 90.0f)
+		fov = 89.0f;
+	
+	_projectionMatrix = glm::perspective(glm::radians(fov), _getAspectRatio, 1.0f, 100.0f);
+
+}
+
+float Camera::FieldOfView() {
+	return fov;
+}
 Camera::Camera(GLFWwindow* window)
 {
+	
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetScrollCallback(window, scroll_callback);
 
 	_firstMouse = true;
 	_lastX = 0.0f;
@@ -65,6 +90,8 @@ Camera::Camera(GLFWwindow* window)
 	_sensitivity = 0.5f;
 	_yaw = 0.0f;
 	_pitch = 0.0f;
+	_getAspectRatio = 600.f / 800.f;
+	fov = 45.f;
 
 	_cameraPos = vec3(0.0f, 0.0f, 0.0f);
 	_cameraDir = vec3(0.0f, 0.0f, 0.0f);
@@ -75,11 +102,18 @@ Camera::Camera(GLFWwindow* window)
 		_cameraPos + glm::normalize(_cameraDir),	// Direction Vector
 		_cameraUp									// Up Vector
 	);
+
+	_projectionMatrix = glm::perspective(fov, _getAspectRatio, 1.0f, 100.0f);
+	std::cout <<"Fov:" <<fov;
+	std::cout << "_getAspectRatio:" << _getAspectRatio;
+	
 }
 
 Camera::~Camera()
 {
 }
+
+
 
 void Camera::UpdateViewMatrix()
 {
@@ -99,10 +133,33 @@ void Camera::CameraMoveForward(float speed)
 	UpdateViewMatrix();
 }
 
+
 void Camera::CameraTranslate(float x, float y, float z)
 {
 	_cameraPos.x += x;
 	_cameraPos.y += y;
+	_cameraPos.z += z;
+
+	UpdateViewMatrix();
+}
+
+void Camera::CameraTranslateX(float x)
+{
+	_cameraPos.x += x;
+
+	UpdateViewMatrix();
+}
+
+void Camera::CameraTranslateY(float y)
+{
+	_cameraPos.y += y;
+
+	UpdateViewMatrix();
+}
+
+void Camera::CameraTranslateZ( float z)
+{
+
 	_cameraPos.z += z;
 
 	UpdateViewMatrix();
@@ -135,4 +192,9 @@ vec3 Camera::GetCameraUp()
 mat4 Camera::GetViewMatrix()
 {
 	return _viewMatrix;
+}
+
+mat4 Camera::GetProjectionMatrix() 
+{
+	return _projectionMatrix;
 }
