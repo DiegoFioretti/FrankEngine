@@ -71,9 +71,11 @@ void scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
 
 }
 
+
 float Camera::FieldOfView() {
 	return fov;
 }
+
 Camera::Camera(GLFWwindow* window)
 {
 	
@@ -81,6 +83,7 @@ Camera::Camera(GLFWwindow* window)
 
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
+
 
 	_firstMouse = true;
 	_lastX = 0.0f;
@@ -132,7 +135,6 @@ void Camera::CameraMoveForward(float speed)
 
 	UpdateViewMatrix();
 }
-
 
 void Camera::CameraTranslate(float x, float y, float z)
 {

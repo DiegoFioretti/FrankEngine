@@ -6,6 +6,7 @@
 #include "Tilemap.h"
 #include "CollisionManager.h"
 #include "Input.h"
+#include "Camera.h"
 #include <iostream>
 
 class Game : public GameBase {
@@ -21,7 +22,7 @@ private:
 
 	Material * material1;
 	Material * material3;
-
+	Camera* cam;
 	Input * inp;
 	
 public:

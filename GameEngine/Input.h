@@ -14,7 +14,8 @@ private:
 	Window *win;
 	bool keyReleased[30];
 public:
-	Input(Window *window);
+	Input(Window* window);
 	bool keyCall(int key, int num);
+	bool keyCall(string key, int num);
 };
 

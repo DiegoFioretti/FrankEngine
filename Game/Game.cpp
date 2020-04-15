@@ -25,7 +25,7 @@ bool Game::OnStart()
 	pollo->SetPos(0, 0, 0);// Asigna la posicion
 	pollo->SetBoundingBox(2.0f, 2.0f);// le seteas el ancho y alto de la caja de colisiones
 	pollo->SetAnim(0, 11, 1.1f);// desde que frame arranca y hasta cual termina, mas el tiempo de duracion total
-
+	
 	muchacho = new Sprite(render, 4, 4);
 	muchacho->SetMaterial(material1);
 	muchacho->LoadMaterial("spritesheet_caveman.bmp");
@@ -46,13 +46,14 @@ bool Game::OnStart()
 	triangle = new Triangle(render);
 	triangle->SetMaterial(material3);
 	triangle->SetPos(-3, 5, 0);
-
+	
 	inp = new Input(window);
 
 	return true;
 }
 //RECORDATORIO crear delta time
 bool Game::OnUpdate() {
+
 	i++;
 	//chequea las colisiones entre 2 sprites
 	CollisionManager::GetInstance()->CheckColision(pollo,muchacho);
@@ -62,33 +63,34 @@ bool Game::OnUpdate() {
 	//esto es cada cuanto suma la animacion, en un futuro sera un DeltaTime
 	muchacho->UpdAnim(0.05f);
 	pollo->UpdAnim(0.05f);
-	triangle->SetRot(0.0f, 0.0f, i / 5);
+	//triangle->SetRot(0.0f, 0.0f, i / 5);
 
 	//Inputs (letra a tocar, 0 const y 1 una sola vez)
-	if (inp->keyCall('c', 0)) {
-		render->MainCamera()->CameraMoveForward(0.5f);
+	if (inp->keyCall("Space", 0)) {
+		cam->CameraMoveForward(0.5f);
+		//render->MainCamera()->CameraMoveForward(0.5f);
 		//window->CameraTranslate(0.0f,0.0f,0.5f);
 	}
 
 	
 	//Mov camara
 	if (inp->keyCall('a', 0)) {
-		render->MainCamera()->CameraTranslateX(-0.5f);
+		cam->CameraTranslateX(-0.5f);
 	}
 	if (inp->keyCall('d', 0)) {
-		render->MainCamera()->CameraTranslateX(0.5f);
+		cam->CameraTranslateX(0.5f);
 	}
 	if (inp->keyCall('w', 0)) {
-		render->MainCamera()->CameraTranslateZ(-0.5f);
+		cam->CameraTranslateZ(-0.5f);
 	}
 	if (inp->keyCall('s', 0)) {
-		render->MainCamera()->CameraTranslateZ(0.5f);
+		cam->CameraTranslateZ(0.5f);
 	}
 	if (inp->keyCall('q', 0)) {
-		render->MainCamera()->CameraTranslateY(-0.5f);
+		cam->CameraTranslateY(-0.5f);
 	}
 	if (inp->keyCall('e', 0)) {
-		render->MainCamera()->CameraTranslateY(0.5f);
+		cam->CameraTranslateY(0.5f);
 	}
 
 
@@ -103,12 +105,14 @@ bool Game::OnUpdate() {
 
 //Esto es lo que determina que va a dibujarse
 void Game::OnDraw(){
+	
 	myLevel->DrawTiles();
 	myLevel->UpdateTilesAnim(0.05f);
-	//cuadradito->Draw();
 	pollo->Draw();
 	muchacho->Draw();	
+	
 	//triangle->Draw();
+	//cuadradito->Draw();
 }
 
 bool Game::OnStop() {

@@ -3,9 +3,12 @@
 
 
 
-Input::Input(Window *window)
+
+Input::Input(Window* window)
 {
 	win = window;
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//glfwSetMouseButtonCallback(window, mouse_button_callback);
 }
 
 // que key queres saber si se toca, 0 es siempre 1 es una sola vez
@@ -728,3 +731,38 @@ bool Input::keyCall(int key, int num) {
 	return false;
 }
 
+bool Input::keyCall(string key, int num) {
+	int a = 0;
+
+	if (glfwGetKey((GLFWwindow*)win->GetWindow(), GLFW_KEY_SPACE) == GLFW_PRESS){
+		if (key == "Space") {
+			switch (num) {
+			case 0:
+				return true;
+				break;
+			case 1:
+				if (keyReleased[a]) {
+					keyReleased[a] = false;
+					return true;
+				}
+				break;
+
+			default:
+				break;
+			}
+		}
+	}
+	if (glfwGetKey((GLFWwindow*)win->GetWindow(), GLFW_KEY_SPACE) == GLFW_RELEASE ) {
+		keyReleased[a] = true;
+	}
+	a++;
+
+	return false;
+}
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+	{
+	}
+}

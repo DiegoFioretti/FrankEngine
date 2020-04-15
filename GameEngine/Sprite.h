@@ -17,6 +17,7 @@ private:
 	int uvVtxCount;
 	Animation * anim;
 	bool onCollision;
+	bool ShouldDispouseTexture;
 
 public:
 	void Draw() override;
@@ -29,6 +30,8 @@ public:
 
 	void setCollision();
 	bool getCollision();
+
+	void DisposeTexture();
 
 	Sprite(Renderer * render, int columns, int rows);
 	~Sprite();

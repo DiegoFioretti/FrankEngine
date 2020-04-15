@@ -18,11 +18,19 @@ Sprite::Sprite(Renderer * render, int columns, int rows) : Shape(render) {
 }
 
 void Sprite::SetTextureVertex(float * vertices, int count) {
-
+	DisposeTexture();
 
 	uvVtxCount = count;
-
+	ShouldDispouseTexture = true;
 	uvBufferID = render->GenBuffer(vertices, sizeof(float)* count * 2);
+}
+
+void Sprite::DisposeTexture() {
+	if (ShouldDispouseTexture)
+	{
+		render->DestroyBuffer(uvBufferID);
+		ShouldDispouseTexture = false;
+	}
 }
 
 void Sprite::SetAnim(int initF, int finishF, float timePerF) {
