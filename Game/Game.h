@@ -7,6 +7,7 @@
 #include "CollisionManager.h"
 #include "Input.h"
 #include "Camera.h"
+
 #include <iostream>
 
 class Game : public GameBase {
