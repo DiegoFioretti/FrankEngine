@@ -19,6 +19,11 @@ bool Game::OnStart()
 	material3->LoadShaders("colorvertexshader.txt", "colorfragmentshader.txt");	
 
 	
+	//shader= new Shader3D("1.model_loading.vs", "1.model_loading.fs");
+
+	//ourModel = new Model("12221_Cat_v1_l3.obj");
+
+
 	pollo = new Sprite(render, 3, 4);//le pasas el renderer a utilizar y le decis por cuanto cortas el spritesheet
 	pollo->SetMaterial(material1); // le asignas el material 
 	pollo->LoadMaterial("spritesheet_chicken.bmp"); // le pasas el archivo a cortar (BMP es un archivo nativo del window)
@@ -53,6 +58,15 @@ bool Game::OnStart()
 }
 //RECORDATORIO crear delta time
 bool Game::OnUpdate() {
+	//shader->use();
+
+	// render the loaded model
+	/*glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
+	model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
+	shader->setMat4("model", model);
+	ourModel->Draw(*shader);*/
+
 
 	i++;
 	//chequea las colisiones entre 2 sprites
@@ -130,5 +144,6 @@ bool Game::OnStop() {
 
 	delete inp;
 
+	//delete ourModel;
 	return false;
 }
