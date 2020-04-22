@@ -12,6 +12,7 @@ public:
 	Camera(GLFWwindow* window);
 	~Camera();
 	void CameraMoveForward(float speed);
+	void CameraMoveLeft(float speed);
 
 	void CameraTranslate(float x, float y, float z);
 	void CameraTranslateX(float x);

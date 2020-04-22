@@ -7,8 +7,9 @@
 #include "CollisionManager.h"
 #include "Input.h"
 #include "Camera.h"
-//#include "Shader3D.h"
-//#include "Model.h"
+#include "Model.h"
+#include "Shader3D.h"
+
 
 #include <iostream>
 
@@ -28,8 +29,8 @@ private:
 	Camera* cam;
 	Input * inp;
 	
-	//Shader3D* shader;
-	//Model* ourModel;
+	Shader3D* shader;
+	Model* ourModel;
 	
 public:
 	Game();

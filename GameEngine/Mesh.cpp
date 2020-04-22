@@ -46,6 +46,7 @@ void Mesh::Draw(Shader3D shader)
 
 	// always good practice to set everything back to defaults once configured.
 	glActiveTexture(GL_TEXTURE0);
+
 }
 
 void Mesh::setupMesh()
