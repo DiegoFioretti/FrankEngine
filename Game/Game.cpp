@@ -21,8 +21,9 @@ bool Game::OnStart()
 
 
 	shader = new Shader3D("ModelVS3D.txt", "ModelFS3D.txt");
-
 	ourModel = new Model("Metroid/DolSzerosuitR1.obj");
+
+	ourShader = new Shader3D("Lighting/BasicLightingVS","Lighting/BasicLightingFS");
 
 	
 	inp = new Input(window);
@@ -31,13 +32,33 @@ bool Game::OnStart()
 }
 //RECORDATORIO crear delta time
 bool Game::OnUpdate() {
-	shader->use();
+	//shader->use();
 
 	// render the loaded model
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)); 
 	model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	
-	shader->setMat4("model", model);
+	//shader->setMat4("model", model);
+
+
+	glm::vec3 lightPos(1.2f, 10.0f, 2.0f);
+	// be sure to activate shader when setting uniforms/drawing objects
+	ourShader->use();
+	ourShader->setVec3("objectColor", 1.0f, 0.5f, 0.31f);
+	ourShader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+	ourShader->setVec3("lightPos", lightPos);
+	ourShader->setVec3("viewPos", cam->GetCameraPos());
+
+	// view/projection transformations
+	ourShader->setMat4("projection", cam->GetProjectionMatrix());
+	ourShader->setMat4("view", cam->GetViewMatrix());
+
+	// world transformation
+	//model = glm::mat4(1.0f);
+	ourShader->setMat4("model", model);
+
+
+
 	
 	
 	//Inputs (letra a tocar, 0 const y 1 una sola vez)

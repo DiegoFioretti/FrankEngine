@@ -30,6 +30,8 @@ private:
 	Input * inp;
 	
 	Shader3D* shader;
+	Shader3D* ourShader;
+
 	Model* ourModel;
 	
 public:
