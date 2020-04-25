@@ -34,8 +34,6 @@ void Shape::DrawMesh(int typeDraw)
 
 void Shape::SetVertices(float * vertices, int count)
 {
-
-
 	vertexCount = count;
 	shouldDispose = true;
 	bufferId = render->GenBuffer(vertices, sizeof(float)* count * 3);
@@ -43,8 +41,6 @@ void Shape::SetVertices(float * vertices, int count)
 
 void Shape::SetColorVertex(float * vertices, int count)
 {
-
-
 	colorVertexCount = count;
 	shouldDisposeColor = true;
 	colorBufferId = render->GenBuffer(vertices, sizeof(float)* count * 3);

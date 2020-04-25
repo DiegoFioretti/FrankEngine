@@ -13,7 +13,6 @@ public:
 	~Camera();
 	void CameraMoveForward(float speed);
 	void CameraMoveLeft(float speed);
-
 	void CameraTranslate(float x, float y, float z);
 	void CameraTranslateX(float x);
 	void CameraTranslateY(float y);

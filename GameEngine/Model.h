@@ -1,7 +1,15 @@
 #pragma once
 
 #include "Exports.h"
+#include "Shader3D.h"
 #include "Mesh.h"
+
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <map>
+#include <vector>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -9,19 +17,11 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-
- 
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <map>
-#include <vector>
 using namespace std;
 
 unsigned int TextureFromFile(const char* path, const string& directory, bool gamma = false);
 
-class FRANKENGINE_API Model 
+class FRANKENGINE_API Model
 {
 public:
 	/*  Model Data */
@@ -47,10 +47,4 @@ private:
 	// checks all material textures of a given type and loads the textures if they're not loaded yet.
 	// the required info is returned as a Texture struct.
 	vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName);
-	
 };
-
-
-
-
-

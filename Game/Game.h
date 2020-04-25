@@ -7,9 +7,8 @@
 #include "CollisionManager.h"
 #include "Input.h"
 #include "Camera.h"
-#include "Model.h"
 #include "Shader3D.h"
-
+#include "Model.h"
 
 #include <iostream>
 
@@ -17,23 +16,22 @@ class Game : public GameBase {
 private:
 	int i;
 	Sprite* pollo;
-	Sprite* muchacho;
-	Sprite* cuadradito;
+	//Sprite* muchacho;
+	//Sprite* cuadradito;
 
-	Tilemap* myLevel;
+	//Tilemap* myLevel;
 
-	Triangle* triangle;
+	//Triangle* triangle;
 
-	Material * material1;
-	Material * material3;
+	//Material * material1;
+	//Material * material3;
 	Camera* cam;
 	Input * inp;
 	
 	Shader3D* shader;
-	Shader3D* ourShader;
+	//Shader3D* lightShader;
 
 	Model* ourModel;
-	
 public:
 	Game();
 	~Game();

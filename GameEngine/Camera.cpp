@@ -68,7 +68,6 @@ void scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
 		fov = 89.0f;
 	
 	_projectionMatrix = glm::perspective(glm::radians(fov), _getAspectRatio, 1.0f, 1000.0f);
-
 }
 
 
@@ -106,7 +105,7 @@ Camera::Camera(GLFWwindow* window)
 		_cameraUp									// Up Vector
 	);
 
-	_projectionMatrix = glm::perspective(fov, _getAspectRatio, 1.0f, 1000.0f);
+	_projectionMatrix = glm::perspective(fov, _getAspectRatio, 1.0f, 100.0f);
 	std::cout <<"Fov:" <<fov;
 	std::cout << "_getAspectRatio:" << _getAspectRatio;
 	
@@ -138,7 +137,7 @@ void Camera::CameraMoveForward(float speed)
 
 void Camera::CameraMoveLeft(float speed)
 {
-	_cameraPos-=glm::normalize(glm::cross(_cameraDir, _cameraUp))*speed;
+	_cameraPos -= glm::normalize(glm::cross(_cameraDir, _cameraUp)) * speed;
 	UpdateViewMatrix();
 }
 

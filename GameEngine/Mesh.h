@@ -1,6 +1,4 @@
 #pragma once
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
 #include <string>
 #include <fstream>
@@ -11,6 +9,9 @@
 #include "Exports.h"
 #include "Shader3D.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 using namespace std;
 
 struct Vertex {
@@ -20,10 +21,6 @@ struct Vertex {
 	glm::vec3 Normal;
 	// texCoords
 	glm::vec2 TexCoords;
-	// tangent
-	glm::vec3 Tangent;
-	// bitangent
-	glm::vec3 Bitangent;
 };
 struct Texture {
 	unsigned int id;
@@ -34,7 +31,6 @@ struct Texture {
 class FRANKENGINE_API Mesh
 {
 public:
-
 	/*  Mesh Data  */
 	vector<Vertex> vertices;
 	vector<unsigned int> indices;

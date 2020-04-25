@@ -12,9 +12,9 @@
 class FRANKENGINE_API Shader3D
 {
 public:
-	unsigned int ID;
+	GLuint ID;
 	
-	Shader3D(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
+	Shader3D(const char* vertexPath, const char* fragmentPath);
 	void use();	
 	void setBool(const std::string& name, bool value) const;
 	void setInt(const std::string& name, int value) const;
