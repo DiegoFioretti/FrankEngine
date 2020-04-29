@@ -29,9 +29,13 @@ private:
 	Input * inp;
 	
 	Shader3D* shader;
+	Shader3D* lightingShader;
 	//Shader3D* lightShader;
 
 	Model* ourModel;
+
+	bool cosa=true;
+
 public:
 	Game();
 	~Game();
