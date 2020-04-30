@@ -26,62 +26,54 @@ bool Game::OnStart()
 }
 //RECORDATORIO crear delta time
 bool Game::OnUpdate() {
-
-	
-
-	glm::vec3 lightColor(0.9f, 0.0f, 0.9f);
-
+	i++;
 	shader->use();
 	// view/projection transformations
 	shader->setMat4("projection", cam->GetProjectionMatrix());
 	shader->setMat4("view", cam->GetViewMatrix());
-	shader->setVec3("LightColor", lightColor);
 
 	// render the loaded model
 	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f));
-	model = glm::scale(model, glm::vec3(1.0f, 1.5f, 1.0f));
+	model = glm::translate(model, glm::vec3((i * 0.1f), 0.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
 	shader->setMat4("model", model);
 	//-------------------------------------LUZ-----------------------------------------
-	if (cosa)
+	if (light)
 	{
 	// be sure to activate shader when setting uniforms/drawing objects
-	lightingShader->use();
-	lightingShader->setVec3("lightPos", 1.2f, 1.0f, 2.0f);
-	lightingShader->setVec3("viewPos", cam->GetCameraPos());
+		lightingShader->use();
 
-	// light properties
+		if (hold)
+			lightingShader->setVec3("light.position", holdPosition);
+		else
+			lightingShader->setVec3("light.position", cam->GetCameraPos());
+
+		lightingShader->setVec3("viewPos", cam->GetCameraPos());
+
+		// light properties
+		glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
+		glm::vec3 diffuseColor = lightColor * glm::vec3(0.65f); // decrease the influence
+		glm::vec3 ambientColor = diffuseColor * glm::vec3(0.7f); // low influence
+		lightingShader->setVec3("light.ambient", ambientColor);
+		lightingShader->setVec3("light.diffuse", diffuseColor);
+		lightingShader->setVec3("light.specular", 0.5f, 0.5f, 0.5f);
+
+		shader->setVec3("LightColor", lightColor);
+
+		// material properties
+		lightingShader->setVec3("material.ambient", 1.0f, 1.0f, 1.0f);
+		lightingShader->setVec3("material.diffuse", 1.0f, 1.0f, 1.0f);
+		lightingShader->setVec3("material.specular", 1.0f, 1.0f, 1.0f);
+		lightingShader->setFloat("material.shininess", 1.0f);
+
+		// view/projection transformations
+		lightingShader->setMat4("projection", cam->GetProjectionMatrix());
+		lightingShader->setMat4("view", cam->GetViewMatrix());
 	
-	glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f); // decrease the influence
-	glm::vec3 ambientColor = diffuseColor * glm::vec3(0.9f); // low influence
-	lightingShader->setVec3("light.ambient", ambientColor);
-	lightingShader->setVec3("light.diffuse", diffuseColor);
-	lightingShader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-
-	// material properties
-	lightingShader->setVec3("material.ambient", 0.5f, 0.5f, 0.3f);
-	lightingShader->setVec3("material.diffuse", 0.5f, 0.5f, 0.3f);
-	lightingShader->setVec3("material.specular", 0.5f, 0.5f, 0.5f); 
-	lightingShader->setFloat("material.shininess", 50.0f);
-
-	// view/projection transformations
-	lightingShader->setMat4("projection", cam->GetProjectionMatrix());
-	lightingShader->setMat4("view", cam->GetViewMatrix());
-
-	// world transformation
-	glm::mat4 modelLight = glm::mat4(1.0f);
-	lightingShader->setMat4("model", modelLight*model);
+		lightingShader->setMat4("model", model);
 	}
-
-	
-	
-
 
 	//Inputs (letra a tocar, 0 const y 1 una sola vez)
-	if (inp->keyCall("Space", 0)) {
-		cam->CameraMoveForward(0.5f);
-	}
-
 	//Mov camara
 	if (inp->keyCall('a', 0)) {
 		cam->CameraMoveLeft(0.3f);
@@ -102,12 +94,20 @@ bool Game::OnUpdate() {
 		cam->CameraTranslateY(0.5f);
 	}
 
+	if (inp->keyCall('t', 1)) {
+		if (hold == true) {
+			hold = false;
+		}
+		else {
+			hold = true;
+			holdPosition = cam->GetCameraPos();
+		}
+	}
 	if (inp->keyCall('r', 1)) {
-		if (cosa==true)
-			cosa = false;
+		if (light == true)
+			light = false;
 		else
-			cosa = true;
-		
+			light = true;
 	}
 	return true;
 
@@ -117,8 +117,10 @@ bool Game::OnUpdate() {
 
 //Esto es lo que determina que va a dibujarse
 void Game::OnDraw(){
-
-	ourModel->Draw(*shader);
+	if (light)
+		ourModel->Draw(*lightingShader);
+	else
+		ourModel->Draw(*shader);
 }
 
 bool Game::OnStop() {
@@ -129,7 +131,6 @@ bool Game::OnStop() {
 	delete lightingShader;
 	delete ourModel;
 
-	delete pollo;
 	return false;
 }
 

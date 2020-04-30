@@ -14,8 +14,8 @@
 
 class Game : public GameBase {
 private:
-	int i;
-	Sprite* pollo;
+	float i;
+	//Entity* pollo;
 	//Sprite* muchacho;
 	//Sprite* cuadradito;
 
@@ -34,7 +34,9 @@ private:
 
 	Model* ourModel;
 
-	bool cosa=true;
+	bool light=true;
+	bool hold = false;
+	glm::vec3 holdPosition;
 
 public:
 	Game();
