@@ -10,6 +10,7 @@
 
 #include "Exports.h"
 #include "Shader3D.h"
+#include "Lighting.h"
 
 using namespace std;
 
@@ -42,6 +43,7 @@ public:
 	/*  Functions  */
 	Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
 	void Draw(Shader3D shader);
+	void Draw(Lighting shader);
 	~Mesh();
 private:
 	/*  Render data  */

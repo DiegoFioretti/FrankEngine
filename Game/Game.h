@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "Shader3D.h"
 #include "Model.h"
+#include "Lighting.h"
 
 #include <iostream>
 
@@ -30,7 +31,8 @@ private:
 	
 	Shader3D* shader;
 	Shader3D* lightingShader;
-	//Shader3D* lightShader;
+	
+	Lighting* looz;
 
 	Model* ourModel;
 

@@ -13,12 +13,10 @@ bool Game::OnStart()
 	i = 0;
 	render->setClearScreenColor(0.2f,0.2f,0.2f,1.0f);
 
-	//shader = lightingShader();
-	lightingShader = new Shader3D("Lighting/BasicLightingVS.txt", "Lighting/BasicLightingFS.txt");
+	looz = new Lighting("Lighting/BasicLightingVS.txt", "Lighting/BasicLightingFS.txt");
 	shader = new Shader3D("ModelVS3D.txt", "ModelFS3D.txt");
-	ourModel = new Model("Metroid/DolSzerosuitR1.obj");
 
-	//lightShader = new Shader3D("BasicLightingVS","BasicLightingFS");
+	ourModel = new Model("Gun/Gun.fbx");
 
 	inp = new Input(window);
 
@@ -34,43 +32,26 @@ bool Game::OnUpdate() {
 
 	// render the loaded model
 	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3((i * 0.1f), 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
 	shader->setMat4("model", model);
+
+	glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
+	shader->setVec3("LightColor", lightColor);
+
+
+
 	//-------------------------------------LUZ-----------------------------------------
 	if (light)
 	{
 	// be sure to activate shader when setting uniforms/drawing objects
-		lightingShader->use();
-
-		if (hold)
-			lightingShader->setVec3("light.position", holdPosition);
-		else
-			lightingShader->setVec3("light.position", cam->GetCameraPos());
-
-		lightingShader->setVec3("viewPos", cam->GetCameraPos());
-
-		// light properties
-		glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
-		glm::vec3 diffuseColor = lightColor * glm::vec3(0.65f); // decrease the influence
-		glm::vec3 ambientColor = diffuseColor * glm::vec3(0.7f); // low influence
-		lightingShader->setVec3("light.ambient", ambientColor);
-		lightingShader->setVec3("light.diffuse", diffuseColor);
-		lightingShader->setVec3("light.specular", 0.5f, 0.5f, 0.5f);
-
-		shader->setVec3("LightColor", lightColor);
-
-		// material properties
-		lightingShader->setVec3("material.ambient", 1.0f, 1.0f, 1.0f);
-		lightingShader->setVec3("material.diffuse", 1.0f, 1.0f, 1.0f);
-		lightingShader->setVec3("material.specular", 1.0f, 1.0f, 1.0f);
-		lightingShader->setFloat("material.shininess", 1.0f);
-
-		// view/projection transformations
-		lightingShader->setMat4("projection", cam->GetProjectionMatrix());
-		lightingShader->setMat4("view", cam->GetViewMatrix());
-	
-		lightingShader->setMat4("model", model);
+		looz->use();
+		looz->position(cam->GetCameraPos());
+		looz->viewPosition(cam->GetCameraPos());
+		looz->lightPropierties("base");
+		looz->materialPropierties("emerald");
+		looz->viewProyection(cam->GetViewMatrix(), cam->GetProjectionMatrix());
+		looz->modelLight(model);
 	}
 
 	//Inputs (letra a tocar, 0 const y 1 una sola vez)
@@ -117,10 +98,8 @@ bool Game::OnUpdate() {
 
 //Esto es lo que determina que va a dibujarse
 void Game::OnDraw(){
-	if (light)
-		ourModel->Draw(*lightingShader);
-	else
-		ourModel->Draw(*shader);
+
+		ourModel->Draw(*looz);
 }
 
 bool Game::OnStop() {
@@ -128,7 +107,7 @@ bool Game::OnStop() {
 	delete inp;
 
 	delete shader;
-	delete lightingShader;
+	delete looz;
 	delete ourModel;
 
 	return false;

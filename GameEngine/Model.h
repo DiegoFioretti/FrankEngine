@@ -34,6 +34,7 @@ public:
 
 	Model(string const& path, bool gamma = false);
 	void Draw(Shader3D shader);
+	void Draw(Lighting shader);
 	~Model();
 
 private:
