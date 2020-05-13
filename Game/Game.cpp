@@ -10,13 +10,18 @@ Game::~Game()
 
 bool Game::OnStart() 
 {	
+
 	i = 0;
 	render->setClearScreenColor(0.2f,0.2f,0.2f,1.0f);
 
 	looz = new Lighting("Lighting/BasicLightingVS.txt", "Lighting/BasicLightingFS.txt");
-	shader = new Shader3D("ModelVS3D.txt", "ModelFS3D.txt");
+	lightingShader = new Shader3D("Lighting/MultiLightVS.txt", "Lighting/MultiLightFS.txt");
 
-	ourModel = new Model("Gun/Gun.fbx");
+	shader = new Shader3D("ModelVS3D.txt", "ModelFS3D.txt");
+	boxShader= new Shader3D("ModelVS3D.txt", "ModelFS3D.txt");
+
+	ourModel = new Model("Metroid/DolSzerosuitR1.obj");
+	boxModel = new Model("OBJs/box.obj");
 
 	inp = new Input(window);
 
@@ -39,8 +44,19 @@ bool Game::OnUpdate() {
 	glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
 	shader->setVec3("LightColor", lightColor);
 
+	boxShader->use();
+	// view/projection transformations
+	boxShader->setMat4("projection", cam->GetProjectionMatrix());
+	boxShader->setMat4("view", cam->GetViewMatrix());
 
+	// render the loaded model
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(10.0f, 0.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+	boxShader->setMat4("model", model);
 
+	boxShader->setVec3("LightColor", lightColor);
+	
 	//-------------------------------------LUZ-----------------------------------------
 	if (light)
 	{
@@ -49,10 +65,88 @@ bool Game::OnUpdate() {
 		looz->position(cam->GetCameraPos());
 		looz->viewPosition(cam->GetCameraPos());
 		looz->lightPropierties("base");
-		looz->materialPropierties("emerald");
+		looz->materialPropierties("base");
 		looz->viewProyection(cam->GetViewMatrix(), cam->GetProjectionMatrix());
 		looz->modelLight(model);
 	}
+	  
+	//-----
+	glm::vec3 pointLightPositions[] = {
+		glm::vec3(1.0f,  0.0f,  2.0f),
+		glm::vec3(2.3f, -3.3f, -4.0f),
+		glm::vec3(-4.0f,  2.0f, -12.0f),
+		glm::vec3(0.0f,  0.0f, -3.0f)
+	};
+
+	lightingShader->use();
+	lightingShader->setVec3("viewPos", cam->GetCameraPos());
+	lightingShader->setFloat("material.shininess", 32.0f);
+	/*
+	   Here we set all the uniforms for the 5/6 types of lights we have. We have to set them manually and index
+	   the proper PointLight struct in the array to set each uniform variable. This can be done more code-friendly
+	   by defining light types as classes and set their values in there, or by using a more efficient uniform approach
+	   by using 'Uniform buffer objects', but that is something we'll discuss in the 'Advanced GLSL' tutorial.
+	*/
+	// directional light
+	lightingShader->setVec3("dirLight.direction", a, b, c);
+	lightingShader->setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+	lightingShader->setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
+	lightingShader->setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
+	
+	// point light 1
+	lightingShader->setVec3("pointLights[0].position", pointLightPositions[0]);
+	lightingShader->setVec3("pointLights[0].ambient", 0.5f, 0.5f, 0.5f);
+	lightingShader->setVec3("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
+	lightingShader->setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
+	lightingShader->setFloat("pointLights[0].constant", 1.0f);
+	lightingShader->setFloat("pointLights[0].linear", 0.09);
+	lightingShader->setFloat("pointLights[0].quadratic", 0.032);
+	/*// point light 2
+	lightingShader->setVec3("pointLights[1].position", pointLightPositions[1]);
+	lightingShader->setVec3("pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
+	lightingShader->setVec3("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f);
+	lightingShader->setVec3("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
+	lightingShader->setFloat("pointLights[1].constant", 1.0f);
+	lightingShader->setFloat("pointLights[1].linear", 0.09);
+	lightingShader->setFloat("pointLights[1].quadratic", 0.032);
+	// point light 3
+	lightingShader->setVec3("pointLights[2].position", pointLightPositions[2]);
+	lightingShader->setVec3("pointLights[2].ambient", 0.05f, 0.05f, 0.05f);
+	lightingShader->setVec3("pointLights[2].diffuse", 0.8f, 0.8f, 0.8f);
+	lightingShader->setVec3("pointLights[2].specular", 1.0f, 1.0f, 1.0f);
+	lightingShader->setFloat("pointLights[2].constant", 1.0f);
+	lightingShader->setFloat("pointLights[2].linear", 0.09);
+	lightingShader->setFloat("pointLights[2].quadratic", 0.032);
+	// point light 4
+	lightingShader->setVec3("pointLights[3].position", pointLightPositions[3]);
+	lightingShader->setVec3("pointLights[3].ambient", 0.05f, 0.05f, 0.05f);
+	lightingShader->setVec3("pointLights[3].diffuse", 0.8f, 0.8f, 0.8f);
+	lightingShader->setVec3("pointLights[3].specular", 1.0f, 1.0f, 1.0f);
+	lightingShader->setFloat("pointLights[3].constant", 1.0f);
+	lightingShader->setFloat("pointLights[3].linear", 0.09);
+	lightingShader->setFloat("pointLights[3].quadratic", 0.032);*/
+	// spotLight
+	lightingShader->setVec3("spotLight.position", cam->GetCameraPos());
+	lightingShader->setVec3("spotLight.direction", cam->GetCameraDir());
+	lightingShader->setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+	lightingShader->setVec3("spotLight.diffuse", 0.0f, 0.0f, 0.0f);
+	lightingShader->setVec3("spotLight.specular", 0.0f, 0.0f, 0.0f);
+	lightingShader->setFloat("spotLight.constant", 1.0f);
+	lightingShader->setFloat("spotLight.linear", 0.09);
+	lightingShader->setFloat("spotLight.quadratic", 0.032);
+	lightingShader->setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+	lightingShader->setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+	
+	// view/projection transformations
+
+	lightingShader->setMat4("projection", cam->GetProjectionMatrix());
+	lightingShader->setMat4("view", cam->GetViewMatrix());
+
+	// world transformation
+	model = glm::mat4(1.0f);
+	lightingShader->setMat4("model", model);
+
+	//-----
 
 	//Inputs (letra a tocar, 0 const y 1 una sola vez)
 	//Mov camara
@@ -73,6 +167,18 @@ bool Game::OnUpdate() {
 	}
 	if (inp->keyCall('e', 0)) {
 		cam->CameraTranslateY(0.5f);
+	}
+	if (inp->keyCall('o', 0)) {
+		a += 0.1;
+	}
+	if (inp->keyCall('i', 0)) {
+		a -= 0.1;
+	}
+	if (inp->keyCall('j', 0)) {
+		b += 0.1;
+	}
+	if (inp->keyCall('k', 0)) {
+		b -= 0.1;
 	}
 
 	if (inp->keyCall('t', 1)) {
@@ -98,8 +204,9 @@ bool Game::OnUpdate() {
 
 //Esto es lo que determina que va a dibujarse
 void Game::OnDraw(){
-
-		ourModel->Draw(*looz);
+	
+		ourModel->Draw(*shader);
+		boxModel->Draw(*boxShader);
 }
 
 bool Game::OnStop() {

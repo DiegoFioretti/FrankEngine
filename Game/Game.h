@@ -31,14 +31,22 @@ private:
 	
 	Shader3D* shader;
 	Shader3D* lightingShader;
-	
+	Shader3D* boxShader;
+
 	Lighting* looz;
+	//Lighting* lightingShader;
 
 	Model* ourModel;
+	Model* boxModel;
 
-	bool light=true;
+	bool light = false;
 	bool hold = false;
 	glm::vec3 holdPosition;
+
+	float a = -0.2f;
+	float b = -1.0f;
+	float c = -0.3f;
+
 
 public:
 	Game();
