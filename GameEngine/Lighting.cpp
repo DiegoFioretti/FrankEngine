@@ -1,6 +1,8 @@
 #include "Lighting.h"
 
 
+using namespace std;
+
 
 Lighting::Lighting(const char* vertexPath, const char* fragmentPath, const char* geometryPath ){
 	
@@ -20,7 +22,7 @@ void Lighting::viewPosition(glm::vec3 pos) {
 	newShader->setVec3("viewPos", pos);
 }
 
-void Lighting::lightPropierties(std::string name) {
+void Lighting::ambientPropierties(std::string name) {
 	if (name == "base")
 	{
 		glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
@@ -33,7 +35,7 @@ void Lighting::lightPropierties(std::string name) {
 
 }
 
-void Lighting::lightPropierties(glm::vec3 lColor, float difCulor, float aColor, glm::vec3 specular) {
+void Lighting::ambientPropierties(glm::vec3 lColor, float difCulor, float aColor, glm::vec3 specular) {
 
 	glm::vec3 lightColor(lColor);
 	glm::vec3 diffuseColor = lightColor * glm::vec3(difCulor); // decrease the influence
@@ -42,6 +44,61 @@ void Lighting::lightPropierties(glm::vec3 lColor, float difCulor, float aColor, 
 	newShader->setVec3("light.diffuse", diffuseColor);
 	newShader->setVec3("light.specular", specular);
 }
+
+void Lighting::directionalPropierties(glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular) {
+	newShader->setVec3("dirLight.direction",direction);
+	newShader->setVec3("dirLight.ambient", ambient);
+	newShader->setVec3("dirLight.diffuse", diffuse);
+	newShader->setVec3("dirLight.specular", specular);
+}
+
+void Lighting::pointLight(glm::vec3 position, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float constant, float linear, float quadratic) {
+	//cout<<automaticSetPointLights(i, 0)<<endl;
+
+	newShader->setVec3 (automaticSetPointLights(i,0) , position);
+	newShader->setVec3 (automaticSetPointLights(i,1), ambient);
+	newShader->setVec3 (automaticSetPointLights(i,2), diffuse);
+	newShader->setVec3 (automaticSetPointLights(i,3), specular);
+	newShader->setFloat(automaticSetPointLights(i,4), constant);
+	newShader->setFloat(automaticSetPointLights(i,5), linear);
+	newShader->setFloat(automaticSetPointLights(i,6), quadratic);
+	i++;
+}
+
+void Lighting::spotLight(std::string name, glm::vec3 position, glm::vec3 direction) {
+	if (name=="base")
+	{
+		newShader->setVec3("spotLight.position", position);
+		newShader->setVec3("spotLight.direction", direction);
+		newShader->setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+		newShader->setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
+		newShader->setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
+		newShader->setFloat("spotLight.constant", 1.0f);
+		newShader->setFloat("spotLight.linear", 0.09);
+		newShader->setFloat("spotLight.quadratic", 0.032);
+		newShader->setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+		newShader->setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+	}
+
+}
+
+void Lighting::spotLight(glm::vec3 position, glm::vec3 direction,glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float constant, float linear, float quadratic, float cutOff, float outerCutOff) {
+	
+	newShader->setVec3("spotLight.position", position);
+	newShader->setVec3("spotLight.direction", direction);
+	newShader->setVec3("spotLight.ambient", ambient);
+	newShader->setVec3("spotLight.diffuse", diffuse);
+	newShader->setVec3("spotLight.specular", specular);
+	newShader->setFloat("spotLight.constant", constant);
+	newShader->setFloat("spotLight.linear", linear);
+	newShader->setFloat("spotLight.quadratic", quadratic);
+	newShader->setFloat("spotLight.cutOff", cutOff);
+	newShader->setFloat("spotLight.outerCutOff", outerCutOff);
+
+}
+
+
+
 
 void Lighting::materialPropierties(std::string name) {
 	glm::vec3 mAmient(1.0f, 1.0f, 1.0f);
@@ -263,6 +320,10 @@ void Lighting::materialPropierties(glm::vec3 ambient, glm::vec3 diffuse, glm::ve
 	newShader->setFloat("material.shininess", shiness);
 }
 
+void Lighting::materialShiness(float shiness) {
+	newShader->setFloat("material.shininess", shiness);
+}
+
 void Lighting::viewProyection(glm::mat4 view, glm::mat4 proy) {
 	newShader->setMat4("projection", proy);
 	newShader->setMat4("view", view);
@@ -272,7 +333,49 @@ void Lighting::modelLight(glm::mat4 model) {
 	newShader->setMat4("model", model);
 }
 
+string Lighting::automaticSetPointLights(int i, int j) {
 
+	string a = "pointLights[";
+	stringstream b;
+	b << i;
+	a.append(b.str());
+
+	switch (j) {
+	case 0:
+		a.append("].position");
+		return a;
+		break;
+	case 1:
+		a.append("].ambient");
+		return a;
+		break;
+	case 2:
+		a.append("].diffuse");
+		return a;
+		break;
+	case 3:
+		a.append("].specular");
+		return a;
+		break;
+	case 4:
+		a.append("].constant");
+		return a;
+		break;
+	case 5:
+		a.append("].linear");
+		return a;
+		break;
+	case 6:
+		a.append("].quadratic");
+		return a;
+		break;
+
+	default:
+		break;
+	}
+	j++;
+	return a;
+}
 
 
 Lighting::~Lighting()
