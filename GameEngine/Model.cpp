@@ -4,7 +4,7 @@
 
 
 // constructor, expects a filepath to a 3D model.
-Model::Model(string const& path, bool gamma) : gammaCorrection(gamma)
+Model::Model(string const& path, bool gamma) : gammaCorrection(gamma), Transform()
 {
 	loadModel(path);
 }

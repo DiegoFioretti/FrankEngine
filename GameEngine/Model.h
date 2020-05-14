@@ -2,14 +2,13 @@
 
 #include "Exports.h"
 #include "Mesh.h"
+#include "Transform.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-
-
 
 #include <string>
 #include <fstream>
@@ -21,7 +20,7 @@ using namespace std;
 
 unsigned int TextureFromFile(const char* path, const string& directory, bool gamma = false);
 
-class FRANKENGINE_API Model
+class FRANKENGINE_API Model : public Transform
 {
 public:
 	/*  Model Data */

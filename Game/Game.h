@@ -33,7 +33,7 @@ private:
 	Shader3D* lightingShader;
 	Shader3D* boxShader;
 
-	Lighting* looz;
+	//Lighting* looz;
 	//Lighting* lightingShader;
 
 	Model* ourModel;

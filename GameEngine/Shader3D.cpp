@@ -1,7 +1,5 @@
 #include "Shader3D.h"
 
-
-
 // constructor generates the shader on the fly
 Shader3D::Shader3D(const char* vertexPath, const char* fragmentPath, const char* geometryPath)
 {

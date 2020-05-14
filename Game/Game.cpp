@@ -10,18 +10,22 @@ Game::~Game()
 
 bool Game::OnStart() 
 {	
-
 	i = 0;
 	render->setClearScreenColor(0.2f,0.2f,0.2f,1.0f);
 
-	looz = new Lighting("Lighting/BasicLightingVS.txt", "Lighting/BasicLightingFS.txt");
+	//looz = new Lighting("Lighting/BasicLightingVS.txt", "Lighting/BasicLightingFS.txt");
 	lightingShader = new Shader3D("Lighting/MultiLightVS.txt", "Lighting/MultiLightFS.txt");
 
 	shader = new Shader3D("ModelVS3D.txt", "ModelFS3D.txt");
 	boxShader= new Shader3D("ModelVS3D.txt", "ModelFS3D.txt");
 
 	ourModel = new Model("Metroid/DolSzerosuitR1.obj");
-	boxModel = new Model("OBJs/box.obj");
+	ourModel->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
+	ourModel->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
+
+	boxModel = new Model("Link/source/zeldaPosed001.fbx");
+	boxModel->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
+	boxModel->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
 
 	inp = new Input(window);
 
@@ -30,46 +34,22 @@ bool Game::OnStart()
 //RECORDATORIO crear delta time
 bool Game::OnUpdate() {
 	i++;
-	shader->use();
-	// view/projection transformations
-	shader->setMat4("projection", cam->GetProjectionMatrix());
-	shader->setMat4("view", cam->GetViewMatrix());
+	
 
-	// render the loaded model
-	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
-	shader->setMat4("model", model);
-
-	glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
-	shader->setVec3("LightColor", lightColor);
-
-	boxShader->use();
-	// view/projection transformations
-	boxShader->setMat4("projection", cam->GetProjectionMatrix());
-	boxShader->setMat4("view", cam->GetViewMatrix());
-
-	// render the loaded model
-	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(10.0f, 0.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
-	boxShader->setMat4("model", model);
-
-	boxShader->setVec3("LightColor", lightColor);
+	
 	
 	//-------------------------------------LUZ-----------------------------------------
 	if (light)
 	{
 	// be sure to activate shader when setting uniforms/drawing objects
-		looz->use();
+	/*	looz->use();
 		looz->position(cam->GetCameraPos());
 		looz->viewPosition(cam->GetCameraPos());
 		looz->lightPropierties("base");
 		looz->materialPropierties("base");
 		looz->viewProyection(cam->GetViewMatrix(), cam->GetProjectionMatrix());
-		looz->modelLight(model);
+		looz->modelLight(ourModel->GetWorldMatrix());*/
 	}
-	  
 	//-----
 	glm::vec3 pointLightPositions[] = {
 		glm::vec3(1.0f,  0.0f,  2.0f),
@@ -143,13 +123,16 @@ bool Game::OnUpdate() {
 	lightingShader->setMat4("view", cam->GetViewMatrix());
 
 	// world transformation
-	model = glm::mat4(1.0f);
-	lightingShader->setMat4("model", model);
-
+	glm::mat4 model = glm::mat4(1.0f);
+	lightingShader->setMat4("model", ourModel->GetWorldMatrix());
+	ourModel->SetPos(glm::vec3(a, 0.0f, 0.0f));
 	//-----
 
 	//Inputs (letra a tocar, 0 const y 1 una sola vez)
 	//Mov camara
+	if (inp->keyCall('t', 0)) {
+		cout << boxModel->GetPos().x << endl;
+	}
 	if (inp->keyCall('a', 0)) {
 		cam->CameraMoveLeft(0.3f);
 	}
@@ -157,16 +140,16 @@ bool Game::OnUpdate() {
 		cam->CameraMoveLeft(-0.3f);
 	}
 	if (inp->keyCall('w', 0)) {
-		cam->CameraMoveForward(0.5f);
+		cam->CameraMoveForward(0.1f);
 	}
 	if (inp->keyCall('s', 0)) {
-		cam->CameraMoveForward(-0.5f);
+		cam->CameraMoveForward(-0.1f);
 	}
 	if (inp->keyCall('q', 0)) {
-		cam->CameraTranslateY(-0.5f);
+		cam->CameraTranslateY(-0.1f);
 	}
 	if (inp->keyCall('e', 0)) {
-		cam->CameraTranslateY(0.5f);
+		cam->CameraTranslateY(0.1f);
 	}
 	if (inp->keyCall('o', 0)) {
 		a += 0.1;
@@ -204,9 +187,21 @@ bool Game::OnUpdate() {
 
 //Esto es lo que determina que va a dibujarse
 void Game::OnDraw(){
-	
-		ourModel->Draw(*shader);
-		boxModel->Draw(*boxShader);
+	shader->use();
+	// view/projection transformations
+	shader->setMat4("projection", cam->GetProjectionMatrix());
+	shader->setMat4("view", cam->GetViewMatrix());
+	// render the loaded model
+	shader->setMat4("model", ourModel->GetWorldMatrix());
+	ourModel->Draw(*shader);
+
+	boxShader->use();
+	// view/projection transformations
+	boxShader->setMat4("projection", cam->GetProjectionMatrix());
+	boxShader->setMat4("view", cam->GetViewMatrix());
+	// render the loaded model
+	boxShader->setMat4("model", boxModel->GetWorldMatrix());
+	boxModel->Draw(*boxShader);
 }
 
 bool Game::OnStop() {
@@ -214,8 +209,11 @@ bool Game::OnStop() {
 	delete inp;
 
 	delete shader;
-	delete looz;
+	delete boxShader;
+	//delete looz;
 	delete ourModel;
+	delete boxModel;
+	delete lightingShader;
 
 	return false;
 }
