@@ -14,6 +14,7 @@ bool Renderer::Start(Window* wnd) {
 	}
 
 	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_LIGHTING);
 	cam = new Camera((GLFWwindow*)wnd->GetWindowPtr());
 
 	glGenVertexArrays(1, &VertexArrayID);

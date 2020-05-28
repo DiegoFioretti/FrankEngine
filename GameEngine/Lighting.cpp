@@ -10,6 +10,12 @@ Lighting::Lighting(const char* vertexPath, const char* fragmentPath, const char*
 
 }
 
+Lighting::Lighting(const char* vertexPath, const char* fragmentPath, int numOfPointLights, char* geometryPath ){
+
+	newShader = new Shader3D(vertexPath, fragmentPath, numOfPointLights, geometryPath);
+
+}
+
 void Lighting::use() {
 	newShader->use();
 }
@@ -53,7 +59,6 @@ void Lighting::directionalPropierties(glm::vec3 direction, glm::vec3 ambient, gl
 }
 
 void Lighting::pointLight(glm::vec3 position, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float constant, float linear, float quadratic) {
-	//cout<<automaticSetPointLights(i, 0)<<endl;
 
 	newShader->setVec3 (automaticSetPointLights(i,0) , position);
 	newShader->setVec3 (automaticSetPointLights(i,1), ambient);
@@ -65,7 +70,28 @@ void Lighting::pointLight(glm::vec3 position, glm::vec3 ambient, glm::vec3 diffu
 	i++;
 }
 
+
+void Lighting::spotLight(std::string name) {
+
+	if (name == "null")
+	{
+		newShader->setVec3("spotLight.position", 0.f,0.f,0.f);
+		newShader->setVec3("spotLight.direction", 0.f,0.f,0.f);
+		newShader->setVec3("spotLight.ambient", 0.01f, 0.01f, 0.01f);
+		newShader->setVec3("spotLight.diffuse", 0.01f, 0.01f, 0.01f);
+		newShader->setVec3("spotLight.specular", 0.01f, 0.01f, 0.01f);
+		newShader->setFloat("spotLight.constant", 0.01f);
+		newShader->setFloat("spotLight.linear", 0.09f);
+		newShader->setFloat("spotLight.quadratic", 0.032f);
+		newShader->setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+		newShader->setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+	}
+}
+
+
 void Lighting::spotLight(std::string name, glm::vec3 position, glm::vec3 direction) {
+
+
 	if (name=="base")
 	{
 		newShader->setVec3("spotLight.position", position);
@@ -74,8 +100,8 @@ void Lighting::spotLight(std::string name, glm::vec3 position, glm::vec3 directi
 		newShader->setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
 		newShader->setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
 		newShader->setFloat("spotLight.constant", 1.0f);
-		newShader->setFloat("spotLight.linear", 0.09);
-		newShader->setFloat("spotLight.quadratic", 0.032);
+		newShader->setFloat("spotLight.linear", 0.09f);
+		newShader->setFloat("spotLight.quadratic", 0.032f);
 		newShader->setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
 		newShader->setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
 	}
