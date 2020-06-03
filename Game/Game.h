@@ -17,7 +17,6 @@ using namespace std;
 
 class Game : public GameBase {
 private:
-	float i;
 	//Entity* pollo;
 	//Sprite* muchacho;
 	//Sprite* cuadradito;
@@ -28,6 +27,7 @@ private:
 
 	//Material * material1;
 	//Material * material3;
+
 	Camera* cam;
 	Input * inp;
 	
@@ -35,7 +35,6 @@ private:
 	Shader3D* boxShader;
 
 	Lighting* looz;
-	//Lighting* lightingShader;
 
 	Model* samusModel;
 	Model* clonSamus;
@@ -82,3 +81,9 @@ protected:
 	bool OnUpdate() override;
 	void OnDraw() override;
 };
+
+
+/*Dudas:
+camera.cpp
+
+*/

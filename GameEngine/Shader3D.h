@@ -13,8 +13,9 @@ class FRANKENGINE_API Shader3D
 {
 public:
 	unsigned int ID;
-	Shader3D(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
-	Shader3D(const char* vertexPath, const char* fragmentPath, int numOfPointLights, const char* geometryPath = nullptr);
+	Shader3D(const char* vertexPath, const char* fragmentPath);
+	Shader3D(const char* vertexPath, const char* fragmentPath, int numOfPointLights);
+	//---
 	void use();
 	void setBool(const std::string& name, bool value) const;
 	void setInt(const std::string& name, int value) const;

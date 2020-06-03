@@ -10,7 +10,6 @@ Game::~Game()
 
 bool Game::OnStart() 
 {	
-	i = 0;
 	render->setClearScreenColor(0.2f,0.2f,0.2f,1.0f);
 
 	looz = new Lighting("Lighting/MultiLightVS.txt", "Lighting/MultiLightFS.txt",2);
@@ -31,19 +30,14 @@ bool Game::OnStart()
 
 	inp = new Input(window);
 
+	cam->setCameraPos(10.0f, 7.0f, 31.0f);
+	cam->setCameraRot(-90.0f, 5.5f);
+
 	return true;
 }
+
 //RECORDATORIO crear delta time
 bool Game::OnUpdate() {
-	
-	/*shader->use();
-	// view/projection transformations
-	shader->setMat4("projection", cam->GetProjectionMatrix());
-	shader->setMat4("view", cam->GetViewMatrix());
-	// render the loaded model
-	shader->setMat4("model", ourModel->GetWorldMatrix());*/
-	
-	
 	//-------------------------------------LUZ-----------------------------------------
 	offset = glm::vec3(zeldaModel->GetPos().x- 1.56252f, zeldaModel->GetPos().y+14.43748f, zeldaModel->GetPos().z + 5.24109f);
 
@@ -54,26 +48,22 @@ bool Game::OnUpdate() {
 		glm::vec3(0.0f,  0.0f, -3.0f)
 	};
 
-	if (true)
-	{
-		looz->use();
-		looz->viewPosition(cam->GetCameraPos());
-		looz->materialShiness(70.0f);
-		looz->directionalPropierties(dirDirection, dirAmbient, dirDiffuse, dirSpecular);
-		looz->pointLight(pointLightPositions[0], bpointAmbient, bpointDiffuse, bpointSpecular, pointConstant, pointLinear, pointQuadratic);
-		looz->pointLight(pointLightPositions[1], pointAmbient, pointDiffuse, pointSpecular, pointConstant, pointLinear, pointQuadratic);
-		looz->spotLight("null");
-		looz->viewProyection(cam->GetViewMatrix(), cam->GetProjectionMatrix());
-		//looz->modelLight(ourModel->GetWorldMatrix());
-	}
-
 	
-	
+	looz->use();
+	looz->viewPosition(cam->GetCameraPos());
+	looz->materialShiness(70.0f);
+	looz->directionalPropierties(dirDirection, dirAmbient, dirDiffuse, dirSpecular);
+	looz->pointLight(0,pointLightPositions[0], bpointAmbient, bpointDiffuse, bpointSpecular, pointConstant, pointLinear, pointQuadratic);
+	looz->pointLight(1,pointLightPositions[1], pointAmbient, pointDiffuse, pointSpecular, pointConstant, pointLinear, pointQuadratic);
+	//looz->spotLight("null");
+	looz->spotLight("base", cam->GetCameraPos(), cam->GetCameraDir());
+	looz->viewProyection(cam->GetViewMatrix(), cam->GetProjectionMatrix());
 
-	//samusModel->SetPos(glm::vec3(a, 0.0f, 0.0f));
+
+	samusModel->SetPos(glm::vec3(a, 0.0f, 0.0f));
+	
 
 	//Inputs (letra a tocar, 0 const y 1 una sola vez)
-	//Mov camara
 	if (inp->keyCall('t', 0)) {
 		cout << zeldaModel->GetPos().x << endl;
 		cout << offset.x<<endl;
@@ -103,18 +93,23 @@ bool Game::OnUpdate() {
 		a -= 0.1;
 	}
 	if (inp->keyCall('j', 0)) {
-		cout << "Zelda x=" << zeldaModel->GetPos().x << endl;
-		cout << "Zelda y=" << zeldaModel->GetPos().y << endl;
-		cout << "Zelda z=" << zeldaModel->GetPos().z << endl;
-		cout << "Camara x=" << cam->GetCameraPos().x << endl;
-		cout << "Camara y=" << cam->GetCameraPos().y << endl;
-		cout << "Camara z=" << cam->GetCameraPos().z << endl;
+		//cout << "Zelda x=" << zeldaModel->GetPos().x << endl;
+		//cout << "Zelda y=" << zeldaModel->GetPos().y << endl;
+		//cout << "Zelda z=" << zeldaModel->GetPos().z << endl;
+		//cout << "Camara x=" << cam->GetCameraDir().x << endl;
+		//cout << "Camara y=" << cam->GetCameraDir().y << endl;
+		//cout << "Camara z=" << cam->GetCameraDir().z << endl;
+		cout << "Camara yaw=" << cam->GetCameraYaw() << endl;
+		cout << "Camara pitch=" << cam->GetCameraPitch() << endl;
+		
 
 	}
 	if (inp->keyCall('k', 0)) {
 		zeldaModel->Translate(0.5f,0.f,0.f);
+		offset.x = +0.5f;
 	}
-
+	
+	
 	return true;
 }
 
@@ -123,11 +118,9 @@ void Game::OnDraw(){
 
 	
 	looz->modelLight(zeldaModel->GetWorldMatrix());
-	//shader->setMat4("model", zeldaModel->GetWorldMatrix());
 	zeldaModel->Draw(*looz);
 
 	looz->modelLight(samusModel->GetWorldMatrix());
-	//shader->setMat4("model", ourModel->GetWorldMatrix());
 	samusModel->Draw(*looz);
 
 	looz->modelLight(clonSamus->GetWorldMatrix());

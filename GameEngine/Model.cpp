@@ -68,10 +68,11 @@ Mesh Model::processMesh(aiMesh * mesh, const aiScene * scene)
 	vector<Vertex> vertices;
 	vector<unsigned int> indices;
 	vector<Texture> textures;
-
+	
 	// Walk through each of the mesh's vertices
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
+
 		Vertex vertex;
 		glm::vec3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
 		// positions
@@ -79,9 +80,9 @@ Mesh Model::processMesh(aiMesh * mesh, const aiScene * scene)
 		vector.y = mesh->mVertices[i].y;
 		vector.z = mesh->mVertices[i].z;
 		vertex.Position = vector;
+
 		// normals
-		if (mesh->HasNormals())
-		{
+		if (mesh->HasNormals()){
 			vector.x = mesh->mNormals[i].x;
 			vector.y = mesh->mNormals[i].y;
 			vector.z = mesh->mNormals[i].z;
@@ -89,17 +90,18 @@ Mesh Model::processMesh(aiMesh * mesh, const aiScene * scene)
 		}
 		
 		// texture coordinates
-		if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
+		if (mesh->HasTextureCoords(0)) // does the mesh contain texture coordinates?
 		{
 			glm::vec2 vec;
-			// a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't 
 			// use models where a vertex can have multiple texture coordinates so we always take the first set (0).
 			vec.x = mesh->mTextureCoords[0][i].x;
 			vec.y = mesh->mTextureCoords[0][i].y;
 			vertex.TexCoords = vec;
 		}
-		else
+		else {
 			vertex.TexCoords = glm::vec2(0.0f, 0.0f);
+		}
+
 		if (mesh->HasTangentsAndBitangents())
 		{
 			// tangent
@@ -116,7 +118,9 @@ Mesh Model::processMesh(aiMesh * mesh, const aiScene * scene)
 		
 		vertices.push_back(vertex);
 	}
-	// now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
+
+	// now wak through each of the mesh's faces (a face is a mesh its triangle)
+	// and retrieve the corresponding vertex indices.
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 	{
 		aiFace face = mesh->mFaces[i];
@@ -124,6 +128,7 @@ Mesh Model::processMesh(aiMesh * mesh, const aiScene * scene)
 		for (unsigned int j = 0; j < face.mNumIndices; j++)
 			indices.push_back(face.mIndices[j]);
 	}
+
 	// process materials
 	aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 	// we assume a convention for sampler names in the shaders. Each diffuse texture should be named
@@ -162,12 +167,14 @@ vector<Texture> Model::loadMaterialTextures(aiMaterial * mat, aiTextureType type
 		mat->GetTexture(type, i, &str);
 		// check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
 		bool skip = false;
+
 		for (unsigned int j = 0; j < textures_loaded.size(); j++)
 		{
 			if (std::strcmp(textures_loaded[j].path.data(), str.C_Str()) == 0)
 			{
 				textures.push_back(textures_loaded[j]);
-				skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
+				skip = true; // a texture with the same filepath has already been loaded, 
+							 //continue to next one. (optimization)
 				break;
 			}
 		}
@@ -178,12 +185,15 @@ vector<Texture> Model::loadMaterialTextures(aiMaterial * mat, aiTextureType type
 			texture.type = typeName;
 			texture.path = str.C_Str();
 			textures.push_back(texture);
-			textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
+			textures_loaded.push_back(texture);  
+			// store it as texture loaded for entire model, to ensure we won't unnecesery 
+			// load duplicate textures.
 		}
 	}
 	return textures;
 }
 
+// Esto es para cargar la textura  :)
 unsigned int TextureFromFile(const char* path, const string & directory, bool gamma)
 {
 	string filename = string(path);

@@ -4,7 +4,7 @@
 
 
 
-bool _firstMouse;
+bool  _firstMouse;
 float _lastX;
 float _lastY;
 float _xoffset;
@@ -22,8 +22,12 @@ vec3 _cameraUp;
 mat4 _viewMatrix;
 mat4 _projectionMatrix;
 
+
+
+//Da informacion del movimiento del mouse cada vez que se mueve
 void mouse_callback(GLFWwindow* win, double xpos, double ypos)
 {
+	//Cuando inicia no tiene una ultima pos
 	if (_firstMouse)
 	{
 		_lastX = xpos;
@@ -39,7 +43,7 @@ void mouse_callback(GLFWwindow* win, double xpos, double ypos)
 	_xoffset *= _sensitivity;
 	_yoffset *= _sensitivity;
 
-	_yaw += _xoffset;
+	_yaw   += _xoffset;
 	_pitch += _yoffset;
 
 	if (_pitch > 89.0f)
@@ -58,6 +62,7 @@ void mouse_callback(GLFWwindow* win, double xpos, double ypos)
 	);
 }
 
+//Da informacion del scroll de mouse cada vez que se mueve, se usa para hacer "Zoom"
 void scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
 {
 	if (fov > 1.0f && fov < 90.0f)
@@ -67,17 +72,13 @@ void scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
 	else if (fov >= 90.0f)
 		fov = 89.0f;
 	
-	_projectionMatrix = glm::perspective(glm::radians(fov), _getAspectRatio, 1.0f, 1000.0f);
+	_projectionMatrix = glm::perspective(glm::radians(fov), _getAspectRatio, 1.0f, 400.0f);
 }
 
-
-float Camera::FieldOfView() {
-	return fov;
-}
 
 Camera::Camera(GLFWwindow* window)
 {
-	
+
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	glfwSetCursorPosCallback(window, mouse_callback);
@@ -96,7 +97,7 @@ Camera::Camera(GLFWwindow* window)
 	fov = 45.f;
 
 	_cameraPos = vec3(0.0f, 0.0f, 0.0f);
-	_cameraDir = vec3(0.0f, 0.0f, 0.0f);
+	_cameraDir = vec3(0.00001f, 0.000001f, 0.000001f);
 	_cameraUp = vec3(0.0f, 1.0f, 0.0f);
 
 	_viewMatrix = glm::lookAt(
@@ -106,10 +107,11 @@ Camera::Camera(GLFWwindow* window)
 	);
 
 	_projectionMatrix = glm::perspective(fov, _getAspectRatio, 1.0f, 100.0f);
-	std::cout <<"Fov:" <<fov;
+	std::cout << "Fov:" << fov;
 	std::cout << "_getAspectRatio:" << _getAspectRatio;
-	
+
 }
+
 
 Camera::~Camera()
 {
@@ -172,8 +174,7 @@ void Camera::CameraTranslateZ( float z)
 	UpdateViewMatrix();
 }
 
-void Camera::CameraRotate(float pitch, float yaw)
-{
+void Camera::CameraRotate(float pitch, float yaw){
 	_cameraDir.x = cos(radians(yaw)) * cos(radians(pitch));
 	_cameraDir.y = sin(radians(pitch));
 	_cameraDir.z = sin(radians(yaw)) * cos(radians(pitch));
@@ -184,6 +185,14 @@ void Camera::CameraRotate(float pitch, float yaw)
 vec3 Camera::GetCameraDir()
 {
 	return _cameraDir;
+}
+
+float Camera::GetCameraYaw() {
+	return _yaw;
+}
+
+float Camera::GetCameraPitch() {
+	return _pitch;
 }
 
 vec3 Camera::GetCameraPos()
@@ -204,4 +213,24 @@ mat4 Camera::GetViewMatrix()
 mat4 Camera::GetProjectionMatrix() 
 {
 	return _projectionMatrix;
+}
+
+void Camera::setCameraRot(float yaw, float pitch){
+	_yaw = yaw;
+	_pitch = pitch;
+	_cameraDir.x = cos(radians(_yaw)) * cos(radians(_pitch));
+	_cameraDir.y = sin(radians(_pitch));
+	_cameraDir.z = sin(radians(_yaw)) * cos(radians(_pitch));
+
+
+
+	UpdateViewMatrix();
+}
+
+void Camera::setCameraPos(float x, float y, float z) {
+	_cameraPos.x = x;
+	_cameraPos.y = y;
+	_cameraPos.z = z;
+
+	UpdateViewMatrix();
 }

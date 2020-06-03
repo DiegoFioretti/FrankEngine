@@ -4,15 +4,15 @@
 using namespace std;
 
 
-Lighting::Lighting(const char* vertexPath, const char* fragmentPath, const char* geometryPath ){
+Lighting::Lighting(const char* vertexPath, const char* fragmentPath  ){
 	
-	newShader = new Shader3D(vertexPath, fragmentPath, geometryPath);
+	newShader = new Shader3D(vertexPath, fragmentPath);
 
 }
 
-Lighting::Lighting(const char* vertexPath, const char* fragmentPath, int numOfPointLights, char* geometryPath ){
+Lighting::Lighting(const char* vertexPath, const char* fragmentPath, int numOfPointLights ){
 
-	newShader = new Shader3D(vertexPath, fragmentPath, numOfPointLights, geometryPath);
+	newShader = new Shader3D(vertexPath, fragmentPath, numOfPointLights);
 
 }
 
@@ -58,16 +58,15 @@ void Lighting::directionalPropierties(glm::vec3 direction, glm::vec3 ambient, gl
 	newShader->setVec3("dirLight.specular", specular);
 }
 
-void Lighting::pointLight(glm::vec3 position, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float constant, float linear, float quadratic) {
+void Lighting::pointLight(int ID,glm::vec3 position, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float constant, float linear, float quadratic) {
 
-	newShader->setVec3 (automaticSetPointLights(i,0) , position);
-	newShader->setVec3 (automaticSetPointLights(i,1), ambient);
-	newShader->setVec3 (automaticSetPointLights(i,2), diffuse);
-	newShader->setVec3 (automaticSetPointLights(i,3), specular);
-	newShader->setFloat(automaticSetPointLights(i,4), constant);
-	newShader->setFloat(automaticSetPointLights(i,5), linear);
-	newShader->setFloat(automaticSetPointLights(i,6), quadratic);
-	i++;
+	newShader->setVec3 (automaticSetPointLights(ID,0), position);
+	newShader->setVec3 (automaticSetPointLights(ID,1), ambient);
+	newShader->setVec3 (automaticSetPointLights(ID,2), diffuse);
+	newShader->setVec3 (automaticSetPointLights(ID,3), specular);
+	newShader->setFloat(automaticSetPointLights(ID,4), constant);
+	newShader->setFloat(automaticSetPointLights(ID,5), linear);
+	newShader->setFloat(automaticSetPointLights(ID,6), quadratic);
 }
 
 

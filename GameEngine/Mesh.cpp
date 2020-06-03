@@ -16,6 +16,7 @@ void Mesh::Draw(Shader3D shader)
 	unsigned int specularNr = 1;
 	unsigned int normalNr = 1;
 	unsigned int heightNr = 1;
+
 	for (unsigned int i = 0; i < textures.size(); i++)
 	{
 		glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
@@ -45,8 +46,7 @@ void Mesh::Draw(Shader3D shader)
 	glBindVertexArray(0);
 
 	// always good practice to set everything back to defaults once configured.
-	for (unsigned int i = 0; i < textures.size(); i++)
-	{
+	for (unsigned int i = 0; i < textures.size(); i++){
 		glActiveTexture(GL_TEXTURE0 + i);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}

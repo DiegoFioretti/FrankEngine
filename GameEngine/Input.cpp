@@ -760,9 +760,3 @@ bool Input::keyCall(string key, int num) {
 	return false;
 }
 
-void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
-{
-	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
-	{
-	}
-}
