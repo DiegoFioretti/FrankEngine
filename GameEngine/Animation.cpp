@@ -32,7 +32,8 @@ float * Animation::UpdateAnimation(float deltaTime)
 	currentTime += deltaTime;
 	if (currentTime >= timePerFrame)
 	{
-		currentTime = 0.0f;
+		currentTime = timePerFrame - currentTime;
+
 		if (currentFrame < lastFrame)
 		{
 			currentFrame++;

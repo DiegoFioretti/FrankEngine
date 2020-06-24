@@ -18,6 +18,8 @@ private:
 	Animation * anim;
 	bool onCollision;
 
+	bool ShouldDispouseTexture;
+
 public:
 	void Draw() override;
 	void DrawMeshWithTexture(int typeDraw);
@@ -26,6 +28,8 @@ public:
 
 	void UpdAnim(float deltaTime);
 	void SetAnim(int initF, int finishF, float timePerF);
+
+	void DisposeTexture();
 
 	void setCollision();
 	bool getCollision();

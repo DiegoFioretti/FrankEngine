@@ -15,14 +15,19 @@ bool GameBase::Start(int h, int w, char* name) {
 	render = new Renderer();
 	if (!render->Start(window))
 		return false;
-	render->setClearScreenColor(0.3f, 0.0f, 0.4f, 0.0f);
+	render->setClearScreenColor(0.2f, 0.2f, 0.2f, 0.0f);
 	render->ClearScreen();
 
 	return OnStart();
 }
 void GameBase::Loop() {
+
 	bool loop = true;
 	while (loop && !window->ShouldClose()) {
+		_currentFrame = glfwGetTime();
+		_deltaTime = _currentFrame - _lastFrame;
+		_lastFrame = _currentFrame;
+
 		loop = OnUpdate();
 		render->ClearScreen();
 		OnDraw();
@@ -42,3 +47,7 @@ bool GameBase::Stop() {
 	return true;
 }
 
+float GameBase::DeltaTime() {
+
+	return _deltaTime;
+}

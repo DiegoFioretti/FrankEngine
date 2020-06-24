@@ -60,8 +60,8 @@ bool Game::OnUpdate() {
 	//CollisionManager::GetInstance()->CheckColision(pollo,caja);
 
 	//esto es cada cuanto suma la animacion, en un futuro sera un DeltaTime
-	muchacho->UpdAnim(0.05f);
-	pollo->UpdAnim(0.05f);
+	muchacho->UpdAnim(DeltaTime());
+	pollo->UpdAnim(DeltaTime());
 	triangle->SetRot(0.0f, 0.0f, i / 5);
 
 	//Inputs (letra a tocar, 0 const y 1 una sola vez)
