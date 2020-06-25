@@ -3,6 +3,8 @@
 //Esto es para las formas sin textura
 Shape::Shape(Renderer * render) :Entity(render)
 {
+	
+
 	shouldDispose = false;
 	material = NULL;
 	bufferId = -1;
@@ -10,6 +12,8 @@ Shape::Shape(Renderer * render) :Entity(render)
 	shouldDisposeColor = false;
 	colorBufferId = -1;
 	colorVertexCount = -1;
+
+	SetVertices();
 }
 
 void Shape::DrawMesh(int typeDraw)
@@ -32,13 +36,20 @@ void Shape::DrawMesh(int typeDraw)
 	render->EndDraw(1);
 }
 
-void Shape::SetVertices(float * vertices, int count)
+void Shape::SetVertices()
 {
+
+	vertex = new float[12]{
+		-1.0f, -1.0f, 0.f,
+		-1.0f,  1.0f, 0.f,
+		 1.0f, -1.0f, 0.f,
+		 1.0f,  1.0f, 0.f
+	};
 
 
 	vertexCount = count;
 	shouldDispose = true;
-	bufferId = render->GenBuffer(vertices, sizeof(float)* count * 3);
+	bufferId = render->GenBuffer(vertex, sizeof(float)* count * 3);
 }
 
 void Shape::SetColorVertex(float * vertices, int count)

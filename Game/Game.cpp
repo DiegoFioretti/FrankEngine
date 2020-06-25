@@ -21,21 +21,21 @@ bool Game::OnStart()
 	
 	pollo = new Sprite(render, 3, 4);//le pasas el renderer a utilizar y le decis por cuanto cortas el spritesheet
 	pollo->SetMaterial(material1); // le asignas el material 
-	pollo->LoadMaterial("spritesheet_chicken.bmp"); // le pasas el archivo a cortar (BMP es un archivo nativo del window)
+	pollo->LoadTexture("spritesheet_chicken.bmp"); // le pasas el archivo a cortar (BMP es un archivo nativo del window)
 	pollo->SetPos(0, 0, 0);// Asigna la posicion
 	pollo->SetBoundingBox(2.0f, 2.0f);// le seteas el ancho y alto de la caja de colisiones
 	pollo->SetAnim(0, 11, 1.1f);// desde que frame arranca y hasta cual termina, mas el tiempo de duracion total
 
 	muchacho = new Sprite(render, 4, 4);
 	muchacho->SetMaterial(material1);
-	muchacho->LoadMaterial("spritesheet_caveman.bmp");
+	muchacho->LoadTexture("spritesheet_caveman.bmp");
 	muchacho->SetPos(3, 3, 0);
 	muchacho->SetBoundingBox(2.0f, 2.0f);
 	muchacho->SetAnim(0, 15, 0.1f);	
 	
 	cuadradito = new Sprite(render, 1, 1);
 	cuadradito->SetMaterial(material1);
-	cuadradito->LoadMaterial("angry.bmp");
+	cuadradito->LoadTexture("angry.bmp");
 	cuadradito->SetPos(1, -8, 0);
 	cuadradito->SetBoundingBox(2.0f, 2.0f);
 
@@ -56,7 +56,7 @@ bool Game::OnUpdate() {
 	i++;
 	//chequea las colisiones entre 2 sprites
 	CollisionManager::GetInstance()->CheckColision(pollo,muchacho);
-	CollisionManager::GetInstance()->CheckTileColision(pollo, myLevel, 2);
+	//CollisionManager::GetInstance()->CheckTileColision(pollo, myLevel, 2);
 	//CollisionManager::GetInstance()->CheckColision(pollo,caja);
 
 	//esto es cada cuanto suma la animacion, en un futuro sera un DeltaTime

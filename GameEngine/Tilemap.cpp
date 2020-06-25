@@ -44,7 +44,7 @@ void Tilemap::loadBMPTileset(Renderer* render, Material* material, const char* b
 		{
 			_tileArchive[i] = new Tile(render, columns, rows, i);
 			_tileArchive[i]->SetMaterial(material);
-			_tileArchive[i]->LoadMaterial(bmpFile);
+			_tileArchive[i]->LoadTexture(bmpFile);
 			_tileArchive[i]->SetBoundingBox(2.0f, 2.0f);
 			_tileArchive[i]->SetAnim(i, i, 0.5f);
 		}

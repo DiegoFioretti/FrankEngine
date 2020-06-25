@@ -9,7 +9,7 @@ Triangle::Triangle(Renderer *render) :Shape(render)
 		0.0f,  1.0f, 0.0f,
 	};
 	
-	SetVertices(vertex, 3);
+	//SetVertices(vertex, 3);
 
 	colorVertex = new float[9]
 	{

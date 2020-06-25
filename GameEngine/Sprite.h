@@ -4,10 +4,8 @@
 #include "TextureImporter.h"
 #include "Animation.h"
 
-class FRANKENGINE_API Sprite :
-	public Shape
+class FRANKENGINE_API Sprite : public Shape
 {
-
 private:
 
 	BMPheader texture;
@@ -23,7 +21,7 @@ private:
 public:
 	void Draw() override;
 	void DrawMeshWithTexture(int typeDraw);
-	void LoadMaterial(const char * bmpFile);
+	void LoadTexture(const char * bmpFile);
 	void SetTextureVertex(float * vertices, int count);
 
 	void UpdAnim(float deltaTime);

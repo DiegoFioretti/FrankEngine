@@ -15,7 +15,7 @@ bool GameBase::Start(int h, int w, char* name) {
 	render = new Renderer();
 	if (!render->Start(window))
 		return false;
-	render->setClearScreenColor(0.2f, 0.2f, 0.2f, 0.0f);
+	render->setClearScreenColor(0.7f, 0.5f, 0.3f, 0.0f);
 	render->ClearScreen();
 
 	return OnStart();

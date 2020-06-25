@@ -1,8 +1,6 @@
 #pragma once
 #include "Sprite.h"
-class FRANKENGINE_API Tile:
-	public Sprite
-
+class FRANKENGINE_API Tile:public Sprite
 {
 private:
 	bool _walkable;

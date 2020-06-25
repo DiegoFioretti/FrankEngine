@@ -3,13 +3,6 @@
 // Para dibujar con textura 
 Sprite::Sprite(Renderer * render, int columns, int rows) : Shape(render) {
 	onCollision = false;
-	vertex = new float[12]{
-		-1.0f, -1.0f, 0.f,
-		-1.0f,  1.0f, 0.f,
-		 1.0f, -1.0f, 0.f,
-		 1.0f,  1.0f, 0.f
-	};
-	SetVertices(vertex, 4);
 
 	anim = new Animation(columns, rows);
 	
@@ -55,7 +48,7 @@ bool Sprite::getCollision()
 	return onCollision;
 }
 
-void Sprite::LoadMaterial(const char * bmpFile) {
+void Sprite::LoadTexture(const char * bmpFile) {
 	TextureImporter::LoadBMP(bmpFile,texture);
 	textureID = render->ChargeTexture(texture.width, texture.height, texture.data);
 	material->BindTexture("myTextureSampler");
