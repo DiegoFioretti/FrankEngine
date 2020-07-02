@@ -19,21 +19,21 @@ bool Game::OnStart()
 	material3->LoadShaders("colorvertexshader.txt", "colorfragmentshader.txt");	
 
 	
-	pollo = new Sprite(render, 3, 4);//le pasas el renderer a utilizar y le decis por cuanto cortas el spritesheet
+	pollo = new Sprite( 3, 4);//le pasas el renderer a utilizar y le decis por cuanto cortas el spritesheet
 	pollo->SetMaterial(material1); // le asignas el material 
 	pollo->LoadTexture("spritesheet_chicken.bmp"); // le pasas el archivo a cortar (BMP es un archivo nativo del window)
 	pollo->SetPos(0, 0, 0);// Asigna la posicion
 	pollo->SetBoundingBox(2.0f, 2.0f);// le seteas el ancho y alto de la caja de colisiones
 	pollo->SetAnim(0, 11, 1.1f);// desde que frame arranca y hasta cual termina, mas el tiempo de duracion total
 
-	muchacho = new Sprite(render, 4, 4);
+	muchacho = new Sprite( 4, 4);
 	muchacho->SetMaterial(material1);
 	muchacho->LoadTexture("spritesheet_caveman.bmp");
 	muchacho->SetPos(3, 3, 0);
 	muchacho->SetBoundingBox(2.0f, 2.0f);
 	muchacho->SetAnim(0, 15, 0.1f);	
 	
-	cuadradito = new Sprite(render, 1, 1);
+	cuadradito = new Sprite( 1, 1);
 	cuadradito->SetMaterial(material1);
 	cuadradito->LoadTexture("angry.bmp");
 	cuadradito->SetPos(1, -8, 0);
@@ -43,7 +43,7 @@ bool Game::OnStart()
 	myLevel->loadBMPTileset(render, material1, "FinalTile.bmp", 2, 2);
 	myLevel->loatTXTTilemap("Tilemap.txt", 10, 10);
 
-	triangle = new Triangle(render);
+	triangle = new Triangle();
 	triangle->SetMaterial(material3);
 	triangle->SetPos(-3, 5, 0);
 

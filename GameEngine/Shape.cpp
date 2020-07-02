@@ -1,7 +1,7 @@
 #include "Shape.h"
 
 //Esto es para las formas sin textura
-Shape::Shape(Renderer * render) :Entity(render)
+Shape::Shape() 
 {
 	
 

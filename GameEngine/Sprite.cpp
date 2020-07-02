@@ -1,7 +1,7 @@
 #include "Sprite.h"
 
 // Para dibujar con textura 
-Sprite::Sprite(Renderer * render, int columns, int rows) : Shape(render) {
+Sprite::Sprite( int columns, int rows)  {
 	onCollision = false;
 
 	anim = new Animation(columns, rows);

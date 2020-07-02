@@ -25,7 +25,7 @@ protected:
 	float * colorVertex;
 
 public:
-	Shape(Renderer * render);
+	Shape();
 	virtual void Draw() = 0;
 	void DrawMesh(int typeDraw);
 	void SetVertices();

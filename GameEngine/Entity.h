@@ -1,6 +1,6 @@
 #pragma once
 #include "Exports.h"
-#include "Renderer.h"
+#include "Renderizer.h"
 #include "BoundingBox.h"
 
 #include<iostream>
@@ -23,8 +23,7 @@ protected:
 	BoundingBox *boundBox;
 
 public:
-
-	Entity(Renderer * renderPTR);
+	Entity();
 	virtual void Draw() = 0;
 	void SetPos(float x, float y, float z);
 	void SetRot(float x, float y, float z);

@@ -32,7 +32,7 @@ public:
 	void setCollision();
 	bool getCollision();
 
-	Sprite(Renderer * render, int columns, int rows);
+	Sprite(int columns, int rows);
 	~Sprite();
 };
 

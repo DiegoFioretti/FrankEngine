@@ -1,5 +1,6 @@
 #include "Exports.h"
 #include "Renderer.h"
+#include "Renderizer.h"
 #include "Window.h"
 #include <iostream>
 using namespace std;
@@ -8,6 +9,7 @@ private:
 	float _deltaTime=0;
 	float _lastFrame=0;
 	float _currentFrame=0;
+	Renderizer* rnzr;
 
 protected:
 	Renderer * render;

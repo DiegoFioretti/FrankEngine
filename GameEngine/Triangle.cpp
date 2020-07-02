@@ -1,5 +1,5 @@
 #include "Triangle.h"
-Triangle::Triangle(Renderer *render) :Shape(render)
+Triangle::Triangle() 
 {
 	
 	vertex = new float[9]
