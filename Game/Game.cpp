@@ -64,20 +64,21 @@ bool Game::OnUpdate() {
 	pollo->UpdAnim(DeltaTime());
 	triangle->SetRot(0.0f, 0.0f, i / 5);
 
+
 	//Inputs (letra a tocar, 0 const y 1 una sola vez)
 	if (inp->keyCall('a', 0)) {
 		pollo->SetAnim(0, 2, 0.1f);
-		pollo->Translate(-0.1f, 0.0f, 0.0f);
+		pollo->Translate(-0.03f , 0.0f, 0.0f);
 	}
 	if (inp->keyCall('d', 0)) {
 		pollo->SetAnim(3, 5, 0.1f);
-		pollo->Translate(0.1f, 0.0f, 0.0f);
+		pollo->Translate(0.03f, 0.0f, 0.0f);
 	}
 	if (inp->keyCall('w', 0)) {
-		pollo->Translate(0, 0.1f, 0);
+		pollo->Translate(0, 0.03f, 0);
 	}
 	if (inp->keyCall('s', 0)) {
-		pollo->Translate(0, -0.1f, 0);
+		pollo->Translate(0, -0.03f, 0);
 	}
 	if (inp->keyCall('g', 0)) {
 		pollo->SetScale(pollo->GetScale().x+0.01f,1.0f,0);

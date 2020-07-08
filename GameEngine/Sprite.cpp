@@ -28,7 +28,15 @@ void Sprite::DisposeTexture() {
 }
 
 void Sprite::SetAnim(int initF, int finishF, float timePerF) {
-	anim->SetAnimation(initF, finishF, timePerF);
+	if (initF != animB ){
+		animB = initF;
+		anim->SetAnimation(initF, finishF, timePerF);
+	}
+	if (finishF != animE){
+		animE = finishF;
+		anim->SetAnimation(initF, finishF, timePerF);
+	}
+	
 }
 
 

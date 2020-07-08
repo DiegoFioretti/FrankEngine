@@ -17,6 +17,8 @@ private:
 	bool onCollision;
 
 	bool ShouldDispouseTexture;
+	int animB;
+	int animE;
 
 public:
 	void Draw() override;

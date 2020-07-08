@@ -24,6 +24,9 @@ private:
 
 	Input * inp;
 	
+	bool setAnimL = false;
+	bool setAnimR = false;
+	bool cancel = false;
 public:
 	Game();
 	~Game();
