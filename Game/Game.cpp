@@ -55,17 +55,23 @@ bool Game::OnStart()
 bool Game::OnUpdate() {
 	i++;
 	//chequea las colisiones entre 2 sprites
-	CollisionManager::GetInstance()->CheckColision(pollo,muchacho);
+	//CollisionManager::GetInstance()->MakeCollision(pollo,muchacho);
 	//CollisionManager::GetInstance()->CheckTileColision(pollo, myLevel, 2);
 	//CollisionManager::GetInstance()->CheckColision(pollo,caja);
 
-	//esto es cada cuanto suma la animacion, en un futuro sera un DeltaTime
 	muchacho->UpdAnim(DeltaTime());
 	pollo->UpdAnim(DeltaTime());
 	triangle->SetRot(0.0f, 0.0f, i / 5);
 
 
+	col->MakeCollision(pollo,muchacho);
+
+	if (col->CheckCollision(pollo, muchacho)){
+		//cout << "aaaaaaaaaaaaaaaa" << endl;
+	}
+
 	//Inputs (letra a tocar, 0 const y 1 una sola vez)
+
 	if (inp->keyCall('a', 0)) {
 		pollo->SetAnim(0, 2, 0.1f);
 		pollo->Translate(-0.03f , 0.0f, 0.0f);
@@ -86,6 +92,7 @@ bool Game::OnUpdate() {
 	if (inp->keyCall('r', 0)) {
 		render->setClearScreenColor(0.8f,0.42,0.23f,1.0f);
 	}
+
 	return true;
 }
 

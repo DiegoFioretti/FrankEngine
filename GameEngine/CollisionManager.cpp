@@ -44,7 +44,7 @@ void CollisionManager::HorizontalCollision(Entity* EntityA, Entity* EntityB,
 	}
 }
 
-void CollisionManager::CheckColision(Entity* a, Entity* b) {
+void CollisionManager::MakeCollision(Entity* a, Entity* b) {
 
 	BoundingBox* A = a->GetBoundingBox();
 	BoundingBox* B = b->GetBoundingBox();
@@ -68,6 +68,31 @@ void CollisionManager::CheckColision(Entity* a, Entity* b) {
 		}
 	}
 }
+
+void CollisionManager::WallCollision(Entity* a) {
+	BoundingBox* A = a->GetBoundingBox();
+	vec2 pos = A->GetPos();
+	vec2 topR ;
+	topR.y = abs(pos.y + (A->GetHeigth() / 2)) ;
+	topR.x = abs(pos.x + (A->GetWidth() / 2));
+}
+
+bool CollisionManager::CheckCollision(Entity* a, Entity* b) {
+
+	BoundingBox* A = a->GetBoundingBox();
+	BoundingBox* B = b->GetBoundingBox();
+	vec2 dif = A->GetPos() - B->GetPos();
+	float diffX = abs(dif.x);
+	float diffY = abs(dif.y);
+
+	if (diffX <= (A->GetWidth() / 2 + B->GetWidth() / 2) &&
+		diffY <= (A->GetHeigth() / 2 + B->GetHeigth() / 2)) {
+		return true;
+	}
+
+	return false;
+}
+
 
 void CollisionManager::AddEntity(Entity* entidad) {
 

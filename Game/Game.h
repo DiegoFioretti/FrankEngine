@@ -24,6 +24,8 @@ private:
 
 	Input * inp;
 	
+	CollisionManager* col;
+
 	bool setAnimL = false;
 	bool setAnimR = false;
 	bool cancel = false;

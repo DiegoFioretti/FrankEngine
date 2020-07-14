@@ -26,7 +26,11 @@ private:
 public:
 	static CollisionManager * GetInstance();
 	
-	void CheckColision(Entity* a, Entity* b);
+	void MakeCollision(Entity* a, Entity* b);
+
+	void WallCollision(Entity* a);
+
+	bool CheckCollision(Entity* a, Entity* b);
 
 	void CheckTileColision(Entity* a, Entity* level, int tileID);
 	~CollisionManager();
