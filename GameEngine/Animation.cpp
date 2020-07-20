@@ -2,7 +2,7 @@
 
 //Le pasas las columnas y filas de la animacion
 Animation::Animation(int columns, int rows) {
-	sprSheet = new SpriteSheet(columns, rows, 1, 1);
+	sprSheet = new SpriteSheet(columns, rows);
 	initialFrame = 0;
 	lastFrame = 0;
 	timePerFrame = 0.0f;

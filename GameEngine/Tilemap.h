@@ -6,6 +6,7 @@
 #include <sstream>
 #include <algorithm>
 #include <cstring>
+
 #define MAXTILES 20
 #define MAXTILESINMAP 250
 
@@ -21,8 +22,10 @@ private:
 	bool _tilesetExist;
 
 	int _tileAmount;
+	Tile* auxTile;
 
-	Tile* _tileArchive[MAXTILES];
+	vector <Tile*> _tileArchive;
+	//Tile* _tileArchive[MAXTILES];
 
 	int _mapGuide[MAXTILESINMAP];
 
@@ -30,7 +33,7 @@ private:
 public:
 	Tilemap(float x, float y, float z);
 	~Tilemap();
-	void loadBMPTileset(Renderer* render, Material* material, const char* bmpFile, int columns, int rows);
+	void loadBMPTileset( Material* material, const char* bmpFile, int columns, int rows);
 	void loatTXTTilemap(const char* txtFile, int width, int height);
 	void DrawTiles();
 	void UpdateTilesAnim(float time);

@@ -3,17 +3,15 @@
 // Para dibujar con textura 
 Sprite::Sprite( int columns, int rows)  {
 	onCollision = false;
-
 	anim = new Animation(columns, rows);
-	
 	uvArray = anim->UpdateAnimation(0);
+
 	SetTextureVertex(uvArray, 4);
 }
 
 void Sprite::SetTextureVertex(float * vertices, int count) {
 	DisposeTexture();
-
-	uvVtxCount = count;
+	
 	ShouldDispouseTexture = true;
 	uvBufferID = render->GenBuffer(vertices, sizeof(float) * count * 2);
 	
@@ -59,7 +57,7 @@ bool Sprite::getCollision()
 void Sprite::LoadTexture(const char * bmpFile) {
 	TextureImporter::LoadBMP(bmpFile,texture);
 	textureID = render->ChargeTexture(texture.width, texture.height, texture.data);
-	material->BindTexture("myTextureSampler");
+	
 }
 
 

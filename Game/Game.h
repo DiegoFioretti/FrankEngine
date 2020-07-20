@@ -10,14 +10,14 @@
 
 class Game : public GameBase {
 private:
-	int i;
+	float i;
 	Sprite* pollo;
 	Sprite* muchacho;
 	Sprite* cuadradito;
 
-	Tilemap* myLevel;
-
 	Triangle* triangle;
+	
+	Tilemap* myLevel;
 
 	Material * material1;
 	Material * material3;

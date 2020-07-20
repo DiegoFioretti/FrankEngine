@@ -6,10 +6,6 @@ Tilemap::Tilemap(float x, float y, float z)
 	_y = y;
 	_z = z;
 
-	for (size_t i = 0; i < MAXTILES; i++)
-	{
-		_tileArchive[i] = NULL;
-	}
 	for (size_t i = 0; i < MAXTILESINMAP; i++)
 	{
 		_mapGuide[i] = -1;
@@ -21,41 +17,24 @@ Tilemap::Tilemap(float x, float y, float z)
 
 Tilemap::~Tilemap()
 {
-	for (size_t i = 0; i < MAXTILES; i++)
-	{
-		if (_tileArchive[i] != NULL)
-		{
-			delete _tileArchive[i];
-		}
-	}
+	
 }
 
-void Tilemap::loadBMPTileset(Renderer* render, Material* material, const char* bmpFile, int columns, int rows)
+void Tilemap::loadBMPTileset(Material* material, const char* bmpFile, int columns, int rows)
 {
-
 	_tileAmount = columns * rows;
-	if (_tileAmount > MAXTILES)
+	for (int i = 0; i < _tileAmount; i++)
 	{
-		printf("MAXIMO DE TILES ALCANZADO. CANCELANDO OPERACION");
-	}
-	else
-	{
-		for (size_t i = 0; i < _tileAmount; i++)
-		{
-			_tileArchive[i] = new Tile(render, columns, rows, i);
-			_tileArchive[i]->SetMaterial(material);
-			_tileArchive[i]->LoadTexture(bmpFile);
-			_tileArchive[i]->SetBoundingBox(2.0f, 2.0f);
-			_tileArchive[i]->SetAnim(i, i, 0.5f);
-		}
+		auxTile = new Tile(0,0,0,i,true);
+		auxTile->SetMaterial(material);
+		auxTile->LoadTexture(bmpFile);
+		auxTile->SetBoundingBox(2.0f, 2.0f);
 
-		_tileArchive[0]->SetPos(-3, 6, 0);
-		_tileArchive[1]->SetPos(-1, 6, 0);
-		_tileArchive[2]->SetPos(1, 6, 0);
-		_tileArchive[3]->SetPos(3, 6, 0);
-
+		_tileArchive.push_back(auxTile);
 		_tilesetExist = true;
 	}
+
+	
 }
 
 void Tilemap::loatTXTTilemap(const char* txtFile, int width, int height)
@@ -144,7 +123,7 @@ void Tilemap::UpdateTilesAnim(float time)
 			{
 				num++;
 			}
-			_tileArchive[_mapGuide[num]]->UpdAnim(time);
+			//_tileArchive[_mapGuide[num]]->UpdAnim(time);
 			num++;
 		}
 	}

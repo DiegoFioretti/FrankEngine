@@ -40,7 +40,7 @@ bool Game::OnStart()
 	cuadradito->SetBoundingBox(2.0f, 2.0f);
 
 	myLevel = new Tilemap( -10 , 10, 0);
-	myLevel->loadBMPTileset(render, material1, "FinalTile.bmp", 2, 2);
+	myLevel->loadBMPTileset(material1, "Verde.bmp", 2, 2);
 	myLevel->loatTXTTilemap("Tilemap.txt", 10, 10);
 
 	triangle = new Triangle();
@@ -53,18 +53,19 @@ bool Game::OnStart()
 }
 //RECORDATORIO crear delta time
 bool Game::OnUpdate() {
-	i++;
+
 	//chequea las colisiones entre 2 sprites
 	//CollisionManager::GetInstance()->MakeCollision(pollo,muchacho);
 	//CollisionManager::GetInstance()->CheckTileColision(pollo, myLevel, 2);
 	//CollisionManager::GetInstance()->CheckColision(pollo,caja);
-
+	
 	muchacho->UpdAnim(DeltaTime());
 	pollo->UpdAnim(DeltaTime());
 	triangle->SetRot(0.0f, 0.0f, i / 5);
 
 
 	col->MakeCollision(pollo,muchacho);
+	col->MakeCollision(pollo, cuadradito);
 
 	if (col->CheckCollision(pollo, muchacho)){
 		//cout << "aaaaaaaaaaaaaaaa" << endl;
@@ -74,17 +75,17 @@ bool Game::OnUpdate() {
 
 	if (inp->keyCall('a', 0)) {
 		pollo->SetAnim(0, 2, 0.1f);
-		pollo->Translate(-0.03f , 0.0f, 0.0f);
+		pollo->Translate(-10.53f*DeltaTime() , 0.0f, 0.0f);
 	}
 	if (inp->keyCall('d', 0)) {
 		pollo->SetAnim(3, 5, 0.1f);
-		pollo->Translate(0.03f, 0.0f, 0.0f);
+		pollo->Translate(10.53f * DeltaTime(), 0.0f, 0.0f);
 	}
 	if (inp->keyCall('w', 0)) {
-		pollo->Translate(0, 0.03f, 0);
+		pollo->Translate(0, 10.03f * DeltaTime(), 0);
 	}
 	if (inp->keyCall('s', 0)) {
-		pollo->Translate(0, -0.03f, 0);
+		pollo->Translate(0, -10.03f * DeltaTime(), 0);
 	}
 	if (inp->keyCall('g', 0)) {
 		pollo->SetScale(pollo->GetScale().x+0.01f,1.0f,0);
@@ -98,11 +99,14 @@ bool Game::OnUpdate() {
 
 //Esto es lo que determina que va a dibujarse
 void Game::OnDraw(){
-	myLevel->DrawTiles();
-	myLevel->UpdateTilesAnim(0.05f);
-	//cuadradito->Draw();
-	pollo->Draw();
-	muchacho->Draw();	
+
+		myLevel->DrawTiles();
+		cuadradito->Draw();
+		pollo->Draw();
+		muchacho->Draw();
+	
+	
+	
 	//triangle->Draw();
 }
 
@@ -112,7 +116,7 @@ bool Game::OnStop() {
 	delete material1;
 	delete material3;
 
-	delete myLevel;
+	//delete myLevel;
 
 	delete triangle;
 
