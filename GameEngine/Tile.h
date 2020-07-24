@@ -1,10 +1,13 @@
 #pragma once
-#include "CollisionManager.h"
+
 #include "Shape.h"
+#include "CollisionManager.h"
 #include "TextureImporter.h"
 
 class FRANKENGINE_API Tile : public Shape
 {
+protected:
+	float* uvArray;
 private:
 	bool _walkable;
 	int _id;
@@ -12,7 +15,7 @@ private:
 	float _y;
 	float _z;
 	BMPheader texture;
-	float* uvArray;
+	
 	unsigned int uvBufferID=0;
 	unsigned int textureID=0;
 	int uvVtxCount;
@@ -28,5 +31,6 @@ public:
 	void DisposeTexture();
 	bool isWalkable();
 	void setWalkable(bool walk);
+	void UVArr(float * uv);
 	int getTileID();
 };

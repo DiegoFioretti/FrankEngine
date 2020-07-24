@@ -25,8 +25,9 @@ private:
 	Tile* auxTile;
 
 	vector <Tile*> _tileArchive;
-	//Tile* _tileArchive[MAXTILES];
-
+	Tile* test;
+	vector<float*>* uvVector;
+	float* uvArrays;
 	int _mapGuide[MAXTILESINMAP];
 
 	int num = 0;
@@ -38,6 +39,9 @@ public:
 	void DrawTiles();
 	void UpdateTilesAnim(float time);
 	int GetTileAmount();
+	void UpdateAnim();
+	void CutTileSet(int col, int row);
+	float* GetTile(int index);
 	Tile* GetTileInfo(int tileid);
 };
 

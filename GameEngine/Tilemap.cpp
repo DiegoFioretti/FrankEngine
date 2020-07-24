@@ -5,7 +5,7 @@ Tilemap::Tilemap(float x, float y, float z)
 	_x = x;
 	_y = y;
 	_z = z;
-
+	 
 	for (size_t i = 0; i < MAXTILESINMAP; i++)
 	{
 		_mapGuide[i] = -1;
@@ -22,20 +22,48 @@ Tilemap::~Tilemap()
 
 void Tilemap::loadBMPTileset(Material* material, const char* bmpFile, int columns, int rows)
 {
+	CutTileSet(columns, rows);
 	_tileAmount = columns * rows;
-	for (int i = 0; i < _tileAmount; i++)
-	{
+	for (int i = 0; i < _tileAmount; i++){
+
 		auxTile = new Tile(0,0,0,i,true);
 		auxTile->SetMaterial(material);
 		auxTile->LoadTexture(bmpFile);
 		auxTile->SetBoundingBox(2.0f, 2.0f);
-
+		auxTile->UVArr(GetTile(i));
 		_tileArchive.push_back(auxTile);
 		_tilesetExist = true;
 	}
-
-	
 }
+
+void Tilemap::CutTileSet(int col, int row) {
+
+	uvVector = new vector<float*>();
+	float frameW = 1.0f / col;
+	float frameH = 1.0f / row;
+	int totalSprites = col * row;
+
+	for (int i = 0; i < totalSprites; i++) {
+		float x = (i % col) * frameW;
+		float y = (i / col) * frameH;
+
+		uvArrays = new float[8]
+		{
+			 x , 1 - (y + frameH),
+			 x , 1 - y ,
+			(x + frameW) , 1 - (y + frameH),
+			(x + frameW) , 1 - (y)
+		};
+
+		uvVector->push_back(uvArrays);
+	}
+
+}
+
+float* Tilemap::GetTile(int index) {
+	return uvVector->at(index);
+}
+
 
 void Tilemap::loatTXTTilemap(const char* txtFile, int width, int height)
 {
@@ -70,6 +98,7 @@ void Tilemap::loatTXTTilemap(const char* txtFile, int width, int height)
 		//paso el tring a un array de ints
 		num = 0;
 		
+		//Arreglar esto para que cuando sea -38 pase abajo--------------
 		int mapa[MAXTILESINMAP];
 		for (int i = 0; i < MAXTILESINMAP; i++)
 		{
@@ -96,6 +125,7 @@ void Tilemap::loatTXTTilemap(const char* txtFile, int width, int height)
 
 void Tilemap::DrawTiles()
 {
+	UpdateAnim();
 	num = 0;
 	for (size_t i = 0; i < _mapWidth; i++)
 	{
@@ -110,6 +140,14 @@ void Tilemap::DrawTiles()
 			num++;
 		}
 	}
+}
+
+void Tilemap::UpdateAnim() {
+
+	for (int i = 0; i < _tileAmount; i++) {
+		//_tileArchive[i]->UVArr();
+	}
+
 }
 
 void Tilemap::UpdateTilesAnim(float time)
@@ -145,3 +183,4 @@ Tile* Tilemap::GetTileInfo(int tileid)
 		return NULL;
 	}
 }
+

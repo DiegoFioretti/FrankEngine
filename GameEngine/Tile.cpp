@@ -7,8 +7,15 @@ Tile::Tile(float x, float y, float z, int id, bool walk)
 	_z = z;
 	_id=id;
 	_walkable = walk;
+	//anim = new Animation(2, 2);
+	//uvArray = anim->UpdateAnimation(0);
 	SetTextureVertex(uvArray, 4);
 }
+
+void Tile::UVArr(float * uv) {
+	SetTextureVertex(uv, 4);
+}
+
 
 void Tile::SetTextureVertex(float* vertices, int count) {
 	DisposeTexture();

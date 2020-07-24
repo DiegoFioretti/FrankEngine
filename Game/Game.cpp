@@ -15,9 +15,6 @@ bool Game::OnStart()
 	material1 = new Material();
 	material1->LoadShaders("VertexTexture.txt", "FragmentTexture.txt");
 
-	material3 = new Material();	
-	material3->LoadShaders("colorvertexshader.txt", "colorfragmentshader.txt");	
-
 	
 	pollo = new Sprite( 3, 4);//le pasas el renderer a utilizar y le decis por cuanto cortas el spritesheet
 	pollo->SetMaterial(material1); // le asignas el material 
@@ -40,12 +37,8 @@ bool Game::OnStart()
 	cuadradito->SetBoundingBox(2.0f, 2.0f);
 
 	myLevel = new Tilemap( -10 , 10, 0);
-	myLevel->loadBMPTileset(material1, "Verde.bmp", 2, 2);
+	myLevel->loadBMPTileset(material1, "FinalTile.bmp", 2, 2);
 	myLevel->loatTXTTilemap("Tilemap.txt", 10, 10);
-
-	triangle = new Triangle();
-	triangle->SetMaterial(material3);
-	triangle->SetPos(-3, 5, 0);
 
 	inp = new Input(window);
 
@@ -54,14 +47,9 @@ bool Game::OnStart()
 //RECORDATORIO crear delta time
 bool Game::OnUpdate() {
 
-	//chequea las colisiones entre 2 sprites
-	//CollisionManager::GetInstance()->MakeCollision(pollo,muchacho);
-	//CollisionManager::GetInstance()->CheckTileColision(pollo, myLevel, 2);
-	//CollisionManager::GetInstance()->CheckColision(pollo,caja);
 	
 	muchacho->UpdAnim(DeltaTime());
 	pollo->UpdAnim(DeltaTime());
-	triangle->SetRot(0.0f, 0.0f, i / 5);
 
 
 	col->MakeCollision(pollo,muchacho);
@@ -104,10 +92,6 @@ void Game::OnDraw(){
 		cuadradito->Draw();
 		pollo->Draw();
 		muchacho->Draw();
-	
-	
-	
-	//triangle->Draw();
 }
 
 
@@ -118,7 +102,6 @@ bool Game::OnStop() {
 
 	//delete myLevel;
 
-	delete triangle;
 
 	delete pollo;
 	delete muchacho;

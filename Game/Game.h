@@ -14,8 +14,6 @@ private:
 	Sprite* pollo;
 	Sprite* muchacho;
 	Sprite* cuadradito;
-
-	Triangle* triangle;
 	
 	Tilemap* myLevel;
 
