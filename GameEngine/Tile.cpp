@@ -75,3 +75,11 @@ void Tile::LoadTexture(const char* bmpFile) {
 	TextureImporter::LoadBMP(bmpFile, texture);
 	textureID = render->ChargeTexture(texture.width, texture.height, texture.data);
 }
+
+void Tile::TileCol() {
+
+	if (_walkable)
+	{
+
+	}
+}

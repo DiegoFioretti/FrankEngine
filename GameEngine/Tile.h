@@ -15,11 +15,11 @@ private:
 	float _y;
 	float _z;
 	BMPheader texture;
-	
 	unsigned int uvBufferID=0;
 	unsigned int textureID=0;
 	int uvVtxCount;
 	bool ShouldDispouseTexture;
+	CollisionManager* col;
 
 public:
 	Tile(float x, float y, float z, int id, bool walk);
@@ -33,4 +33,5 @@ public:
 	void setWalkable(bool walk);
 	void UVArr(float * uv);
 	int getTileID();
+	void TileCol();
 };

@@ -6,6 +6,7 @@
 #include <sstream>
 #include <algorithm>
 #include <cstring>
+#include <iostream>
 
 #define MAXTILES 20
 #define MAXTILESINMAP 250
@@ -23,7 +24,7 @@ private:
 
 	int _tileAmount;
 	Tile* auxTile;
-
+	CollisionManager* col;
 	vector <Tile*> _tileArchive;
 	Tile* test;
 	vector<float*>* uvVector;
@@ -43,5 +44,8 @@ public:
 	void CutTileSet(int col, int row);
 	float* GetTile(int index);
 	Tile* GetTileInfo(int tileid);
+	void MakeColTile(int numTile, Entity* A);
+	bool CheckColTile(int numTile, Entity* A);
+
 };
 

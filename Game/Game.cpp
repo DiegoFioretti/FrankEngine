@@ -54,9 +54,11 @@ bool Game::OnUpdate() {
 
 	col->MakeCollision(pollo,muchacho);
 	col->MakeCollision(pollo, cuadradito);
+	myLevel->MakeColTile(1, pollo);
 
-	if (col->CheckCollision(pollo, muchacho)){
-		//cout << "aaaaaaaaaaaaaaaa" << endl;
+	cout << "x:" << pollo->GetPos().x << "y: " << pollo->GetPos().y << "z: " << pollo->GetPos().z << endl;
+	if (myLevel->CheckColTile(2, muchacho)){
+		cout << "aaaaaaaaaaaaaaaa" << endl;
 	}
 
 	//Inputs (letra a tocar, 0 const y 1 una sola vez)

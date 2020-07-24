@@ -125,6 +125,9 @@ void Tilemap::loatTXTTilemap(const char* txtFile, int width, int height)
 
 void Tilemap::DrawTiles()
 {
+
+	//cout<<"x:" << _tileArchive[2]->GetPos().x <<"y: "<< _tileArchive[2]->GetPos().y<<"z: "<< _tileArchive[2]->GetPos().z<<endl;
+
 	UpdateAnim();
 	num = 0;
 	for (size_t i = 0; i < _mapWidth; i++)
@@ -184,3 +187,13 @@ Tile* Tilemap::GetTileInfo(int tileid)
 	}
 }
 
+void Tilemap::MakeColTile(int numTile, Entity* A) {
+
+	col->MakeCollision(_tileArchive[numTile], A);
+
+}
+
+bool Tilemap::CheckColTile(int numTile, Entity* A) {
+
+	return col->CheckCollision(_tileArchive[numTile], A);
+}
