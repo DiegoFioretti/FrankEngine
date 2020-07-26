@@ -75,6 +75,7 @@ void Tilemap::loatTXTTilemap(const char* txtFile, int width, int height)
 	{
 		_mapWidth = width;
 		_mapHeight = height;
+		_tileAmount = _mapWidth * _mapHeight;
 	//-------------------------------
 	//leo el tilemap y lo guardo en un sting
 		std::string tile;
@@ -139,10 +140,22 @@ void Tilemap::DrawTiles()
 				num++;
 			}
 			_tileArchive[_mapGuide[num]]->SetPos(_x + (2.0f * j), _y - (2.0f * i), _z);
+			
+			
+			if (first)
+			{
+				pos.push_back(vec3(_x + (2.0f * j), _y - (2.0f * i), _z));
+				totalTiles.push_back(_tileArchive[_mapGuide[num]]);
+				totalTiles[_mapGuide[num]]->SetPos(_x + (2.0f * j), _y - (2.0f * i), _z);
+				
+			}
 			_tileArchive[_mapGuide[num]]->Draw();
 			num++;
+			
 		}
 	}
+	first = false;
+
 }
 
 void Tilemap::UpdateAnim() {
@@ -187,13 +200,36 @@ Tile* Tilemap::GetTileInfo(int tileid)
 	}
 }
 
-void Tilemap::MakeColTile(int numTile, Entity* A) {
-
-	col->MakeCollision(_tileArchive[numTile], A);
-
+void Tilemap::MakeColTile( Entity* A, int numTile ) {
+	
+	for (int i = 0; i < totalTiles.size(); i++)
+	{
+		if (totalTiles[i]->getTileID()==numTile)
+		{
+			//cout << i << "=" << totalTiles[i]->GetPos().x << " , "<< totalTiles[i]->GetPos().y << endl;
+			col = new CollisionManager();
+			tileCol.push_back(col);
+			tileNum.push_back(i);
+		}
+	}
+	for (int i = 0; i < tileCol.size(); i++)
+	{
+		totalTiles[tileNum[i]]->SetPos(pos[tileNum[i]].x, pos[tileNum[i]].y, pos[tileNum[i]].z);
+		tileCol[i]->MakeCollision(A, totalTiles[tileNum[i]]);
+	}
+	
+	Clean();
 }
 
 bool Tilemap::CheckColTile(int numTile, Entity* A) {
 
 	return col->CheckCollision(_tileArchive[numTile], A);
+}
+
+void Tilemap::Clean() {
+
+
+	tileCol.resize(0);
+	tileNum.resize(0);
+	//delete col;
 }

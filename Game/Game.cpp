@@ -52,11 +52,12 @@ bool Game::OnUpdate() {
 	pollo->UpdAnim(DeltaTime());
 
 
-	col->MakeCollision(pollo,muchacho);
+	col->MakeCollision(pollo, muchacho);
 	col->MakeCollision(pollo, cuadradito);
-	myLevel->MakeColTile(1, pollo);
+	//col->MakeCollision(pollo, myLevel);
+	myLevel->MakeColTile(pollo,0);
 
-	cout << "x:" << pollo->GetPos().x << "y: " << pollo->GetPos().y << "z: " << pollo->GetPos().z << endl;
+	//cout << "x:" << pollo->GetPos().x << "y: " << pollo->GetPos().y << "z: " << pollo->GetPos().z << endl;
 	if (myLevel->CheckColTile(2, muchacho)){
 		cout << "aaaaaaaaaaaaaaaa" << endl;
 	}

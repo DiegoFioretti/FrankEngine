@@ -21,11 +21,16 @@ private:
 	float _y;
 	float _z;
 	bool _tilesetExist;
+	bool first = true;
+	vector <vec3> pos;
 
 	int _tileAmount;
 	Tile* auxTile;
 	CollisionManager* col;
 	vector <Tile*> _tileArchive;
+	vector <Tile*> totalTiles;
+	vector <CollisionManager*> tileCol;
+	vector <int> tileNum;
 	Tile* test;
 	vector<float*>* uvVector;
 	float* uvArrays;
@@ -44,8 +49,9 @@ public:
 	void CutTileSet(int col, int row);
 	float* GetTile(int index);
 	Tile* GetTileInfo(int tileid);
-	void MakeColTile(int numTile, Entity* A);
+	void MakeColTile(Entity* A, int numTile);
 	bool CheckColTile(int numTile, Entity* A);
+	void Clean();
 
 };
 

@@ -9,9 +9,10 @@ using namespace std;
 
 class FRANKENGINE_API CollisionManager
 {
+	
 private:
 	/*Box Collision*/
-	CollisionManager();
+	
 
 	void VerticalCollision(Entity * EntityA, Entity* EntityB,
 		BoundingBox * A, BoundingBox * B, float penetrateY);
@@ -24,6 +25,8 @@ private:
 	void AddEntity(Entity* entidad);
 
 public:
+	CollisionManager();
+
 	static CollisionManager * GetInstance();
 	
 	void MakeCollision(Entity* a, Entity* b);
