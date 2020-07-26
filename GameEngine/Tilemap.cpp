@@ -8,17 +8,14 @@ Tilemap::Tilemap(float x, float y, float z)
 	 
 	for (size_t i = 0; i < MAXTILESINMAP; i++)
 	{
-		_mapGuide[i] = -1;
+		_mapGuide[i] = -10;
 	}
 	_tileAmount = 0;
 	_tilesetExist = false;
 }
 
 
-Tilemap::~Tilemap()
-{
-	
-}
+
 
 void Tilemap::loadBMPTileset(Material* material, const char* bmpFile, int columns, int rows)
 {
@@ -100,6 +97,16 @@ void Tilemap::loatTXTTilemap(const char* txtFile, int width, int height)
 		num = 0;
 		
 		//Arreglar esto para que cuando sea -38 pase abajo--------------
+		for (int i = 0; i < tile.length(); i++)
+		{
+			if ((tile[i]-48)>-2)
+			{
+				_mapGuide[num] = int(tile[i]) - 48;
+				num++;
+			}
+			
+		}
+		/*
 		int mapa[MAXTILESINMAP];
 		for (int i = 0; i < MAXTILESINMAP; i++)
 		{
@@ -118,8 +125,8 @@ void Tilemap::loatTXTTilemap(const char* txtFile, int width, int height)
 		for (size_t i = 0; i < MAXTILESINMAP; i++)
 		{
 			_mapGuide[i] = mapa[i];
-		}
-
+		}*/
+	
 		//---------------------
 	}
 }
@@ -129,33 +136,53 @@ void Tilemap::DrawTiles()
 
 	//cout<<"x:" << _tileArchive[2]->GetPos().x <<"y: "<< _tileArchive[2]->GetPos().y<<"z: "<< _tileArchive[2]->GetPos().z<<endl;
 
-	UpdateAnim();
+	
 	num = 0;
 	for (size_t i = 0; i < _mapWidth; i++)
 	{
 		for (size_t j = 0; j < _mapHeight; j++)
 		{
+
+			if (_mapGuide[num] < 0)
+			{
+
+			}
+			else
+			{
+				_tileArchive[_mapGuide[num]]->SetPos(_x + (2.0f * j), _y - (2.0f * i), _z);
+				_tileArchive[_mapGuide[num]]->Draw();
+
+				if (first)
+				{
+					pos.push_back(vec3(_x + (2.0f * j), _y - (2.0f * i), _z));
+					//totalTiles.push_back(_tileArchive[_mapGuide[num]]);
+					//totalTiles[_mapGuide[num]]->SetPos(_x + (2.0f * j), _y - (2.0f * i), _z);
+
+				}
+			}
+			num++;
+			/*
 			while (_mapGuide[num] < 0)
 			{
 				num++;
 			}
 			_tileArchive[_mapGuide[num]]->SetPos(_x + (2.0f * j), _y - (2.0f * i), _z);
-			
-			
+
+
 			if (first)
 			{
 				pos.push_back(vec3(_x + (2.0f * j), _y - (2.0f * i), _z));
 				totalTiles.push_back(_tileArchive[_mapGuide[num]]);
 				totalTiles[_mapGuide[num]]->SetPos(_x + (2.0f * j), _y - (2.0f * i), _z);
-				
+
 			}
 			_tileArchive[_mapGuide[num]]->Draw();
 			num++;
-			
+
+		}*/
 		}
 	}
 	first = false;
-
 }
 
 void Tilemap::UpdateAnim() {
@@ -201,35 +228,45 @@ Tile* Tilemap::GetTileInfo(int tileid)
 }
 
 void Tilemap::MakeColTile( Entity* A, int numTile ) {
-	
-	for (int i = 0; i < totalTiles.size(); i++)
+
+	if (!first)
 	{
-		if (totalTiles[i]->getTileID()==numTile)
+		for (int i = 0; i < _tileAmount; i++)
 		{
-			//cout << i << "=" << totalTiles[i]->GetPos().x << " , "<< totalTiles[i]->GetPos().y << endl;
-			col = new CollisionManager();
-			tileCol.push_back(col);
-			tileNum.push_back(i);
+			if (_mapGuide[i] == numTile)
+			{
+				_tileArchive[numTile]->SetPos(pos[i].x, pos[i].y, pos[i].z);
+				cul->MakeCollision(A, _tileArchive[numTile]);
+			}
 		}
 	}
-	for (int i = 0; i < tileCol.size(); i++)
-	{
-		totalTiles[tileNum[i]]->SetPos(pos[tileNum[i]].x, pos[tileNum[i]].y, pos[tileNum[i]].z);
-		tileCol[i]->MakeCollision(A, totalTiles[tileNum[i]]);
-	}
 	
-	Clean();
+
+	/*
+	for (int i = 0; i < totalTiles.size(); i++)
+	{
+
+		
+		if (totalTiles[i]->getTileID()==numTile)
+		{
+
+			totalTiles[i]->SetPos(pos[i].x, pos[i].y, pos[i].z);
+			cul->MakeCollision(A, totalTiles[i]);
+
+		}
+	}
+	*/
+	
 }
 
 bool Tilemap::CheckColTile(int numTile, Entity* A) {
 
-	return col->CheckCollision(_tileArchive[numTile], A);
+	return cul->CheckCollision(_tileArchive[numTile], A);
 }
 
-void Tilemap::Clean() {
-
-
-	tileCol.resize(0);
-	tileNum.resize(0);
-	//delete col;
+Tilemap::~Tilemap()
+{
+	auxTile = NULL;
+	_tileArchive.clear();
+	delete uvVector;
 }

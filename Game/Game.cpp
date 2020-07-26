@@ -56,6 +56,7 @@ bool Game::OnUpdate() {
 	col->MakeCollision(pollo, cuadradito);
 	//col->MakeCollision(pollo, myLevel);
 	myLevel->MakeColTile(pollo,0);
+	myLevel->MakeColTile(pollo, 2);
 
 	//cout << "x:" << pollo->GetPos().x << "y: " << pollo->GetPos().y << "z: " << pollo->GetPos().z << endl;
 	if (myLevel->CheckColTile(2, muchacho)){

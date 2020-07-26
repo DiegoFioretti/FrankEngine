@@ -26,11 +26,9 @@ private:
 
 	int _tileAmount;
 	Tile* auxTile;
-	CollisionManager* col;
+	CollisionManager* cul;
 	vector <Tile*> _tileArchive;
 	vector <Tile*> totalTiles;
-	vector <CollisionManager*> tileCol;
-	vector <int> tileNum;
 	Tile* test;
 	vector<float*>* uvVector;
 	float* uvArrays;
