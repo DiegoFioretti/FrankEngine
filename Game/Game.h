@@ -18,7 +18,6 @@ private:
 	Tilemap* myLevel;
 
 	Material * material1;
-	Material * material3;
 
 	Input * inp;
 	

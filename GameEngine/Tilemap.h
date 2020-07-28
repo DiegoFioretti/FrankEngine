@@ -24,7 +24,7 @@ private:
 	bool first = true;
 	vector <vec3> pos;
 
-	int _tileAmount;
+	int _tileAmount=0;
 	Tile* auxTile;
 	CollisionManager* cul;
 	vector <Tile*> _tileArchive;
@@ -41,15 +41,11 @@ public:
 	void loadBMPTileset( Material* material, const char* bmpFile, int columns, int rows);
 	void loatTXTTilemap(const char* txtFile, int width, int height);
 	void DrawTiles();
-	void UpdateTilesAnim(float time);
 	int GetTileAmount();
-	void UpdateAnim();
 	void CutTileSet(int col, int row);
 	float* GetTile(int index);
 	Tile* GetTileInfo(int tileid);
 	void MakeColTile(Entity* A, int numTile);
-	bool CheckColTile(int numTile, Entity* A);
-	void Clean();
 
 };
 

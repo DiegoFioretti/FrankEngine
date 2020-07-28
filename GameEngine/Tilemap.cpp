@@ -1,29 +1,34 @@
 #include "Tilemap.h"
 
+// Tilmap funciona de la siguiente manera:
+// Se crean los tiles , se le setea el material, la textura , el bounding box y el uv uno x cada tile y se guardan en tileArchive
+// Load TXT carga el txt y levanta todos los numeros asignados y los guarda en un array
+// Draw lo que hace es agarrar los tiles creados, en este caso 4 y dibujarlos donde corresponden , y guarda la posicion de cada tile en un vec pos
+// Col lo que hace es ver que numero le pasas (Num de Tile) ve la posicion y genera una colsion.
+// Esta es la mejor y mas optima forma que creamos ya que solo usa solo 4 tiles para dibujar y con las posiciones que fueron dibujadas se puede crear la colision
+
 Tilemap::Tilemap(float x, float y, float z)
 {
 	_x = x;
 	_y = y;
 	_z = z;
 	 
-	for (size_t i = 0; i < MAXTILESINMAP; i++)
-	{
+	for (size_t i = 0; i < MAXTILESINMAP; i++){
 		_mapGuide[i] = -10;
 	}
-	_tileAmount = 0;
 	_tilesetExist = false;
 }
 
 
 
-
+// cargado asignacion de textura para cada tile
 void Tilemap::loadBMPTileset(Material* material, const char* bmpFile, int columns, int rows)
 {
 	CutTileSet(columns, rows);
 	_tileAmount = columns * rows;
 	for (int i = 0; i < _tileAmount; i++){
 
-		auxTile = new Tile(0,0,0,i,true);
+		auxTile = new Tile(i);
 		auxTile->SetMaterial(material);
 		auxTile->LoadTexture(bmpFile);
 		auxTile->SetBoundingBox(2.0f, 2.0f);
@@ -44,8 +49,8 @@ void Tilemap::CutTileSet(int col, int row) {
 		float x = (i % col) * frameW;
 		float y = (i / col) * frameH;
 
-		uvArrays = new float[8]
-		{
+		uvArrays = new float[8]{
+
 			 x , 1 - (y + frameH),
 			 x , 1 - y ,
 			(x + frameW) , 1 - (y + frameH),
@@ -96,7 +101,6 @@ void Tilemap::loatTXTTilemap(const char* txtFile, int width, int height)
 		//paso el tring a un array de ints
 		num = 0;
 		
-		//Arreglar esto para que cuando sea -38 pase abajo--------------
 		for (int i = 0; i < tile.length(); i++)
 		{
 			if ((tile[i]-48)>-2)
@@ -106,45 +110,14 @@ void Tilemap::loatTXTTilemap(const char* txtFile, int width, int height)
 			}
 			
 		}
-		/*
-		int mapa[MAXTILESINMAP];
-		for (int i = 0; i < MAXTILESINMAP; i++)
-		{
-			mapa[i] = -1;
-		}
-		for (int i = 0; i < tile.length(); i++) {
-			if (tile[i] == ',') {
-
-			}
-			else {
-				mapa[num] = int(tile[i]) - 48;
-				num++;
-			}
-		}
-		
-		for (size_t i = 0; i < MAXTILESINMAP; i++)
-		{
-			_mapGuide[i] = mapa[i];
-		}*/
-	
-		//---------------------
 	}
 }
 
-void Tilemap::DrawTiles()
-{
-
-	//cout<<"x:" << _tileArchive[2]->GetPos().x <<"y: "<< _tileArchive[2]->GetPos().y<<"z: "<< _tileArchive[2]->GetPos().z<<endl;
-
-	
+void Tilemap::DrawTiles(){
 	num = 0;
-	for (size_t i = 0; i < _mapWidth; i++)
-	{
-		for (size_t j = 0; j < _mapHeight; j++)
-		{
-
-			if (_mapGuide[num] < 0)
-			{
+	for (size_t i = 0; i < _mapWidth; i++){
+		for (size_t j = 0; j < _mapHeight; j++){
+			if (_mapGuide[num] < 0){
 
 			}
 			else
@@ -152,63 +125,17 @@ void Tilemap::DrawTiles()
 				_tileArchive[_mapGuide[num]]->SetPos(_x + (2.0f * j), _y - (2.0f * i), _z);
 				_tileArchive[_mapGuide[num]]->Draw();
 
-				if (first)
-				{
+				if (first){
 					pos.push_back(vec3(_x + (2.0f * j), _y - (2.0f * i), _z));
-					//totalTiles.push_back(_tileArchive[_mapGuide[num]]);
-					//totalTiles[_mapGuide[num]]->SetPos(_x + (2.0f * j), _y - (2.0f * i), _z);
-
 				}
 			}
 			num++;
-			/*
-			while (_mapGuide[num] < 0)
-			{
-				num++;
-			}
-			_tileArchive[_mapGuide[num]]->SetPos(_x + (2.0f * j), _y - (2.0f * i), _z);
-
-
-			if (first)
-			{
-				pos.push_back(vec3(_x + (2.0f * j), _y - (2.0f * i), _z));
-				totalTiles.push_back(_tileArchive[_mapGuide[num]]);
-				totalTiles[_mapGuide[num]]->SetPos(_x + (2.0f * j), _y - (2.0f * i), _z);
-
-			}
-			_tileArchive[_mapGuide[num]]->Draw();
-			num++;
-
-		}*/
 		}
 	}
 	first = false;
 }
 
-void Tilemap::UpdateAnim() {
 
-	for (int i = 0; i < _tileAmount; i++) {
-		//_tileArchive[i]->UVArr();
-	}
-
-}
-
-void Tilemap::UpdateTilesAnim(float time)
-{
-	num = 0;
-	for (size_t i = 0; i < _mapWidth; i++)
-	{
-		for (size_t j = 0; j < _mapHeight; j++)
-		{
-			while (_mapGuide[num] < 0)
-			{
-				num++;
-			}
-			//_tileArchive[_mapGuide[num]]->UpdAnim(time);
-			num++;
-		}
-	}
-}
 
 int Tilemap::GetTileAmount()
 {
@@ -240,29 +167,8 @@ void Tilemap::MakeColTile( Entity* A, int numTile ) {
 			}
 		}
 	}
-	
-
-	/*
-	for (int i = 0; i < totalTiles.size(); i++)
-	{
-
-		
-		if (totalTiles[i]->getTileID()==numTile)
-		{
-
-			totalTiles[i]->SetPos(pos[i].x, pos[i].y, pos[i].z);
-			cul->MakeCollision(A, totalTiles[i]);
-
-		}
-	}
-	*/
-	
 }
 
-bool Tilemap::CheckColTile(int numTile, Entity* A) {
-
-	return cul->CheckCollision(_tileArchive[numTile], A);
-}
 
 Tilemap::~Tilemap()
 {

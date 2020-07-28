@@ -36,35 +36,38 @@ bool Game::OnStart()
 	cuadradito->SetPos(1, -8, 0);
 	cuadradito->SetBoundingBox(2.0f, 2.0f);
 
-	myLevel = new Tilemap( -10 , 10, 0);
-	myLevel->loadBMPTileset(material1, "FinalTile.bmp", 2, 2);
-	myLevel->loatTXTTilemap("Tilemap.txt", 10, 10);
+
+	myLevel = new Tilemap( -10 , 10, 0);// Creamos el tilemap y le decimos donde se va a ubicar en el mundo
+	myLevel->loadBMPTileset(material1, "FinalTile.bmp", 2, 2);// se le indica el material que va a usar, la imagen y de cuanto se compone dicha imagen 
+	myLevel->loatTXTTilemap("Tilemap.txt", 10, 10);// le pasas el TXT con la informacion del tilemap y el tamano del mismo
+
 
 	inp = new Input(window);
-
 	return true;
 }
 //RECORDATORIO crear delta time
 bool Game::OnUpdate() {
 
-	
+	//Actualizamos la animacion x el delta time
 	muchacho->UpdAnim(DeltaTime());
 	pollo->UpdAnim(DeltaTime());
 
-
+	//Creamos colisiones con los sprites 
+	//El 2do sprite es inamobible (esto significa que si invertimos el orden de pollo y muchacho el pollo puede mover a muchacho) 
 	col->MakeCollision(pollo, muchacho);
 	col->MakeCollision(pollo, cuadradito);
-	//col->MakeCollision(pollo, myLevel);
-	myLevel->MakeColTile(pollo,0);
+	
+	//Aqui se crean las colisiones de los tiles
+	myLevel->MakeColTile(pollo, 0);
 	myLevel->MakeColTile(pollo, 2);
 
-	//cout << "x:" << pollo->GetPos().x << "y: " << pollo->GetPos().y << "z: " << pollo->GetPos().z << endl;
-	if (myLevel->CheckColTile(2, muchacho)){
+	//Esto es un trigger enter sirve para detectar la colision sin generarla
+	if (col->CheckCollision(pollo, muchacho)){
 		cout << "aaaaaaaaaaaaaaaa" << endl;
 	}
 
-	//Inputs (letra a tocar, 0 const y 1 una sola vez)
 
+	//Inputs (letra a tocar, 0 const y 1 una sola vez)
 	if (inp->keyCall('a', 0)) {
 		pollo->SetAnim(0, 2, 0.1f);
 		pollo->Translate(-10.53f*DeltaTime() , 0.0f, 0.0f);
@@ -102,10 +105,8 @@ void Game::OnDraw(){
 bool Game::OnStop() {
 
 	delete material1;
-	delete material3;
 
-	//delete myLevel;
-
+	delete myLevel;
 
 	delete pollo;
 	delete muchacho;
