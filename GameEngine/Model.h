@@ -46,10 +46,14 @@ public:
 	void Draw(Shader3D shader);
 	void Draw(Lighting shader);
 	~Model();
-	void MoveChilden(string namea);
+	void MoveChildren(string namea,float x , float y,float z);
+	void RotChildren(string namea, float x, float y, float z);
+	void ScaleChildren(string namea, vec3 num);
+	void Rotate(float x, float y, float z);
 	void SetScale(vec3 newScale);
 	void SetPos(vec3 newPos);
 	void SetRot(vec3 newRot);
+	void Translate(float x, float y, float z);
 
 private:
 	// loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.

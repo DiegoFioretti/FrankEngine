@@ -66,12 +66,12 @@ private:
 
 
 
-
+	//LUZ: 7.4 , 14.7 , 5.8 ,
 	float a = -0.2f;
-	float d = 0.0f;
-	float b = -1.0f;
-	float c = -0.3f;
-
+	
+	float b = 7.4f;
+	float c = 14.7f;
+	float d = 5.8f;
 
 public:
 	Game();

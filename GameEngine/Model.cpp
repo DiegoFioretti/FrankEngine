@@ -48,7 +48,13 @@ void Model::SetRot(vec3 newRot)
 	}
 }
 
+void Model::Translate(float x, float y, float z) {
 
+	for (size_t i = 0; i < child.size(); i++)
+	{
+		child[i].trans->Translate(x,y,z);
+	}
+}
 
 // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
 void Model::loadModel(string const& path)
@@ -308,19 +314,42 @@ unsigned int TextureFromFile(const char* path, const string & directory, bool ga
 }
 
 
-void Model::MoveChilden(string namea) {
+void Model::MoveChildren(string namea, float x, float y, float z) {
 
-	for (size_t i = 0; i < child.size(); i++)
-	{
-		if (child[i].name==namea)
-		{
-			
-			child[i].trans->Translate(-1.0f, 0.0f, 0.0f);
-
-			cout << child[i].trans->GetPos().x << endl;
+	for (size_t i = 0; i < child.size(); i++){
+		if (child[i].name==namea){
+			child[i].trans->Translate(x, y, z);
 		}
 	}
 
+}
+
+void Model::RotChildren(string namea, float x, float y, float z) {
+
+	for (size_t i = 0; i < child.size(); i++) {
+		if (child[i].name == namea) {
+			child[i].trans->Rotate(x, y, z);
+		}
+	}
+
+}
+
+void Model::ScaleChildren(string namea, vec3 num) {
+
+	for (size_t i = 0; i < child.size(); i++) {
+		if (child[i].name == namea) {
+			child[i].trans->SetScale(num);
+		}
+	}
+
+}
+
+void Model::Rotate(float x, float y, float z)
+{
+	for (size_t i = 0; i < child.size(); i++)
+	{
+		child[i].trans->Rotate(x,y,z);
+	}
 }
 
 Model::~Model()

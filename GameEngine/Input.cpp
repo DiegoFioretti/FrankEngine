@@ -568,7 +568,7 @@ bool Input::keyCall(int key, int num) {
 	a++;
 
 	if (glfwGetKey((GLFWwindow*)win->GetWindow(), GLFW_KEY_N) == GLFW_PRESS) {
-		if (key == 'b') {
+		if (key == 'n') {
 			switch (num) {
 			case 0:
 				return true;
@@ -585,7 +585,7 @@ bool Input::keyCall(int key, int num) {
 			}
 		}
 	}
-	if (glfwGetKey((GLFWwindow*)win->GetWindow(), GLFW_KEY_B) == GLFW_RELEASE) {
+	if (glfwGetKey((GLFWwindow*)win->GetWindow(), GLFW_KEY_N) == GLFW_RELEASE) {
 		keyReleased[a] = true;
 	}
 	a++;

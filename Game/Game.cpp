@@ -43,7 +43,7 @@ bool Game::OnStart()
 //RECORDATORIO crear delta time
 bool Game::OnUpdate() {
 	//-------------------------------------LUZ-----------------------------------------
-	offset = glm::vec3(zeldaModel->GetPos().x- 1.56252f, zeldaModel->GetPos().y+14.43748f, zeldaModel->GetPos().z + 5.24109f);
+	offset = glm::vec3(zeldaModel->GetPos().x+b, zeldaModel->GetPos().y+c, zeldaModel->GetPos().z+d );
 
 	glm::vec3 pointLightPositions[] = {
 		glm::vec3(-2.68787f+a,  14.8674f,  2.34049f),
@@ -68,10 +68,7 @@ bool Game::OnUpdate() {
 	
 
 	//Inputs (letra a tocar, 0 const y 1 una sola vez)
-	if (inp->keyCall('t', 0)) {
-		cout << zeldaModel->GetPos().x << endl;
-		cout << offset.x<<endl;
-	}
+	//Movimiento
 	if (inp->keyCall('a', 0)) {
 		cam->CameraMoveLeft(0.3f);
 	}
@@ -84,28 +81,59 @@ bool Game::OnUpdate() {
 	if (inp->keyCall('s', 0)) {
 		cam->CameraMoveForward(-0.1f);
 	}
+
+
 	if (inp->keyCall('q', 0)) {
-		cam->CameraTranslateY(-0.1f);
+		b -= 0.1f;
 	}
 	if (inp->keyCall('e', 0)) {
-		cam->CameraTranslateY(0.1f);
+		b += 0.1f;
 	}
+	if (inp->keyCall('r', 0)) {
+		c -= 0.1f;
+	}
+	if (inp->keyCall('t', 0)) {
+		c += 0.1f;
+	}
+	if (inp->keyCall('y', 0)) {
+		d -= 0.1f;
+	}
+	if (inp->keyCall('u', 0)) {
+		d += 0.1f;
+	}
+
+
+	//Samus y luz
 	if (inp->keyCall('o', 0)) {
-		a += 0.1;
-		
+		//a += 0.1;
+		cout << "Zelda: " << zeldaModel->GetPos().x << " , " << zeldaModel->GetPos().y << " , " << zeldaModel->GetPos().z << " , " << endl;
 	}
 	if (inp->keyCall('i', 0)) {
-		//zeldaModel->Translate(0.1f,0.f,0.f);
-		a -= 0.1;
+		//a -= 0.1;
+		cout << "LUZ: " << offset.x << " , " << offset.y << " , " << offset.z << " , " << endl;
 	}
+
+	//zelda hijo
+	if (inp->keyCall('b', 0)) {
+		zeldaModel->MoveChildren("mesh_terrain",0.1f,0.f,0.f);
+		cout << "aaa" << endl;
+	}
+	if (inp->keyCall('n', 0)) {
+		zeldaModel->RotChildren("mesh_terrain", 0.1f, 0.f, 0.f);
+
+	}
+	if (inp->keyCall('m', 0)) {
+		zeldaModel->ScaleChildren("mesh_terrain", glm::vec3(1.1f, 1.1f, 1.1f));
+	}
+	// todo Zelda
 	if (inp->keyCall('j', 0)) {
-		zeldaModel->MoveChilden("mesh_terrain");
+		zeldaModel->Translate(0.1f,0,0);
 	}
-	if (inp->keyCall('k', 0)) {
-		zeldaModel->SetPos(glm::vec3(b, 0.0f, 0.0f));
-		b += 0.1;
+	if (inp->keyCall('v', 0)) {
+		zeldaModel->Rotate(0.1f, 0, 0);
 	}
-	
+
+
 	
 	return true;
 }
