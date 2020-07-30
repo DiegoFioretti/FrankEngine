@@ -11,8 +11,10 @@ Model::Model(string const& path, bool gamma) : gammaCorrection(gamma), Transform
 // draws the model, and thus all its meshes
 void Model::Draw(Shader3D shader)
 {
-	for (unsigned int i = 0; i < meshes.size(); i++)
-		meshes[i].Draw(shader);
+	for (unsigned int i = 0; i < child.size(); i++) {
+		shader.setMat4("model",child[i].trans->GetWorldMatrix());
+		child[i].meshes.Draw(shader);
+	}
 }
 
 void Model::Draw(Lighting shader)
@@ -21,6 +23,14 @@ void Model::Draw(Lighting shader)
 	for (unsigned int i = 0; i < child.size(); i++) {
 		shader.modelLight(child[i].trans->GetWorldMatrix());
 		child[i].meshes.Draw(shader);
+	}
+
+}
+void Model::DrawBox(Shader3D shader)
+{
+	for (unsigned int i = 0; i < child.size(); i++) {
+		shader.setMat4("model", child[i].trans->GetWorldMatrix());
+		child[i].aabb->DrawBox(shader);
 	}
 
 }
@@ -121,13 +131,20 @@ void Model::processNode(aiNode * node, const aiScene * scene)
 		//meshes.push_back(processMesh(mesh, scene));
 		string name = node->mName.C_Str();
 		//names.push_back(name);
+
 		tempT = new Transform();
 		tempT->SetPos(this->GetPos());
 		tempT->SetRot(this->GetRot());
 		tempT->SetScale(this->GetScale());
 
-		//tempT->WorldMatrix(this->GetWorldMatrix());
-		children hijo = { name, tempT, processMesh(mesh, scene)};
+		tempAABB = new AABB(processMesh(mesh, scene));
+		tempAABB->SetBox();
+		tempAABB->CalculateBounds(processMesh(mesh, scene).vertices);
+
+
+
+		children hijo = { name, tempT, processMesh(mesh, scene),tempAABB};
+		//hijo
 		child.push_back(hijo);
 		//cout << name << endl;
 	}

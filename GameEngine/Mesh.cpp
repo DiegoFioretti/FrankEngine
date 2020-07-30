@@ -128,6 +128,24 @@ void Mesh::setupMesh()
 	glBindVertexArray(0);
 }
 
+int Mesh::GetEBO() {
+	return EBO;
+}
+
+int Mesh::GetVAO() {
+	return VAO;
+}
+
+int Mesh::GetVBO() {
+	return VBO;
+}
+
+vector<unsigned int> Mesh::GetIndices() {
+	return indices;
+}
+
+
+
 Mesh::~Mesh()
 {
 }

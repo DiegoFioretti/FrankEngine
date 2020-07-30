@@ -14,8 +14,9 @@ bool Game::OnStart()
 
 	looz = new Lighting("Lighting/MultiLightVS.txt", "Lighting/MultiLightFS.txt",2);
 	
-	shader = new Shader3D("ModelVS3D.txt", "ModelFS3D.txt");
-	cout << " " << endl;
+	//shader = new Shader3D("Shader/WairframeVS.txt", "Shader/WairframeFS.txt");
+
+	cout << endl;
 	cout << "samus" << endl;
 	samusModel = new Model("Metroid/DolSzerosuitR1.obj");
 	samusModel->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
@@ -62,6 +63,10 @@ bool Game::OnUpdate() {
 	//looz->spotLight("null");
 	looz->spotLight("base", cam->GetCameraPos(), cam->GetCameraDir());
 	looz->viewProyection(cam->GetViewMatrix(), cam->GetProjectionMatrix());
+	
+	//shader->use();
+	//shader->setMat4("projection", cam->GetProjectionMatrix());
+	//shader->setMat4("view", cam->GetViewMatrix());
 
 
 	samusModel->SetPos(glm::vec3(a, 0.0f, 0.0f));
@@ -144,6 +149,7 @@ void Game::OnDraw(){
 	
 	//looz->modelLight(zeldaModel->GetWorldMatrix());
 	zeldaModel->Draw(*looz);
+	//zeldaModel->DrawBox(*shader);
 
 	//looz->modelLight(samusModel->GetWorldMatrix());
 	samusModel->Draw(*looz);

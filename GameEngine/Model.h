@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Exports.h"
-#include "Mesh.h"
+#include "AABB.h"
 #include "Transform.h"
 
 #include <glm/glm.hpp>
@@ -25,7 +25,7 @@ struct children {
 	string name;
 	Transform* trans;
 	Mesh meshes;
-
+	AABB* aabb;
 };
 
 class FRANKENGINE_API Model : public Transform
@@ -37,6 +37,7 @@ public:
 	vector <string> names;
 	vector <children> child;
 	Transform * tempT;
+	AABB* tempAABB;
 	int currentLayer;
 	string directory;
 	bool gammaCorrection;
@@ -45,7 +46,9 @@ public:
 	Model(string const& path, bool gamma = false);
 	void Draw(Shader3D shader);
 	void Draw(Lighting shader);
+	void DrawBox(Shader3D shader);
 	~Model();
+
 	void MoveChildren(string namea,float x , float y,float z);
 	void RotChildren(string namea, float x, float y, float z);
 	void ScaleChildren(string namea, vec3 num);
@@ -54,6 +57,7 @@ public:
 	void SetPos(vec3 newPos);
 	void SetRot(vec3 newRot);
 	void Translate(float x, float y, float z);
+
 
 private:
 	// loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.

@@ -164,6 +164,7 @@ void Shader3D::use()
 	glUseProgram(ID);
 }
 
+
 // utility uniform functions
 void Shader3D::setBool(const std::string & name, bool value) const
 {
