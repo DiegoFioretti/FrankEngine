@@ -35,13 +35,13 @@ struct Texture {
 class FRANKENGINE_API Mesh
 {
 public:
-
+	int layer;
 	/*  Mesh Data  */
 	vector<Vertex> vertices;
 	vector<unsigned int> indices;
 	vector<Texture> textures;
 	/*  Functions  */
-	Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
+	Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, int layer);
 	void Draw(Shader3D shader);
 	void Draw(Lighting shader);
 	~Mesh();

@@ -68,6 +68,7 @@ private:
 
 
 	float a = -0.2f;
+	float d = 0.0f;
 	float b = -1.0f;
 	float c = -0.3f;
 

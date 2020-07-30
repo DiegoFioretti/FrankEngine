@@ -15,16 +15,20 @@ bool Game::OnStart()
 	looz = new Lighting("Lighting/MultiLightVS.txt", "Lighting/MultiLightFS.txt",2);
 	
 	shader = new Shader3D("ModelVS3D.txt", "ModelFS3D.txt");
-
+	cout << " " << endl;
+	cout << "samus" << endl;
 	samusModel = new Model("Metroid/DolSzerosuitR1.obj");
 	samusModel->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
 	samusModel->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
 
+	cout << "zelda" << endl;
+	//mesh_terrain
 	zeldaModel = new Model("Link/source/zeldaPosed001.fbx");
 	zeldaModel->SetPos(glm::vec3(10.0f, 0.0f, 0.0f));
 	zeldaModel->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
 
-	clonSamus = new Model("Metroid/DolSzerosuitR1.obj");
+	cout << "mochi" << endl;
+	clonSamus = new Model("backpack/backpack.obj");
 	clonSamus->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
 	clonSamus->SetPos(glm::vec3(20.0f, 0.0f, 0.0f));
 
@@ -88,25 +92,18 @@ bool Game::OnUpdate() {
 	}
 	if (inp->keyCall('o', 0)) {
 		a += 0.1;
+		
 	}
 	if (inp->keyCall('i', 0)) {
+		//zeldaModel->Translate(0.1f,0.f,0.f);
 		a -= 0.1;
 	}
 	if (inp->keyCall('j', 0)) {
-		//cout << "Zelda x=" << zeldaModel->GetPos().x << endl;
-		//cout << "Zelda y=" << zeldaModel->GetPos().y << endl;
-		//cout << "Zelda z=" << zeldaModel->GetPos().z << endl;
-		//cout << "Camara x=" << cam->GetCameraDir().x << endl;
-		//cout << "Camara y=" << cam->GetCameraDir().y << endl;
-		//cout << "Camara z=" << cam->GetCameraDir().z << endl;
-		cout << "Camara yaw=" << cam->GetCameraYaw() << endl;
-		cout << "Camara pitch=" << cam->GetCameraPitch() << endl;
-		
-
+		zeldaModel->MoveChilden("mesh_terrain");
 	}
 	if (inp->keyCall('k', 0)) {
-		zeldaModel->Translate(0.5f,0.f,0.f);
-		offset.x = +0.5f;
+		zeldaModel->SetPos(glm::vec3(b, 0.0f, 0.0f));
+		b += 0.1;
 	}
 	
 	
@@ -117,13 +114,13 @@ bool Game::OnUpdate() {
 void Game::OnDraw(){
 
 	
-	looz->modelLight(zeldaModel->GetWorldMatrix());
+	//looz->modelLight(zeldaModel->GetWorldMatrix());
 	zeldaModel->Draw(*looz);
 
-	looz->modelLight(samusModel->GetWorldMatrix());
+	//looz->modelLight(samusModel->GetWorldMatrix());
 	samusModel->Draw(*looz);
 
-	looz->modelLight(clonSamus->GetWorldMatrix());
+	//looz->modelLight(clonSamus->GetWorldMatrix());
 	clonSamus->Draw(*looz);
 	
 }

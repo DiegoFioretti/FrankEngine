@@ -16,25 +16,40 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <list>
 using namespace std;
 
 unsigned int TextureFromFile(const char* path, const string& directory, bool gamma = false);
+
+struct children {
+	string name;
+	Transform* trans;
+	Mesh meshes;
+
+};
 
 class FRANKENGINE_API Model : public Transform
 {
 public:
 	/*  Model Data */
-	vector<Texture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
-	vector<Mesh> meshes;
+	vector <Texture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
+	vector <Mesh> meshes;
+	vector <string> names;
+	vector <children> child;
+	Transform * tempT;
+	int currentLayer;
 	string directory;
 	bool gammaCorrection;
-
 	/*  Functions   */
 
 	Model(string const& path, bool gamma = false);
 	void Draw(Shader3D shader);
 	void Draw(Lighting shader);
 	~Model();
+	void MoveChilden(string namea);
+	void SetScale(vec3 newScale);
+	void SetPos(vec3 newPos);
+	void SetRot(vec3 newRot);
 
 private:
 	// loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.

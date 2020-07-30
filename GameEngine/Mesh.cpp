@@ -1,10 +1,11 @@
 #include "Mesh.h"
 
-Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures)
+Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, int layer)
 {
 	this->vertices = vertices;
 	this->indices = indices;
 	this->textures = textures;
+	this->layer = layer;
 
 	// now that we have all the required data, set the vertex buffers and its attribute pointers.
 	setupMesh();

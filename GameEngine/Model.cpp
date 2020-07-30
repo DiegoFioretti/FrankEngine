@@ -17,10 +17,36 @@ void Model::Draw(Shader3D shader)
 
 void Model::Draw(Lighting shader)
 {
-	for (unsigned int i = 0; i < meshes.size(); i++)
-		meshes[i].Draw(shader);
+	
+	for (unsigned int i = 0; i < child.size(); i++) {
+		shader.modelLight(child[i].trans->GetWorldMatrix());
+		child[i].meshes.Draw(shader);
+	}
+
 }
 
+void Model::SetScale(vec3 newScale)
+{
+	for (size_t i = 0; i < child.size(); i++)
+	{
+		child[i].trans->SetScale(newScale);
+	}
+}
+void Model::SetPos(vec3 newPos)
+{
+	for (size_t i = 0; i < child.size(); i++)
+	{
+		child[i].trans->SetPos(newPos);
+	}
+}
+
+void Model::SetRot(vec3 newRot)
+{
+	for (size_t i = 0; i < child.size(); i++)
+	{
+		child[i].trans->SetRot(newRot);
+	}
+}
 
 
 
@@ -41,23 +67,70 @@ void Model::loadModel(string const& path)
 
 	// process ASSIMP's root node recursively
 	processNode(scene->mRootNode, scene);
+	
+
+
+	//---- test
+	list<int> meshesLayers;
+
+	for (int i = 0; i < meshes.size(); i++)
+	{
+		meshesLayers.push_back(meshes[i].layer);
+	}
+
+	meshesLayers.sort();
+	meshesLayers.unique();
+
+	int newValue = 0;
+	int newLayerValue = 1;
+
+	for (std::list<int>::iterator it = meshesLayers.begin(); it != meshesLayers.end(); it++)
+	{
+		newValue = *it;
+
+		for (int j = 0; j < meshes.size(); j++)
+		{
+			if (meshes[j].layer == newValue)
+			{
+				meshes[j].layer = newLayerValue;
+			}
+		}
+
+		newLayerValue++;
+	}
+	//--- hasta aca
 }
 
 // processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
 void Model::processNode(aiNode * node, const aiScene * scene)
 {
+	
 	// process each mesh located at the current node
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
 		// the node object only contains indices to index the actual objects in the scene. 
 		// the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
+		
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		meshes.push_back(processMesh(mesh, scene));
+		//meshes.push_back(processMesh(mesh, scene));
+		string name = node->mName.C_Str();
+		//names.push_back(name);
+		tempT = new Transform();
+		tempT->SetPos(this->GetPos());
+		tempT->SetRot(this->GetRot());
+		tempT->SetScale(this->GetScale());
+
+		//tempT->WorldMatrix(this->GetWorldMatrix());
+		children hijo = { name, tempT, processMesh(mesh, scene)};
+		child.push_back(hijo);
+		//cout << name << endl;
 	}
 	// after we've processed all of the meshes (if any) we then recursively process each of the children nodes
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
+		currentLayer++; // Separar los nodos en distintas capas.
 		processNode(node->mChildren[i], scene);
+		currentLayer--;
 	}
 
 }
@@ -152,7 +225,7 @@ Mesh Model::processMesh(aiMesh * mesh, const aiScene * scene)
 	textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
 	// return a mesh object created from the extracted mesh data
-	return Mesh(vertices, indices, textures);
+	return Mesh(vertices, indices, textures,currentLayer);
 }
 
 
@@ -234,6 +307,21 @@ unsigned int TextureFromFile(const char* path, const string & directory, bool ga
 	return textureID;
 }
 
+
+void Model::MoveChilden(string namea) {
+
+	for (size_t i = 0; i < child.size(); i++)
+	{
+		if (child[i].name==namea)
+		{
+			
+			child[i].trans->Translate(-1.0f, 0.0f, 0.0f);
+
+			cout << child[i].trans->GetPos().x << endl;
+		}
+	}
+
+}
 
 Model::~Model()
 {

@@ -33,9 +33,7 @@ void Transform::SetRot(vec3 newRot)
 
 void Transform::SetScale(vec3 newScale)
 {
-	scale = newScale;
-
-	ScaleMatrix = glm::scale(mat4(1.0f), scale);
+	ScaleMatrix = glm::scale(mat4(1.0f), newScale);
 
 	UpdateWorldMatrix();
 }
