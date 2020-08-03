@@ -9,7 +9,6 @@ AABB::~AABB() {
 
 }
 
-
 void AABB::SetBox() {
 
 	GLushort cubeIndices[] = {
@@ -35,8 +34,7 @@ void AABB::SetBox() {
 
 	for (int i = 0; i < 36; i++)
 		indices.push_back(cubeIndices[i]);
-
-
+	
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
@@ -63,7 +61,6 @@ void AABB::Setup()
 
 void AABB::CalculateBounds(vector<Vertex> vertices)
 {
-
 	if (!vertices.empty())
 	{
 		Bounds resetBounds;
@@ -85,6 +82,7 @@ void AABB::CalculateBounds(vector<Vertex> vertices)
 		}
 	}
 
+	CalculateBoundingBox(bounds);
 }
 
 void AABB::CalculateBoundingBox(Bounds bounds)
@@ -107,9 +105,9 @@ void AABB::CalculateBoundingBox(Bounds bounds)
 	Setup();
 }
 
-void AABB::DrawBox(Shader3D shader) {
+void AABB::DrawBox(Lighting shader){
 	
-	//shader.use();
+	shader.use();
 	glBindVertexArray(VAO);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

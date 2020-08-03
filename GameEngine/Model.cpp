@@ -13,24 +13,24 @@ void Model::Draw(Shader3D shader)
 {
 	for (unsigned int i = 0; i < child.size(); i++) {
 		shader.setMat4("model",child[i].trans->GetWorldMatrix());
-		child[i].meshes.Draw(shader);
+		child[i].aabb->Draw(shader);
 	}
 }
 
 void Model::Draw(Lighting shader)
 {
-	
 	for (unsigned int i = 0; i < child.size(); i++) {
 		shader.modelLight(child[i].trans->GetWorldMatrix());
 		child[i].meshes.Draw(shader);
+		child[i].aabb->DrawBox(shader);
+		//child[i].aabb->DrawBox(shader);
 	}
-
 }
 void Model::DrawBox(Shader3D shader)
 {
 	for (unsigned int i = 0; i < child.size(); i++) {
 		shader.setMat4("model", child[i].trans->GetWorldMatrix());
-		child[i].aabb->DrawBox(shader);
+		//child[i].aabb->DrawBox(shader);
 	}
 
 }
@@ -83,8 +83,6 @@ void Model::loadModel(string const& path)
 
 	// process ASSIMP's root node recursively
 	processNode(scene->mRootNode, scene);
-	
-
 
 	//---- test
 	list<int> meshesLayers;
@@ -120,7 +118,6 @@ void Model::loadModel(string const& path)
 // processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
 void Model::processNode(aiNode * node, const aiScene * scene)
 {
-	
 	// process each mesh located at the current node
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
@@ -141,9 +138,7 @@ void Model::processNode(aiNode * node, const aiScene * scene)
 		tempAABB->SetBox();
 		tempAABB->CalculateBounds(processMesh(mesh, scene).vertices);
 
-
-
-		children hijo = { name, tempT, processMesh(mesh, scene),tempAABB};
+		Node hijo = { name, tempT, processMesh(mesh, scene), tempAABB};
 		//hijo
 		child.push_back(hijo);
 		//cout << name << endl;
@@ -155,7 +150,6 @@ void Model::processNode(aiNode * node, const aiScene * scene)
 		processNode(node->mChildren[i], scene);
 		currentLayer--;
 	}
-
 }
 
 Mesh Model::processMesh(aiMesh * mesh, const aiScene * scene)
@@ -251,7 +245,6 @@ Mesh Model::processMesh(aiMesh * mesh, const aiScene * scene)
 	return Mesh(vertices, indices, textures,currentLayer);
 }
 
-
 // checks all material textures of a given type and loads the textures if they're not loaded yet.
 // the required info is returned as a Texture struct.
 vector<Texture> Model::loadMaterialTextures(aiMaterial * mat, aiTextureType type, string typeName)
@@ -329,7 +322,6 @@ unsigned int TextureFromFile(const char* path, const string & directory, bool ga
 
 	return textureID;
 }
-
 
 void Model::MoveChildren(string namea, float x, float y, float z) {
 

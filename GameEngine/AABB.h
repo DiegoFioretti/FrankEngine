@@ -19,7 +19,7 @@ public:
 	void CalculateBounds(vector<Vertex> vertices);
 	void SetBox();
 	void Setup();
-	void DrawBox(Shader3D shader);
+	void DrawBox(Lighting shader);
 	
 
 private:

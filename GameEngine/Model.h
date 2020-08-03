@@ -21,7 +21,7 @@ using namespace std;
 
 unsigned int TextureFromFile(const char* path, const string& directory, bool gamma = false);
 
-struct children {
+struct Node {
 	string name;
 	Transform* trans;
 	Mesh meshes;
@@ -35,7 +35,7 @@ public:
 	vector <Texture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
 	vector <Mesh> meshes;
 	vector <string> names;
-	vector <children> child;
+	vector <Node> child;
 	Transform * tempT;
 	AABB* tempAABB;
 	int currentLayer;
