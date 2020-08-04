@@ -14,13 +14,19 @@
 class FRANKENGINE_API AABB : public Mesh {
 public:
 	AABB(Mesh msh);
+	AABB();
 	Bounds bounds;
 	void CalculateBoundingBox(Bounds bounds);
 	void CalculateBounds(vector<Vertex> vertices);
+	void CalculateAllBounds(vector<Bounds> vertices);
 	void SetBox();
 	void Setup();
-	void DrawBox(Lighting shader);
-	
+	void DrawBox();
+	vector<unsigned int> cIndices;
+	Bounds bound;
+
+	Bounds getBounds();
+	glm::vec3 getVertices(int a);
 
 private:
 	

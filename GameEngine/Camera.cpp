@@ -9,7 +9,7 @@ float _lastX;
 float _lastY;
 float _xoffset;
 float _yoffset;
-float _sensitivity = 0.5f;
+float _sensitivity = 0.2f;
 float _yaw;
 float _pitch;
 float fov;
@@ -72,7 +72,7 @@ void scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
 	else if (fov >= 90.0f)
 		fov = 89.0f;
 	
-	_projectionMatrix = glm::perspective(glm::radians(fov), _getAspectRatio, 1.0f, 400.0f);
+	_projectionMatrix = glm::perspective(glm::radians(fov), _getAspectRatio, 1.0f, 900.0f);
 }
 
 

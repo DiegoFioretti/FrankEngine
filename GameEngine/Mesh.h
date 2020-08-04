@@ -58,6 +58,7 @@ public:
 	vector<Texture> textures;
 	/*  Functions  */
 	Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, int layer);
+	Mesh();
 	void Draw(Shader3D shader);
 	void Draw(Lighting shader);
 	unsigned int VAO, VBO, EBO;

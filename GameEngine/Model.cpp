@@ -7,6 +7,9 @@
 Model::Model(string const& path, bool gamma) : gammaCorrection(gamma), Transform()
 {
 	loadModel(path);
+	//tempMesh = new Mesh(verticesTemp, indicesTemp, texturesTemp,0);
+	//totalAABB = new AABB();
+	
 }
 // draws the model, and thus all its meshes
 void Model::Draw(Shader3D shader)
@@ -19,12 +22,25 @@ void Model::Draw(Shader3D shader)
 
 void Model::Draw(Lighting shader)
 {
+
+	
 	for (unsigned int i = 0; i < child.size(); i++) {
 		shader.modelLight(child[i].trans->GetWorldMatrix());
+		if (child[i].name=="padre")
+		{
+			vector <Bounds> allBounds;
+			for (size_t i = 0; i < child.size(); i++)
+			{
+				allBounds.push_back(child[i].aabb->getBounds());
+			}
+			child[i].aabb->CalculateAllBounds(allBounds);
+		}
 		child[i].meshes.Draw(shader);
-		child[i].aabb->DrawBox(shader);
-		//child[i].aabb->DrawBox(shader);
+		child[i].aabb->DrawBox(); 
 	}
+
+	//padre.trans->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+
 }
 void Model::DrawBox(Shader3D shader)
 {
@@ -63,6 +79,17 @@ void Model::Translate(float x, float y, float z) {
 	for (size_t i = 0; i < child.size(); i++)
 	{
 		child[i].trans->Translate(x,y,z);
+	}
+}
+
+void Model::TranslateFather(float x, float y, float z) {
+
+	for (size_t i = 0; i < child.size(); i++)
+	{
+		if (child[i].name=="padre")
+		{
+			child[i].trans->Translate(x, y, z);
+		}
 	}
 }
 
@@ -118,6 +145,7 @@ void Model::loadModel(string const& path)
 // processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
 void Model::processNode(aiNode * node, const aiScene * scene)
 {
+
 	// process each mesh located at the current node
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
@@ -127,7 +155,35 @@ void Model::processNode(aiNode * node, const aiScene * scene)
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 		//meshes.push_back(processMesh(mesh, scene));
 		string name = node->mName.C_Str();
+		cout << name << endl;
 		//names.push_back(name);
+
+		
+
+
+
+		if (first)
+		{
+			tempAABB = new AABB(processMesh(mesh, scene));
+			tempAABB->SetBox();
+			//tempAABB->CalculateBounds(processMesh(mesh, scene).vertices);
+
+			tempT = new Transform();
+			tempT->SetPos(this->GetPos());
+			tempT->SetRot(this->GetRot());
+			tempT->SetScale(this->GetScale());
+
+			totalAABB = new AABB(processMesh(mesh, scene));
+			totalAABB->SetBox();
+			//padre = { tempT, totalAABB };
+
+			tempMesh = new Mesh();
+
+			Node pad= { "padre", tempT, *tempMesh, tempAABB };
+
+			child.push_back(pad);
+			first = false;
+		}
 
 		tempT = new Transform();
 		tempT->SetPos(this->GetPos());
@@ -330,6 +386,8 @@ void Model::MoveChildren(string namea, float x, float y, float z) {
 			child[i].trans->Translate(x, y, z);
 		}
 	}
+	//padre.trans->GetScale().x;
+	//padre.trans->SetScale(glm::vec3(padre.trans->GetScale().x+x ,y,z));
 
 }
 
@@ -361,6 +419,11 @@ void Model::Rotate(float x, float y, float z)
 	}
 }
 
+vec3 Model::GetFatherPos() {
+	return padre.trans->GetPos();
+}
+
 Model::~Model()
 {
 }
+

@@ -26,6 +26,12 @@ struct Node {
 	Transform* trans;
 	Mesh meshes;
 	AABB* aabb;
+	//Node *padre = nullptr;
+};
+
+struct FatherNode {
+	Transform* trans;
+	AABB* aabb;
 };
 
 class FRANKENGINE_API Model : public Transform
@@ -36,11 +42,22 @@ public:
 	vector <Mesh> meshes;
 	vector <string> names;
 	vector <Node> child;
+	FatherNode padre;
 	Transform * tempT;
 	AABB* tempAABB;
+
+
+	AABB* totalAABB;
+	Mesh* tempMesh;
+	vector<vector<Vertex>> *verticesTemp;
+	vector<unsigned int> indicesTemp;
+	vector<Texture> texturesTemp;
+
+
 	int currentLayer;
 	string directory;
 	bool gammaCorrection;
+	bool first = true;
 	/*  Functions   */
 
 	Model(string const& path, bool gamma = false);
@@ -57,6 +74,8 @@ public:
 	void SetPos(vec3 newPos);
 	void SetRot(vec3 newRot);
 	void Translate(float x, float y, float z);
+	void TranslateFather(float x, float y, float z);
+	vec3 GetFatherPos();
 
 
 private:

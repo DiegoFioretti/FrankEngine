@@ -5,6 +5,11 @@ AABB::AABB(Mesh msh):Mesh( msh.vertices,  msh.indices, msh.textures, msh.layer){
 
 }
 
+AABB::AABB() {
+
+
+}
+
 AABB::~AABB() {
 
 }
@@ -33,7 +38,7 @@ void AABB::SetBox() {
 	};
 
 	for (int i = 0; i < 36; i++)
-		indices.push_back(cubeIndices[i]);
+		cIndices.push_back(cubeIndices[i]);
 	
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -50,7 +55,7 @@ void AABB::Setup()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), vertex, GL_DYNAMIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_DYNAMIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, cIndices.size() * sizeof(unsigned int), &cIndices[0], GL_DYNAMIC_DRAW);
 
 	// vertex Positions
 	glEnableVertexAttribArray(0);
@@ -85,8 +90,41 @@ void AABB::CalculateBounds(vector<Vertex> vertices)
 	CalculateBoundingBox(bounds);
 }
 
+void AABB::CalculateAllBounds(vector<Bounds> allBounds)
+{
+	if (!vertices.empty())
+	{
+		Bounds resetBounds;
+		bounds = resetBounds;
+		for (int i = 0; i < allBounds.size(); i++)
+		{
+			if (allBounds[i].maxX > bounds.maxX)
+				bounds.maxX = allBounds[i].maxX;
+
+			if (allBounds[i].minX < bounds.minX)
+				bounds.minX = allBounds[i].minX;
+
+			if (allBounds[i].maxY > bounds.maxY)
+				bounds.maxY = allBounds[i].maxY;
+
+			if (allBounds[i].minY < bounds.minY)
+				bounds.minY = allBounds[i].minY;
+
+			if (allBounds[i].maxZ > bounds.maxZ)
+				bounds.maxZ = allBounds[i].maxZ;
+
+			if (allBounds[i].minZ < bounds.minZ)
+				bounds.minZ = allBounds[i].minZ;
+			
+		}
+	}
+
+	CalculateBoundingBox(bounds);
+}
+
 void AABB::CalculateBoundingBox(Bounds bounds)
 {
+	bound = bounds;
 	glm::vec3 boundingBoxVertex[8] =
 	{
 		glm::vec3(bounds.minX, bounds.minY, bounds.maxZ),
@@ -105,9 +143,9 @@ void AABB::CalculateBoundingBox(Bounds bounds)
 	Setup();
 }
 
-void AABB::DrawBox(Lighting shader){
+void AABB::DrawBox(){
 	
-	shader.use();
+	//shader.use();
 	glBindVertexArray(VAO);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -118,4 +156,13 @@ void AABB::DrawBox(Lighting shader){
 
 	glBindVertexArray(0);
 
+}
+
+glm::vec3 AABB::getVertices(int a) {
+
+	return vertex[a];
+}
+
+Bounds AABB::getBounds() {
+	return bound;
 }

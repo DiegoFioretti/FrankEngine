@@ -121,14 +121,15 @@ bool Game::OnUpdate() {
 	//zelda hijo
 	if (inp->keyCall('b', 0)) {
 		zeldaModel->MoveChildren("mesh_terrain",0.1f,0.f,0.f);
-		cout << "aaa" << endl;
+		//cout << "aaa" << endl;
 	}
 	if (inp->keyCall('n', 0)) {
 		zeldaModel->RotChildren("mesh_terrain", 0.1f, 0.f, 0.f);
 
 	}
 	if (inp->keyCall('m', 0)) {
-		zeldaModel->ScaleChildren("mesh_terrain", glm::vec3(1.1f, 1.1f, 1.1f));
+		zeldaModel->TranslateFather(0.1f, 0.f, 0.f);
+		//cout << zeldaModel->GetFatherPos().x << endl;
 	}
 	// todo Zelda
 	if (inp->keyCall('j', 0)) {
