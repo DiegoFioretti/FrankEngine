@@ -18,9 +18,9 @@ bool Game::OnStart()
 
 	cout << endl;
 	cout << "samus" << endl;
-	samusModel = new Model("Metroid/DolSzerosuitR1.obj");
-	samusModel->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
-	samusModel->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
+	//samusModel = new Model("Metroid/DolSzerosuitR1.obj");
+	//samusModel->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
+	//samusModel->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
 
 	cout << "zelda" << endl;
 	//mesh_terrain
@@ -29,9 +29,9 @@ bool Game::OnStart()
 	zeldaModel->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
 
 	cout << "mochi" << endl;
-	clonSamus = new Model("backpack/backpack.obj");
-	clonSamus->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
-	clonSamus->SetPos(glm::vec3(20.0f, 0.0f, 0.0f));
+	//clonSamus = new Model("backpack/backpack.obj");
+	//clonSamus->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
+	//clonSamus->SetPos(glm::vec3(20.0f, 0.0f, 0.0f));
 
 	inp = new Input(window);
 
@@ -69,7 +69,7 @@ bool Game::OnUpdate() {
 	//shader->setMat4("view", cam->GetViewMatrix());
 
 
-	samusModel->SetPos(glm::vec3(a, 0.0f, 0.0f));
+	//samusModel->SetPos(glm::vec3(a, 0.0f, 0.0f));
 	
 
 	//Inputs (letra a tocar, 0 const y 1 una sola vez)
@@ -106,7 +106,7 @@ bool Game::OnUpdate() {
 	if (inp->keyCall('u', 0)) {
 		d += 0.1f;
 	}
-
+	//cout << offset.x<<"," <<offset.y<< "," << offset.z << endl;
 
 	//Samus y luz
 	if (inp->keyCall('o', 0)) {
@@ -120,16 +120,16 @@ bool Game::OnUpdate() {
 
 	//zelda hijo
 	if (inp->keyCall('b', 0)) {
-		zeldaModel->MoveChildren("mesh_terrain",0.1f,0.f,0.f);
+		zeldaModel->MoveChildren("mesh_terrain",0.01f,0.f,0.f);
 		//cout << "aaa" << endl;
 	}
 	if (inp->keyCall('n', 0)) {
-		zeldaModel->RotChildren("mesh_terrain", 0.1f, 0.f, 0.f);
+		zeldaModel->MoveChildren("mesh_terrain", -0.01f, 0.f, 0.f);
 
 	}
 	if (inp->keyCall('m', 0)) {
-		zeldaModel->TranslateFather(0.1f, 0.f, 0.f);
-		//cout << zeldaModel->GetFatherPos().x << endl;
+		zeldaModel->MoveChildren("mesh_eyes", -0.01f, 0.f, 0.f);
+		
 	}
 	// todo Zelda
 	if (inp->keyCall('j', 0)) {
@@ -153,10 +153,10 @@ void Game::OnDraw(){
 	//zeldaModel->DrawBox(*shader);
 
 	//looz->modelLight(samusModel->GetWorldMatrix());
-	samusModel->Draw(*looz);
+	//samusModel->Draw(*looz);
 
 	//looz->modelLight(clonSamus->GetWorldMatrix());
-	clonSamus->Draw(*looz);
+	//clonSamus->Draw(*looz);
 	
 }
 

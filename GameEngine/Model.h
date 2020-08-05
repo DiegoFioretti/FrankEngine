@@ -42,6 +42,7 @@ public:
 	vector <Mesh> meshes;
 	vector <string> names;
 	vector <Node> child;
+	vector <Bounds> allBounds;
 	FatherNode padre;
 	Transform * tempT;
 	AABB* tempAABB;

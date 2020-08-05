@@ -62,6 +62,8 @@ void AABB::Setup()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
 	glBindVertexArray(0);
+
+	
 }
 
 void AABB::CalculateBounds(vector<Vertex> vertices)
@@ -143,6 +145,46 @@ void AABB::CalculateBoundingBox(Bounds bounds)
 	Setup();
 }
 
+void AABB::RezBound(float x, float y, float z) {
+
+	if (x>0.0f)
+	{
+		newBound.maxX += (x * 10);
+		newBound.minX += (x * 10);
+	}
+	if (x < 0.0f)
+	{
+		newBound.maxX += (x * 10);
+		newBound.minX += (x * 10);
+	}
+
+	if (y > 0.0f)
+	{
+		newBound.maxY += (y * 10);
+		newBound.minY += (y * 10);
+	}
+	if (y < 0.0f)
+	{
+		newBound.maxY += (y * 10);
+		newBound.minY += (y * 10);
+	}
+
+	if (z > 0.0f)
+	{
+		newBound.maxZ += (z * 10);
+		newBound.minZ += (z * 10);
+	}
+	if (z < 0.0f)
+	{
+		newBound.maxZ += (z * 10);
+		newBound.minZ += (z * 10);
+	}
+
+
+	CalculateBoundingBox(bound);
+
+}
+
 void AABB::DrawBox(){
 	
 	//shader.use();
@@ -165,4 +207,13 @@ glm::vec3 AABB::getVertices(int a) {
 
 Bounds AABB::getBounds() {
 	return bound;
+}
+
+Bounds AABB::getNewBounds() {
+	if (first)
+	{
+		newBound = bound;
+		first = false;
+	}
+	return newBound;
 }

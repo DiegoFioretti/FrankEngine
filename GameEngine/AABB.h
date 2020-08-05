@@ -19,13 +19,17 @@ public:
 	void CalculateBoundingBox(Bounds bounds);
 	void CalculateBounds(vector<Vertex> vertices);
 	void CalculateAllBounds(vector<Bounds> vertices);
+	void RezBound(float x, float y, float z);
 	void SetBox();
 	void Setup();
 	void DrawBox();
 	vector<unsigned int> cIndices;
 	Bounds bound;
+	Bounds newBound;
+	bool first = true;
 
 	Bounds getBounds();
+	Bounds getNewBounds();
 	glm::vec3 getVertices(int a);
 
 private:
