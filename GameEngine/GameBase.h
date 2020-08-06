@@ -1,7 +1,7 @@
 #include "Exports.h"
-#include "Renderer.h"
+//#include "Renderer.h"
 #include "Renderizer.h"
-#include "Window.h"
+//#include "Window.h"
 #include <iostream>
 using namespace std;
 class FRANKENGINE_API GameBase {

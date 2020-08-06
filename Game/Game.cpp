@@ -10,7 +10,6 @@ Game::~Game()
 
 bool Game::OnStart() 
 {	
-	i = 0;
 	//creamos los materiales y les cargamos los shaders
 	material1 = new Material();
 	material1->LoadShaders("VertexTexture.txt", "FragmentTexture.txt");
@@ -57,13 +56,13 @@ bool Game::OnUpdate() {
 	col->MakeCollision(pollo, muchacho);
 	col->MakeCollision(pollo, cuadradito);
 	
-	//Aqui se crean las colisiones de los tiles
+	//Aqui se crean las colisiones de los tiles 
 	myLevel->MakeColTile(pollo, 0);
 	myLevel->MakeColTile(pollo, 2);
 
 	//Esto es un trigger enter sirve para detectar la colision sin generarla
 	if (col->CheckCollision(pollo, muchacho)){
-		cout << "aaaaaaaaaaaaaaaa" << endl;
+		cout << " " << endl;
 	}
 
 

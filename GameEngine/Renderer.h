@@ -5,6 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLFW/glfw3.h>
 #include <iostream>
+
 using namespace std;
 using namespace glm;
 class FRANKENGINE_API Renderer
@@ -37,6 +38,7 @@ public:
 	void LoadIMatrix();
 	void SetWMatrix(glm::mat4 matrix);
 	void MultiplyWMatrix(glm::mat4 matrix);
+
 
 	Renderer();
 	~Renderer();

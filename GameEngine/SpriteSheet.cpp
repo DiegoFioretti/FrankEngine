@@ -9,19 +9,22 @@ SpriteSheet::SpriteSheet(int columns, int rows)
 	int totalSprites = columns * rows;
 
 	for (int i = 0; i < totalSprites; i++) {
-		float x = (i % columns) * frameW;
-		float y = (i / columns) * frameH;
+		//Este calculo hace un recorrido sobre los sprites
+		float x = (i % columns) * frameW; //Este va a la derecha
+		float y = (i / columns) * frameH; //Este baja 
 
+		// aca van los puntos de cada sprite
 		uvArrays = new float[8]
 		{
-			 x , 1 - (y + frameH),
-			 x , 1 - y ,
-			(x + frameW) , 1 - (y + frameH),
-			(x + frameW) , 1 - (y)
+			 x , 1 - (y + frameH),			//minX y minY
+			 x , 1 - y ,					//minX y maxY 
+			(x + frameW) , 1 - (y + frameH),//maxX y minY
+			(x + frameW) , 1 - (y)			//maxX y maxY
 		};
 
 		uvVector->push_back(uvArrays);
 	}
+	int i;
 }
 
 SpriteSheet::~SpriteSheet()
