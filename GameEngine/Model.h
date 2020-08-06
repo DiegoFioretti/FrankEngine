@@ -26,7 +26,7 @@ struct Node {
 	Transform* trans;
 	Mesh meshes;
 	AABB* aabb;
-	//Node *padre = nullptr;
+	Node *hijo= nullptr;
 };
 
 struct FatherNode {
@@ -68,6 +68,7 @@ public:
 	~Model();
 
 	void MoveChildren(string namea,float x , float y,float z);
+	void MoveChildren1(string namea, float x, float y, float z);
 	void RotChildren(string namea, float x, float y, float z);
 	void ScaleChildren(string namea, vec3 num);
 	void Rotate(float x, float y, float z);
@@ -77,6 +78,9 @@ public:
 	void Translate(float x, float y, float z);
 	void TranslateFather(float x, float y, float z);
 	vec3 GetFatherPos();
+	void GetNames();
+	void AllSons();
+	int sonsR;
 
 
 private:

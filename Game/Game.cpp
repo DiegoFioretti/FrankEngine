@@ -1,5 +1,7 @@
 #include "Game.h"
 
+// ver con assimp herencias
+// tiene que ser un arbol si la cabeza se mueve los ojos tambien
 Game::Game()
 {
 }
@@ -10,7 +12,7 @@ Game::~Game()
 
 bool Game::OnStart() 
 {	
-	render->setClearScreenColor(0.2f,0.2f,0.2f,1.0f);
+	render->setClearScreenColor(0.2f,0.2f,0.7f,1.0f);
 
 	looz = new Lighting("Lighting/MultiLightVS.txt", "Lighting/MultiLightFS.txt",2);
 	
@@ -28,10 +30,12 @@ bool Game::OnStart()
 	zeldaModel->SetPos(glm::vec3(10.0f, 0.0f, 0.0f));
 	zeldaModel->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
 
+
+
 	cout << "mochi" << endl;
-	//clonSamus = new Model("backpack/backpack.obj");
-	//clonSamus->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
-	//clonSamus->SetPos(glm::vec3(20.0f, 0.0f, 0.0f));
+//	clonSamus = new Model("box5.fbx");
+//	clonSamus->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
+//	clonSamus->SetPos(glm::vec3(20.0f, 0.0f, 0.0f));
 
 	inp = new Input(window);
 
@@ -75,16 +79,16 @@ bool Game::OnUpdate() {
 	//Inputs (letra a tocar, 0 const y 1 una sola vez)
 	//Movimiento
 	if (inp->keyCall('a', 0)) {
-		cam->CameraMoveLeft(0.3f);
+		cam->CameraMoveLeft(0.03f);
 	}
 	if (inp->keyCall('d', 0)) {
-		cam->CameraMoveLeft(-0.3f);
+		cam->CameraMoveLeft(-0.03f);
 	}
 	if (inp->keyCall('w', 0)) {
-		cam->CameraMoveForward(0.1f);
+		cam->CameraMoveForward(0.01f);
 	}
 	if (inp->keyCall('s', 0)) {
-		cam->CameraMoveForward(-0.1f);
+		cam->CameraMoveForward(-0.01f);
 	}
 
 
@@ -95,7 +99,7 @@ bool Game::OnUpdate() {
 		b += 0.1f;
 	}
 	if (inp->keyCall('r', 0)) {
-		c -= 0.1f;
+		zeldaModel->GetNames();
 	}
 	if (inp->keyCall('t', 0)) {
 		c += 0.1f;
@@ -120,11 +124,11 @@ bool Game::OnUpdate() {
 
 	//zelda hijo
 	if (inp->keyCall('b', 0)) {
-		zeldaModel->MoveChildren("mesh_terrain",0.01f,0.f,0.f);
+		samusModel->MoveChildren("mesh_eyes",0.01f,0.f,0.f);
 		//cout << "aaa" << endl;
 	}
 	if (inp->keyCall('n', 0)) {
-		zeldaModel->MoveChildren("mesh_terrain", -0.01f, 0.f, 0.f);
+		samusModel->MoveChildren("mesh_eyes", -0.01f, 0.f, 0.f);
 
 	}
 	if (inp->keyCall('m', 0)) {

@@ -149,8 +149,8 @@ void AABB::RezBound(float x, float y, float z) {
 
 	if (x>0.0f)
 	{
-		newBound.maxX += (x * 10);
-		newBound.minX += (x * 10);
+		newBound.maxX += (x * 10.001f);
+		newBound.minX += (x * 10.001f);
 	}
 	if (x < 0.0f)
 	{

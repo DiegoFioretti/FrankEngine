@@ -17,6 +17,7 @@ void Model::Draw(Shader3D shader)
 	for (unsigned int i = 0; i < child.size(); i++) {
 		shader.setMat4("model",child[i].trans->GetWorldMatrix());
 		child[i].aabb->Draw(shader);
+
 	}
 }
 
@@ -26,6 +27,7 @@ void Model::Draw(Lighting shader)
 		shader.modelLight(child[i].trans->GetWorldMatrix());
 		child[i].meshes.Draw(shader);
 		child[i].aabb->DrawBox(); 
+
 	}
 
 
@@ -72,10 +74,8 @@ void Model::Translate(float x, float y, float z) {
 
 void Model::TranslateFather(float x, float y, float z) {
 
-	for (size_t i = 0; i < child.size(); i++)
-	{
-		if (child[i].name=="padre")
-		{
+	for (size_t i = 0; i < child.size(); i++){
+		if (child[i].name=="padre"){
 			child[i].trans->Translate(x, y, z);
 		}
 	}
@@ -138,12 +138,18 @@ void Model::loadModel(string const& path)
 		}
 		child[0].aabb->CalculateAllBounds(allBounds);
 	}
+	
+	for (size_t i = 0; i < child.size()-1; i++)
+	{
+		child[i].hijo = &child[i + 1];
+	}
+
+
 
 }
 
 // processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
-void Model::processNode(aiNode * node, const aiScene * scene)
-{
+void Model::processNode(aiNode * node, const aiScene * scene){
 
 	// process each mesh located at the current node
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
@@ -156,8 +162,6 @@ void Model::processNode(aiNode * node, const aiScene * scene)
 		string name = node->mName.C_Str();
 		cout << name << endl;
 		//names.push_back(name);
-
-		
 
 
 
@@ -196,8 +200,12 @@ void Model::processNode(aiNode * node, const aiScene * scene)
 		Node hijo = { name, tempT, processMesh(mesh, scene), tempAABB};
 		//hijo
 		child.push_back(hijo);
+		if (node->mNumChildren > 0) {
+			child[child.size()-1].hijo = &child[child.size()];
+		}
 		//cout << name << endl;
 	}
+	int a = node->mNumChildren;
 	// after we've processed all of the meshes (if any) we then recursively process each of the children nodes
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
@@ -205,8 +213,7 @@ void Model::processNode(aiNode * node, const aiScene * scene)
 		processNode(node->mChildren[i], scene);
 		currentLayer--;
 	}
-
-
+	
 }
 
 Mesh Model::processMesh(aiMesh * mesh, const aiScene * scene)
@@ -382,10 +389,18 @@ unsigned int TextureFromFile(const char* path, const string & directory, bool ga
 
 void Model::MoveChildren(string namea, float x, float y, float z) {
 
+	cout << "Nombres: " << endl;
+	for (size_t i = 0; i < child.size(); i++)
+	{
+		cout << child[i].name << endl;
+	}
+
 	for (size_t i = 0; i < child.size(); i++){
 		if (child[i].name==namea){
 			child[i].trans->Translate(x, y, z);
+			child[i].hijo->trans->Translate(x, y, z);
 			child[i].aabb->RezBound(x, y, z);
+			child[i].hijo->aabb->RezBound(x, y, z);
 		}
 	}
 	
@@ -401,6 +416,7 @@ void Model::MoveChildren(string namea, float x, float y, float z) {
 	
 
 }
+
 
 void Model::RotChildren(string namea, float x, float y, float z) {
 
@@ -432,6 +448,46 @@ void Model::Rotate(float x, float y, float z)
 
 vec3 Model::GetFatherPos() {
 	return padre.trans->GetPos();
+}
+
+void Model::GetNames() {
+	sonsR = 0;
+	cout << "Nombres: "<<endl;
+	for (size_t i = 0; i < child.size(); i++)
+	{
+		cout << child[i].name << endl;
+	}
+
+	for (size_t i = 0; i < child.size(); i++) {
+		if (child[i].name == "mesh_torch") {
+			child[i].trans->Translate(0.1, 0, 0);
+			child[i].aabb->RezBound(0.1, 0, 0);
+			sonsR = i;
+			AllSons();
+		}
+	}
+
+	if (child[0].name == "padre")
+	{
+		allBounds.clear();
+		for (size_t i = 0; i < child.size(); i++)
+		{
+			allBounds.push_back(child[i].aabb->getNewBounds());
+		}
+		child[0].aabb->CalculateAllBounds(allBounds);
+	}
+
+}
+
+void Model::AllSons() {
+	if (child[sonsR].hijo!=nullptr)
+	{
+		child[sonsR].hijo->aabb->RezBound(0.1, 0, 0);
+		child[sonsR].hijo->trans->Translate(0.1, 0, 0);
+		sonsR++;
+		AllSons();
+	}
+
 }
 
 Model::~Model()
