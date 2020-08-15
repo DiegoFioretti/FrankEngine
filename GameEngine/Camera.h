@@ -12,19 +12,23 @@ public:
 	Camera(GLFWwindow* window);
 	~Camera();
 	void CameraMoveForward(float speed);
-
+	void CameraMoveLeft(float speed);
 	void CameraTranslate(float x, float y, float z);
 	void CameraTranslateX(float x);
 	void CameraTranslateY(float y);
 	void CameraTranslateZ(float z);
 	void CameraRotate(float pitch, float yaw);
-	vec3 GetCameraDir();
-	vec3 GetCameraPos();
-	vec3 GetCameraUp();
-	float FieldOfView();
 	void UpdateViewMatrix();
 	void UpdateProyectionMatrix();
+	vec3 GetCameraDir();
+	float GetCameraYaw();
+	float GetCameraPitch();
+	vec3 GetCameraPos();
+	vec3 GetCameraUp();
 	mat4 GetViewMatrix();
 	mat4 GetProjectionMatrix();
+	void setCameraRot(float yaw, float pitch);
+	void setCameraPos(float x, float y, float z);
+
 };
 

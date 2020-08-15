@@ -10,6 +10,7 @@
 
 #include "Exports.h"
 #include "Shader3D.h"
+#include "Lighting.h"
 
 using namespace std;
 
@@ -31,23 +32,44 @@ struct Texture {
 	string path;
 };
 
+struct Bounds
+{
+	float maxX = INT32_MIN;
+	float maxY = INT32_MIN;
+	float maxZ = INT32_MIN;
+	float minX = INT32_MAX;
+	float minY = INT32_MAX;
+	float minZ = INT32_MAX;
+};
+
 class FRANKENGINE_API Mesh
 {
-public:
+protected:
+	int GetVAO();
+	int GetVBO();
+	int GetEBO();
+	vector<unsigned int> GetIndices();
 
+public:
+	int layer;
 	/*  Mesh Data  */
 	vector<Vertex> vertices;
 	vector<unsigned int> indices;
 	vector<Texture> textures;
 	/*  Functions  */
-	Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
+	Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, int layer);
+	Mesh();
 	void Draw(Shader3D shader);
+	void Draw(Lighting shader);
+	unsigned int VAO, VBO, EBO;
+	
 	~Mesh();
 private:
-	/*  Render data  */
-	unsigned int VAO, VBO, EBO;
+
 	/*  Functions    */
 	void setupMesh();
-	
+
 };
+
+
 

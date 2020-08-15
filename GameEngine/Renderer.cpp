@@ -13,6 +13,8 @@ bool Renderer::Start(Window* wnd) {
 		return -1;
 	}
 
+	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_LIGHTING);
 	cam = new Camera((GLFWwindow*)wnd->GetWindowPtr());
 
 	glGenVertexArrays(1, &VertexArrayID);
@@ -106,7 +108,7 @@ void Renderer::DestroyBuffer(unsigned int buffer)
 }
 
 void Renderer::ClearScreen() {
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Renderer::SwapBuffer() {

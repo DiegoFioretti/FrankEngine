@@ -1,16 +1,14 @@
 #pragma once
 
+#include "Exports.h"
+#include "AABB.h"
+#include "Transform.h"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-#define STB_IMAGE_IMPLEMENTATION    
-#include <stb_image.h>
-
-#include "Exports.h"
-#include "Shader3D.h"
-#include "Mesh.h"
 
 #include <string>
 #include <fstream>
@@ -18,24 +16,72 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <list>
 using namespace std;
 
 unsigned int TextureFromFile(const char* path, const string& directory, bool gamma = false);
 
-class FRANKENGINE_API Model 
+struct Node {
+	string name;
+	Transform* trans;
+	Mesh meshes;
+	AABB* aabb;
+	Node *hijo= nullptr;
+};
+
+struct FatherNode {
+	Transform* trans;
+	AABB* aabb;
+};
+
+class FRANKENGINE_API Model : public Transform
 {
 public:
 	/*  Model Data */
-	vector<Texture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
-	vector<Mesh> meshes;
+	vector <Texture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
+	vector <Mesh> meshes;
+	vector <string> names;
+	vector <Node> child;
+	vector <Bounds> allBounds;
+	FatherNode padre;
+	Transform * tempT;
+	AABB* tempAABB;
+
+
+	AABB* totalAABB;
+	Mesh* tempMesh;
+	vector<vector<Vertex>> *verticesTemp;
+	vector<unsigned int> indicesTemp;
+	vector<Texture> texturesTemp;
+
+
+	int currentLayer;
 	string directory;
 	bool gammaCorrection;
-
+	bool first = true;
 	/*  Functions   */
-	
+
 	Model(string const& path, bool gamma = false);
 	void Draw(Shader3D shader);
+	void Draw(Lighting shader);
+	void DrawBox(Shader3D shader);
 	~Model();
+
+	void MoveChildren(string namea,float x , float y,float z);
+	void MoveChildren1(string namea, float x, float y, float z);
+	void RotChildren(string namea, float x, float y, float z);
+	void ScaleChildren(string namea, vec3 num);
+	void Rotate(float x, float y, float z);
+	void SetScale(vec3 newScale);
+	void SetPos(vec3 newPos);
+	void SetRot(vec3 newRot);
+	void Translate(float x, float y, float z);
+	void TranslateFather(float x, float y, float z);
+	vec3 GetFatherPos();
+	void GetNames();
+	void AllSons();
+	int sonsR;
+
 
 private:
 	// loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
@@ -48,48 +94,10 @@ private:
 	// checks all material textures of a given type and loads the textures if they're not loaded yet.
 	// the required info is returned as a Texture struct.
 	vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName);
-	
+
 };
 
 
-unsigned int TextureFromFile(const char* path, const string& directory, bool gamma)
-{
-	string filename = string(path);
-	filename = directory + '/' + filename;
 
-	unsigned int textureID;
-	glGenTextures(1, &textureID);
-
-	int width, height, nrComponents;
-	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
-	if (data)
-	{
-		GLenum format;
-		if (nrComponents == 1)
-			format = GL_RED;
-		else if (nrComponents == 3)
-			format = GL_RGB;
-		else if (nrComponents == 4)
-			format = GL_RGBA;
-
-		glBindTexture(GL_TEXTURE_2D, textureID);
-		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		stbi_image_free(data);
-	}
-	else
-	{
-		std::cout << "Texture failed to load at path: " << path << std::endl;
-		stbi_image_free(data);
-	}
-
-	return textureID;
-}
 
 

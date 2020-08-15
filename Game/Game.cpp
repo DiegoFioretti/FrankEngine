@@ -1,5 +1,7 @@
 #include "Game.h"
 
+// ver con assimp herencias
+// tiene que ser un arbol si la cabeza se mueve los ojos tambien
 Game::Game()
 {
 }
@@ -10,125 +12,278 @@ Game::~Game()
 
 bool Game::OnStart() 
 {	
-	i = 0;
-	//creamos los materiales y les cargamos los shaders
-	material1 = new Material();
-	material1->LoadShaders("VertexTexture.txt", "FragmentTexture.txt");
+	render->setClearScreenColor(0.2f,0.2f,0.7f,1.0f);
 
-	material3 = new Material();	
-	material3->LoadShaders("colorvertexshader.txt", "colorfragmentshader.txt");	
+	looz = new Lighting("Lighting/MultiLightVS.txt", "Lighting/MultiLightFS.txt",2);
+	
+	//shader = new Shader3D("Shader/WairframeVS.txt", "Shader/WairframeFS.txt");
 
-	
-	pollo = new Sprite(render, 3, 4);//le pasas el renderer a utilizar y le decis por cuanto cortas el spritesheet
-	pollo->SetMaterial(material1); // le asignas el material 
-	pollo->LoadMaterial("spritesheet_chicken.bmp"); // le pasas el archivo a cortar (BMP es un archivo nativo del window)
-	pollo->SetPos(0, 0, 0);// Asigna la posicion
-	pollo->SetBoundingBox(2.0f, 2.0f);// le seteas el ancho y alto de la caja de colisiones
-	pollo->SetAnim(0, 11, 1.1f);// desde que frame arranca y hasta cual termina, mas el tiempo de duracion total
-	
-	muchacho = new Sprite(render, 4, 4);
-	muchacho->SetMaterial(material1);
-	muchacho->LoadMaterial("spritesheet_caveman.bmp");
-	muchacho->SetPos(3, 3, 0);
-	muchacho->SetBoundingBox(2.0f, 2.0f);
-	muchacho->SetAnim(0, 15, 0.1f);	
-	
-	cuadradito = new Sprite(render, 1, 1);
-	cuadradito->SetMaterial(material1);
-	cuadradito->LoadMaterial("angry.bmp");
-	cuadradito->SetPos(1, -8, 0);
-	cuadradito->SetBoundingBox(2.0f, 2.0f);
+	cout << endl;
+	cout << "samus" << endl;
+	//samusModel = new Model("Metroid/DolSzerosuitR1.obj");
+	//samusModel->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
+	//samusModel->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
 
-	myLevel = new Tilemap( -10 , 10, 0);
-	myLevel->loadBMPTileset(render, material1, "FinalTile.bmp", 2, 2);
-	myLevel->loatTXTTilemap("Tilemap.txt", 10, 10);
+	cout << "zelda" << endl;
+	//mesh_terrain
+	zeldaModel = new Model("Link/source/zeldaPosed001.fbx");
+	zeldaModel->SetPos(glm::vec3(10.0f, 0.0f, 0.0f));
+	zeldaModel->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
 
-	triangle = new Triangle(render);
-	triangle->SetMaterial(material3);
-	triangle->SetPos(-3, 5, 0);
-	
+
+
+	cout << "mochi" << endl;
+//	clonSamus = new Model("box5.fbx");
+//	clonSamus->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
+//	clonSamus->SetPos(glm::vec3(20.0f, 0.0f, 0.0f));
+
 	inp = new Input(window);
+
+	cam->setCameraPos(10.0f, 7.0f, 31.0f);
+	cam->setCameraRot(-90.0f, 5.5f);
 
 	return true;
 }
+
 //RECORDATORIO crear delta time
 bool Game::OnUpdate() {
+	//-------------------------------------LUZ-----------------------------------------
+	offset = glm::vec3(zeldaModel->GetPos().x+b, zeldaModel->GetPos().y+c, zeldaModel->GetPos().z+d );
 
-	i++;
-	//chequea las colisiones entre 2 sprites
-	CollisionManager::GetInstance()->CheckColision(pollo,muchacho);
-	CollisionManager::GetInstance()->CheckTileColision(pollo, myLevel, 2);
-	//CollisionManager::GetInstance()->CheckColision(pollo,caja);
-
-	//esto es cada cuanto suma la animacion, en un futuro sera un DeltaTime
-	muchacho->UpdAnim(0.05f);
-	pollo->UpdAnim(0.05f);
-	//triangle->SetRot(0.0f, 0.0f, i / 5);
-
-	//Inputs (letra a tocar, 0 const y 1 una sola vez)
-	if (inp->keyCall("Space", 0)) {
-		cam->CameraMoveForward(0.5f);
-		//render->MainCamera()->CameraMoveForward(0.5f);
-		//window->CameraTranslate(0.0f,0.0f,0.5f);
-	}
+	glm::vec3 pointLightPositions[] = {
+		glm::vec3(-2.68787f+a,  14.8674f,  2.34049f),
+		glm::vec3(offset.x , offset.y, offset.z),
+		glm::vec3(-4.0f,  2.0f, -12.0f),
+		glm::vec3(0.0f,  0.0f, -3.0f)
+	};
 
 	
-	//Mov camara
+	looz->use();
+	looz->viewPosition(cam->GetCameraPos());
+	looz->materialShiness(70.0f);
+	looz->directionalPropierties(dirDirection, dirAmbient, dirDiffuse, dirSpecular);
+	looz->pointLight(0,pointLightPositions[0], bpointAmbient, bpointDiffuse, bpointSpecular, pointConstant, pointLinear, pointQuadratic);
+	looz->pointLight(1,pointLightPositions[1], pointAmbient, pointDiffuse, pointSpecular, pointConstant, pointLinear, pointQuadratic);
+	//looz->spotLight("null");
+	looz->spotLight("base", cam->GetCameraPos(), cam->GetCameraDir());
+	looz->viewProyection(cam->GetViewMatrix(), cam->GetProjectionMatrix());
+	
+	//shader->use();
+	//shader->setMat4("projection", cam->GetProjectionMatrix());
+	//shader->setMat4("view", cam->GetViewMatrix());
+
+
+	//samusModel->SetPos(glm::vec3(a, 0.0f, 0.0f));
+	
+
+	//Inputs (letra a tocar, 0 const y 1 una sola vez)
+	//Movimiento
 	if (inp->keyCall('a', 0)) {
-		cam->CameraTranslateX(-0.5f);
+		cam->CameraMoveLeft(0.03f);
 	}
 	if (inp->keyCall('d', 0)) {
-		cam->CameraTranslateX(0.5f);
+		cam->CameraMoveLeft(-0.03f);
 	}
 	if (inp->keyCall('w', 0)) {
-		cam->CameraTranslateZ(-0.5f);
+		cam->CameraMoveForward(0.01f);
 	}
 	if (inp->keyCall('s', 0)) {
-		cam->CameraTranslateZ(0.5f);
+		cam->CameraMoveForward(-0.01f);
 	}
+
+
 	if (inp->keyCall('q', 0)) {
-		cam->CameraTranslateY(-0.5f);
+		b -= 0.1f;
 	}
 	if (inp->keyCall('e', 0)) {
-		cam->CameraTranslateY(0.5f);
+		b += 0.1f;
 	}
-
-
 	if (inp->keyCall('r', 0)) {
-		render->setClearScreenColor(0.8f,0.42,0.23f,1.0f);
+		zeldaModel->GetNames();
 	}
-	return true;
+	if (inp->keyCall('t', 0)) {
+		c += 0.1f;
+	}
+	if (inp->keyCall('y', 0)) {
+		d -= 0.1f;
+	}
+	if (inp->keyCall('u', 0)) {
+		d += 0.1f;
+	}
+	//cout << offset.x<<"," <<offset.y<< "," << offset.z << endl;
 
-/*pollo->SetAnim(3, 5, 0.1f);
-		pollo->Translate(0.1f, 0.0f, 0.0f);*/
+	//Samus y luz
+	if (inp->keyCall('o', 0)) {
+		//a += 0.1;
+		cout << "Zelda: " << zeldaModel->GetPos().x << " , " << zeldaModel->GetPos().y << " , " << zeldaModel->GetPos().z << " , " << endl;
+	}
+	if (inp->keyCall('i', 0)) {
+		//a -= 0.1;
+		cout << "LUZ: " << offset.x << " , " << offset.y << " , " << offset.z << " , " << endl;
+	}
+
+	//zelda hijo
+	if (inp->keyCall('b', 0)) {
+		samusModel->MoveChildren("mesh_eyes",0.01f,0.f,0.f);
+		//cout << "aaa" << endl;
+	}
+	if (inp->keyCall('n', 0)) {
+		samusModel->MoveChildren("mesh_eyes", -0.01f, 0.f, 0.f);
+
+	}
+	if (inp->keyCall('m', 0)) {
+		zeldaModel->MoveChildren("mesh_eyes", -0.01f, 0.f, 0.f);
+		
+	}
+	// todo Zelda
+	if (inp->keyCall('j', 0)) {
+		zeldaModel->Translate(0.1f,0,0);
+	}
+	if (inp->keyCall('v', 0)) {
+		zeldaModel->Rotate(0.1f, 0, 0);
+	}
+
+
+	
+	return true;
 }
 
 //Esto es lo que determina que va a dibujarse
 void Game::OnDraw(){
+
 	
-	myLevel->DrawTiles();
-	myLevel->UpdateTilesAnim(0.05f);
-	pollo->Draw();
-	muchacho->Draw();	
+	//looz->modelLight(zeldaModel->GetWorldMatrix());
+	zeldaModel->Draw(*looz);
+	//zeldaModel->DrawBox(*shader);
+
+	//looz->modelLight(samusModel->GetWorldMatrix());
+	//samusModel->Draw(*looz);
+
+	//looz->modelLight(clonSamus->GetWorldMatrix());
+	//clonSamus->Draw(*looz);
 	
-	//triangle->Draw();
-	//cuadradito->Draw();
 }
 
 bool Game::OnStop() {
 
-	delete material1;
-	delete material3;
-
-	delete myLevel;
-
-	delete triangle;
-
-	delete pollo;
-	delete muchacho;
-	delete cuadradito;
-
 	delete inp;
+
+	delete shader;
+	delete looz;
+	delete samusModel;
+	delete zeldaModel;
+	delete clonSamus;
 
 	return false;
 }
+
+
+
+//material3 = new Material();	
+//material3->LoadShaders("colorvertexshader.txt", "colorfragmentshader.txt");	
+
+//pollo = new Sprite(render, 3, 4);//le pasas el renderer a utilizar y le decis por cuanto cortas el spritesheet
+//pollo->SetMaterial(material1); // le asignas el material 
+//pollo->LoadMaterial("spritesheet_chicken.bmp"); // le pasas el archivo a cortar (BMP es un archivo nativo del window)
+//pollo->SetPos(0, 0, 0);// Asigna la posicion
+//pollo->SetBoundingBox(2.0f, 2.0f);// le seteas el ancho y alto de la caja de colisiones
+//pollo->SetAnim(0, 11, 1.1f);// desde que frame arranca y hasta cual termina, mas el tiempo de duracion total
+
+//muchacho = new Sprite(render, 4, 4);
+//muchacho->SetMaterial(material1);
+//muchacho->LoadMaterial("spritesheet_caveman.bmp");
+//muchacho->SetPos(3, 3, 0);
+//muchacho->SetBoundingBox(2.0f, 2.0f);
+//muchacho->SetAnim(0, 15, 0.1f);	
+
+//cuadradito = new Sprite(render, 1, 1);
+//cuadradito->SetMaterial(material1);
+//cuadradito->LoadMaterial("angry.bmp");
+//cuadradito->SetPos(1, -8, 0);
+//cuadradito->SetBoundingBox(2.0f, 2.0f);
+
+	//triangle = new Triangle(render);
+	//triangle->SetMaterial(material3);
+	//triangle->SetPos(-3, 5, 0);
+
+
+
+
+
+//-----
+
+
+
+//----- LINGHTIG
+//
+//if (true)
+//{
+//	lightingShader->use();
+//	lightingShader->setVec3("viewPos", cam->GetCameraPos());
+//	lightingShader->setFloat("material.shininess", 32.0f);
+//	/*
+//	   Here we set all the uniforms for the 5/6 types of lights we have. We have to set them manually and index
+//	   the proper PointLight struct in the array to set each uniform variable. This can be done more code-friendly
+//	   by defining light types as classes and set their values in there, or by using a more efficient uniform approach
+//	   by using 'Uniform buffer objects', but that is something we'll discuss in the 'Advanced GLSL' tutorial.
+//	*/
+//
+//	// directional light
+//	lightingShader->setVec3("dirLight.direction", a, b, c);
+//	lightingShader->setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+//	lightingShader->setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
+//	lightingShader->setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
+//
+//	// point light 1
+//	lightingShader->setVec3("pointLights[0].position", pointLightPositions[0]);
+//	lightingShader->setVec3("pointLights[0].ambient", 0.5f, 0.5f, 0.5f);
+//	lightingShader->setVec3("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
+//	lightingShader->setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
+//	lightingShader->setFloat("pointLights[0].constant", 1.0f);
+//	lightingShader->setFloat("pointLights[0].linear", 0.09f);
+//	lightingShader->setFloat("pointLights[0].quadratic", 0.032f);
+//	// point light 2
+//	lightingShader->setVec3("pointLights[1].position", pointLightPositions[1]);
+//	lightingShader->setVec3("pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
+//	lightingShader->setVec3("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f);
+//	lightingShader->setVec3("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
+//	lightingShader->setFloat("pointLights[1].constant", 1.0f);
+//	lightingShader->setFloat("pointLights[1].linear", 0.09);
+//	lightingShader->setFloat("pointLights[1].quadratic", 0.032);
+//	// point light 3
+//	lightingShader->setVec3("pointLights[2].position", pointLightPositions[2]);
+//	lightingShader->setVec3("pointLights[2].ambient", 0.05f, 0.05f, 0.05f);
+//	lightingShader->setVec3("pointLights[2].diffuse", 0.8f, 0.8f, 0.8f);
+//	lightingShader->setVec3("pointLights[2].specular", 1.0f, 1.0f, 1.0f);
+//	lightingShader->setFloat("pointLights[2].constant", 1.0f);
+//	lightingShader->setFloat("pointLights[2].linear", 0.09);
+//	lightingShader->setFloat("pointLights[2].quadratic", 0.032);
+//	// point light 4
+//	lightingShader->setVec3("pointLights[3].position", pointLightPositions[3]);
+//	lightingShader->setVec3("pointLights[3].ambient", 0.05f, 0.05f, 0.05f);
+//	lightingShader->setVec3("pointLights[3].diffuse", 0.8f, 0.8f, 0.8f);
+//	lightingShader->setVec3("pointLights[3].specular", 1.0f, 1.0f, 1.0f);
+//	lightingShader->setFloat("pointLights[3].constant", 1.0f);
+//	lightingShader->setFloat("pointLights[3].linear", 0.09);
+//	lightingShader->setFloat("pointLights[3].quadratic", 0.032);
+//	// spotLight
+//	lightingShader->setVec3("spotLight.position", cam->GetCameraPos());
+//	lightingShader->setVec3("spotLight.direction", cam->GetCameraDir());
+//	lightingShader->setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+//	lightingShader->setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
+//	lightingShader->setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
+//	lightingShader->setFloat("spotLight.constant", 1.0f);
+//	lightingShader->setFloat("spotLight.linear", 0.09);
+//	lightingShader->setFloat("spotLight.quadratic", 0.032);
+//	lightingShader->setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+//	lightingShader->setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+//
+//	// view/projection transformations
+//
+//	lightingShader->setMat4("projection", cam->GetProjectionMatrix());
+//	lightingShader->setMat4("view", cam->GetViewMatrix());
+//
+//	// world transformation
+//	glm::mat4 model = glm::mat4(1.0f);
+//	lightingShader->setMat4("model", ourModel->GetWorldMatrix());
+//}

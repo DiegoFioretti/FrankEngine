@@ -568,7 +568,7 @@ bool Input::keyCall(int key, int num) {
 	a++;
 
 	if (glfwGetKey((GLFWwindow*)win->GetWindow(), GLFW_KEY_N) == GLFW_PRESS) {
-		if (key == 'b') {
+		if (key == 'n') {
 			switch (num) {
 			case 0:
 				return true;
@@ -585,7 +585,7 @@ bool Input::keyCall(int key, int num) {
 			}
 		}
 	}
-	if (glfwGetKey((GLFWwindow*)win->GetWindow(), GLFW_KEY_B) == GLFW_RELEASE) {
+	if (glfwGetKey((GLFWwindow*)win->GetWindow(), GLFW_KEY_N) == GLFW_RELEASE) {
 		keyReleased[a] = true;
 	}
 	a++;
@@ -760,9 +760,3 @@ bool Input::keyCall(string key, int num) {
 	return false;
 }
 
-void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
-{
-	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
-	{
-	}
-}
