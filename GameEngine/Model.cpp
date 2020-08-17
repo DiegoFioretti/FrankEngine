@@ -4,16 +4,11 @@
 
 
 // constructor, expects a filepath to a 3D model.
-Model::Model(string const& path, bool gamma) : gammaCorrection(gamma), Transform()
-{
+Model::Model(string const& path, bool gamma) : gammaCorrection(gamma), Transform(){
 	loadModel(path);
-	//tempMesh = new Mesh(verticesTemp, indicesTemp, texturesTemp,0);
-	//totalAABB = new AABB();
-	
 }
 // draws the model, and thus all its meshes
-void Model::Draw(Shader3D shader)
-{
+void Model::Draw(Shader3D shader){
 	for (unsigned int i = 0; i < child.size(); i++) {
 		shader.setMat4("model",child[i].trans->GetWorldMatrix());
 		child[i].aabb->Draw(shader);
@@ -21,65 +16,14 @@ void Model::Draw(Shader3D shader)
 	}
 }
 
-void Model::Draw(Lighting shader)
-{
+void Model::Draw(Lighting shader){
 	for (unsigned int i = 0; i < child.size(); i++) {
 		shader.modelLight(child[i].trans->GetWorldMatrix());
 		child[i].meshes.Draw(shader);
-		child[i].aabb->DrawBox(); 
-
-	}
-
-
-}
-void Model::DrawBox(Shader3D shader)
-{
-	for (unsigned int i = 0; i < child.size(); i++) {
-		shader.setMat4("model", child[i].trans->GetWorldMatrix());
-		//child[i].aabb->DrawBox(shader);
-	}
-
-}
-
-void Model::SetScale(vec3 newScale)
-{
-	for (size_t i = 0; i < child.size(); i++)
-	{
-		child[i].trans->SetScale(newScale);
-	}
-}
-void Model::SetPos(vec3 newPos)
-{
-	for (size_t i = 0; i < child.size(); i++)
-	{
-		child[i].trans->SetPos(newPos);
+		//child[i].aabb->DrawBox(); 
 	}
 }
 
-void Model::SetRot(vec3 newRot)
-{
-	for (size_t i = 0; i < child.size(); i++)
-	{
-		child[i].trans->SetRot(newRot);
-	}
-}
-
-void Model::Translate(float x, float y, float z) {
-
-	for (size_t i = 0; i < child.size(); i++)
-	{
-		child[i].trans->Translate(x,y,z);
-	}
-}
-
-void Model::TranslateFather(float x, float y, float z) {
-
-	for (size_t i = 0; i < child.size(); i++){
-		if (child[i].name=="padre"){
-			child[i].trans->Translate(x, y, z);
-		}
-	}
-}
 
 // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
 void Model::loadModel(string const& path)
@@ -387,79 +331,54 @@ unsigned int TextureFromFile(const char* path, const string & directory, bool ga
 	return textureID;
 }
 
-void Model::MoveChildren(string namea, float x, float y, float z) {
+//-----------------------------------TRANSFORMACIONES--------------------------------------
 
-	cout << "Nombres: " << endl;
+//					de todo el modelo
+void Model::SetScale(vec3 newScale)
+{
 	for (size_t i = 0; i < child.size(); i++)
 	{
-		cout << child[i].name << endl;
+		child[i].trans->SetScale(newScale);
 	}
-
-	for (size_t i = 0; i < child.size(); i++){
-		if (child[i].name==namea){
-			child[i].trans->Translate(x, y, z);
-			child[i].hijo->trans->Translate(x, y, z);
-			child[i].aabb->RezBound(x, y, z);
-			child[i].hijo->aabb->RezBound(x, y, z);
-		}
-	}
-	
-	if (child[0].name == "padre")
+}
+void Model::SetPos(vec3 newPos)
+{
+	for (size_t i = 0; i < child.size(); i++)
 	{
-		allBounds.clear();
-		for (size_t i = 0; i < child.size(); i++)
-		{
-			allBounds.push_back(child[i].aabb->getNewBounds());
-		}
-		child[0].aabb->CalculateAllBounds(allBounds);
+		child[i].trans->SetPos(newPos);
 	}
-	
-
 }
 
-
-void Model::RotChildren(string namea, float x, float y, float z) {
-
-	for (size_t i = 0; i < child.size(); i++) {
-		if (child[i].name == namea) {
-			child[i].trans->Rotate(x, y, z);
-		}
+void Model::SetRot(vec3 newRot)
+{
+	for (size_t i = 0; i < child.size(); i++)
+	{
+		child[i].trans->SetRot(newRot);
 	}
-
 }
 
-void Model::ScaleChildren(string namea, vec3 num) {
+void Model::Translate(float x, float y, float z) {
 
-	for (size_t i = 0; i < child.size(); i++) {
-		if (child[i].name == namea) {
-			child[i].trans->SetScale(num);
-		}
+	for (size_t i = 0; i < child.size(); i++)
+	{
+		child[i].trans->Translate(x, y, z);
 	}
-
 }
 
 void Model::Rotate(float x, float y, float z)
 {
 	for (size_t i = 0; i < child.size(); i++)
 	{
-		child[i].trans->Rotate(x,y,z);
+		child[i].trans->Rotate(x, y, z);
 	}
 }
 
-vec3 Model::GetFatherPos() {
-	return padre.trans->GetPos();
-}
+//					del hijo y sus hijos
+void Model::MoveAllChildren(string namea, float x, float y, float z) {
 
-void Model::GetNames() {
 	sonsR = 0;
-	cout << "Nombres: "<<endl;
-	for (size_t i = 0; i < child.size(); i++)
-	{
-		cout << child[i].name << endl;
-	}
-
 	for (size_t i = 0; i < child.size(); i++) {
-		if (child[i].name == "mesh_torch") {
+		if (child[i].name == namea) {
 			child[i].trans->Translate(0.1, 0, 0);
 			child[i].aabb->RezBound(0.1, 0, 0);
 			sonsR = i;
@@ -476,18 +395,46 @@ void Model::GetNames() {
 		}
 		child[0].aabb->CalculateAllBounds(allBounds);
 	}
-
 }
 
 void Model::AllSons() {
-	if (child[sonsR].hijo!=nullptr)
-	{
+	if (child[sonsR].hijo != nullptr){
 		child[sonsR].hijo->aabb->RezBound(0.1, 0, 0);
 		child[sonsR].hijo->trans->Translate(0.1, 0, 0);
 		sonsR++;
 		AllSons();
 	}
+}
 
+//						mueve solo un hijo
+void Model::ScaleChildren(string namea, vec3 num){
+	for (size_t i = 0; i < child.size(); i++) {
+		if (child[i].name == namea) {
+			child[i].trans->SetScale(num);
+		}
+	}
+}
+void Model::RotChildren(string namea, float x, float y, float z) {
+	for (size_t i = 0; i < child.size(); i++) {
+		if (child[i].name == namea) {
+			child[i].trans->Rotate(x, y, z);
+		}
+	}
+}
+
+void Model::MoveChildren(string namea, float x, float y, float z) {
+	for (size_t i = 0; i < child.size(); i++) {
+		if (child[i].name == namea) {
+			child[i].trans->Translate(x,y,z);
+		}
+	}
+}
+
+// Devuelve todos los nombres del modelo
+void Model::GetNames() {
+	for (size_t i = 0; i < child.size(); i++) {
+		cout << child[i].name << endl;
+	}
 }
 
 Model::~Model()
