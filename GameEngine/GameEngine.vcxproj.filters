@@ -103,7 +103,7 @@
       <Filter>Archivos de origen\General</Filter>
     </ClCompile>
     <ClCompile Include="Renderizer.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Archivos de origen\General</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -180,7 +180,7 @@
       <Filter>Archivos de encabezado\General</Filter>
     </ClInclude>
     <ClInclude Include="Renderizer.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de encabezado\General</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
