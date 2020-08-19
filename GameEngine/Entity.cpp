@@ -1,10 +1,11 @@
 #include "Entity.h"
 
 //Guarda todos los valores de transformacion del objeto 
-Entity::Entity(Renderer *renderPTR)
+Entity::Entity()
 {
-	boundBox = NULL;
-	render = renderPTR;
+	
+	render =Renderizer::GetInstance()->rnd;
+	
 	WorldMatrix = mat4(1.0f);
 	TranslateMatrix = mat4(1.0f);
 	RotMatrix = mat4(1.0f);
@@ -13,16 +14,18 @@ Entity::Entity(Renderer *renderPTR)
 	pos[0] = pos[1] = pos[2] = 0.0f;
 	rot[0] = rot[1] = rot[2] = 0.0f;
 	scale[0] = scale[1] = scale[2] = 1.0f;
+
+	vec2 tempVec;
+	tempVec.x = pos.x;
+	tempVec.y = pos.y;
+	boundBox=new BoundingBox(tempVec,1,1);
 }
 
 void Entity::SetPos(float x, float y, float z)
 {
-	if (boundBox == NULL) {
-		pos[0] = x;
-		pos[1] = y;
-		pos[2] = z;
-	}
-	else if (!boundBox->GetCollision()) {
+	
+
+	if (!boundBox->GetCollision()) {
 		pos[0] = x;
 		pos[1] = y;
 		pos[2] = z;

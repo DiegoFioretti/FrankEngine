@@ -1,11 +1,14 @@
 #pragma once
 #include "Entity.h"
-#include "BoundingBox.h"
+//#include "BoundingBox.h"
 #include "Material.h"
 
 
 class FRANKENGINE_API Shape : public Entity
 {
+private:
+	int count = 4;
+
 protected:
 	Material * material;
 
@@ -22,10 +25,10 @@ protected:
 	float * colorVertex;
 
 public:
-	Shape(Renderer * render);
+	Shape();
 	virtual void Draw() = 0;
 	void DrawMesh(int typeDraw);
-	void SetVertices(float * vertices, int count);
+	void SetVertices();
 	void SetColorVertex(float * vertices, int count);
 	void SetMaterial(Material* material);
 	~Shape();

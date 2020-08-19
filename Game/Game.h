@@ -17,16 +17,6 @@ using namespace std;
 
 class Game : public GameBase {
 private:
-	//Entity* pollo;
-	//Sprite* muchacho;
-	//Sprite* cuadradito;
-
-	//Tilemap* myLevel;
-
-	//Triangle* triangle;
-
-	//Material * material1;
-	//Material * material3;
 
 	Camera* cam;
 	Input * inp;
@@ -73,6 +63,7 @@ private:
 	float c = 14.7f;
 	float d = 5.8f;
 
+
 public:
 	Game();
 	~Game();
@@ -84,7 +75,19 @@ protected:
 };
 
 
-/*Dudas:
-camera.cpp
+/*
+Sprite* pollo;
+	Sprite* muchacho;
+	Sprite* cuadradito;
+	
+	Tilemap* myLevel;
 
+	Material * material1;
+
+
+	CollisionManager* col;
+
+	bool setAnimL = false;
+	bool setAnimR = false;
+	bool cancel = false;
 */

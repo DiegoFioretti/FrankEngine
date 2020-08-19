@@ -2,8 +2,8 @@
 
 //Aca tiene toda la informacion de las cajas de colisiones 
 
-BoundingBox::BoundingBox(glm::vec2 pos, unsigned int w, unsigned int h) :
-	boxPosition(pos), width(w), height(h),  collision(false) {
+BoundingBox::BoundingBox(glm::vec2 pos, unsigned int w, unsigned int h) : boxPosition(pos), width(w), height(h),  collision(false) {
+
 }
 
 float BoundingBox::GetX()

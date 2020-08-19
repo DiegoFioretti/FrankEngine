@@ -9,7 +9,7 @@ using namespace glm;
 class FRANKENGINE_API BoundingBox
 {
 private:
-	vec2 boxPosition;
+	vec2 boxPosition ;
 	float height;
 	float width;
 	bool collision;

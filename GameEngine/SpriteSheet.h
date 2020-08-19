@@ -8,11 +8,10 @@ class FRANKENGINE_API SpriteSheet
 private:
 	float *uvArrays;
 	vector<float*> * uvVector;
-	int textureH;
-	int textureW;
+
 
 public:
-	SpriteSheet(int columns, int rows, int texW,int texH);
+	SpriteSheet(int columns, int rows);
 	~SpriteSheet();
 	float* GetSprite(int index);
 	int GetSize();

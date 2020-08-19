@@ -1,29 +1,22 @@
 #include "Sprite.h"
 
 // Para dibujar con textura 
-Sprite::Sprite(Renderer * render, int columns, int rows) : Shape(render) {
+Sprite::Sprite( int columns, int rows)  {
 	onCollision = false;
-	vertex = new float[12]{
-		-1.0f, -1.0f, 0.f,
-		-1.0f,  1.0f, 0.f,
-		 1.0f, -1.0f, 0.f,
-		 1.0f,  1.0f, 0.f
-	};
-	SetVertices(vertex, 4);
-
 	anim = new Animation(columns, rows);
-	
 	uvArray = anim->UpdateAnimation(0);
+
 	SetTextureVertex(uvArray, 4);
 }
 
 void Sprite::SetTextureVertex(float * vertices, int count) {
 	DisposeTexture();
 
-	uvVtxCount = count;
 	ShouldDispouseTexture = true;
-	uvBufferID = render->GenBuffer(vertices, sizeof(float)* count * 2);
+	uvBufferID = render->GenBuffer(vertices, sizeof(float) * count * 2);
+	
 }
+
 
 void Sprite::DisposeTexture() {
 	if (ShouldDispouseTexture)
@@ -34,7 +27,15 @@ void Sprite::DisposeTexture() {
 }
 
 void Sprite::SetAnim(int initF, int finishF, float timePerF) {
-	anim->SetAnimation(initF, finishF, timePerF);
+	if (initF != animB ){
+		animB = initF;
+		anim->SetAnimation(initF, finishF, timePerF);
+	}
+	if (finishF != animE){
+		animE = finishF;
+		anim->SetAnimation(initF, finishF, timePerF);
+	}
+	
 }
 
 
@@ -54,10 +55,10 @@ bool Sprite::getCollision()
 	return onCollision;
 }
 
-void Sprite::LoadMaterial(const char * bmpFile) {
+void Sprite::LoadTexture(const char * bmpFile) {
 	TextureImporter::LoadBMP(bmpFile,texture);
 	textureID = render->ChargeTexture(texture.width, texture.height, texture.data);
-	material->BindTexture("myTextureSampler");
+	
 }
 
 

@@ -4,10 +4,8 @@
 #include "TextureImporter.h"
 #include "Animation.h"
 
-class FRANKENGINE_API Sprite :
-	public Shape
+class FRANKENGINE_API Sprite : public Shape
 {
-
 private:
 
 	BMPheader texture;
@@ -19,21 +17,26 @@ private:
 	bool onCollision;
 	bool ShouldDispouseTexture;
 
+	bool ShouldDispouseTexture;
+	int animB;
+	int animE;
+
 public:
 	void Draw() override;
 	void DrawMeshWithTexture(int typeDraw);
-	void LoadMaterial(const char * bmpFile);
+	void LoadTexture(const char * bmpFile);
 	void SetTextureVertex(float * vertices, int count);
 
 	void UpdAnim(float deltaTime);
 	void SetAnim(int initF, int finishF, float timePerF);
 
+	void DisposeTexture();
+
 	void setCollision();
 	bool getCollision();
 
-	void DisposeTexture();
 
-	Sprite(Renderer * render, int columns, int rows);
+	Sprite(int columns, int rows);
 	~Sprite();
 };
 

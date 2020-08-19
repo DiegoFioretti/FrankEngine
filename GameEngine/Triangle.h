@@ -5,7 +5,7 @@ class FRANKENGINE_API Triangle :public Shape
 {
 
 public:
-	Triangle(Renderer *render);
+	Triangle();
 	~Triangle();	
 	void Draw() override;
 };

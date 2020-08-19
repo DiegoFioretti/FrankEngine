@@ -1,62 +1,71 @@
 #include "Tilemap.h"
 
+// Tilmap funciona de la siguiente manera:
+// Se crean los tiles , se le setea el material, la textura , el bounding box y el uv uno x cada tile y se guardan en tileArchive
+// Load TXT carga el txt y levanta todos los numeros asignados y los guarda en un array
+// Draw lo que hace es agarrar los tiles creados, en este caso 4 y dibujarlos donde corresponden , y guarda la posicion de cada tile en un vec pos
+// Col lo que hace es ver que numero le pasas (Num de Tile) ve la posicion y genera una colsion.
+// Esta es la mejor y mas optima forma que creamos ya que solo usa solo 4 tiles para dibujar y con las posiciones que fueron dibujadas se puede crear la colision
+
 Tilemap::Tilemap(float x, float y, float z)
 {
 	_x = x;
 	_y = y;
 	_z = z;
-
-	for (size_t i = 0; i < MAXTILES; i++)
-	{
-		_tileArchive[i] = NULL;
+	 
+	for (size_t i = 0; i < MAXTILESINMAP; i++){
+		_mapGuide[i] = -10;
 	}
-	for (size_t i = 0; i < MAXTILESINMAP; i++)
-	{
-		_mapGuide[i] = -1;
-	}
-	_tileAmount = 0;
 	_tilesetExist = false;
 }
 
 
-Tilemap::~Tilemap()
-{
-	for (size_t i = 0; i < MAXTILES; i++)
-	{
-		if (_tileArchive[i] != NULL)
-		{
-			delete _tileArchive[i];
-		}
-	}
-}
 
-void Tilemap::loadBMPTileset(Renderer* render, Material* material, const char* bmpFile, int columns, int rows)
+// cargado asignacion de textura para cada tile
+void Tilemap::loadBMPTileset(Material* material, const char* bmpFile, int columns, int rows)
 {
-
+	CutTileSet(columns, rows);
 	_tileAmount = columns * rows;
-	if (_tileAmount > MAXTILES)
-	{
-		printf("MAXIMO DE TILES ALCANZADO. CANCELANDO OPERACION");
-	}
-	else
-	{
-		for (size_t i = 0; i < _tileAmount; i++)
-		{
-			_tileArchive[i] = new Tile(render, columns, rows, i);
-			_tileArchive[i]->SetMaterial(material);
-			_tileArchive[i]->LoadMaterial(bmpFile);
-			_tileArchive[i]->SetBoundingBox(2.0f, 2.0f);
-			_tileArchive[i]->SetAnim(i, i, 0.5f);
-		}
+	for (int i = 0; i < _tileAmount; i++){
 
-		_tileArchive[0]->SetPos(-3, 6, 0);
-		_tileArchive[1]->SetPos(-1, 6, 0);
-		_tileArchive[2]->SetPos(1, 6, 0);
-		_tileArchive[3]->SetPos(3, 6, 0);
-
+		auxTile = new Tile(i);
+		auxTile->SetMaterial(material);
+		auxTile->LoadTexture(bmpFile);
+		auxTile->SetBoundingBox(2.0f, 2.0f);
+		auxTile->UVArr(GetTile(i));
+		_tileArchive.push_back(auxTile);
 		_tilesetExist = true;
 	}
 }
+
+void Tilemap::CutTileSet(int col, int row) {
+
+	uvVector = new vector<float*>();
+	float frameW = 1.0f / col;
+	float frameH = 1.0f / row;
+	int totalSprites = col * row;
+
+	for (int i = 0; i < totalSprites; i++) {
+		float x = (i % col) * frameW;
+		float y = (i / col) * frameH;
+
+		uvArrays = new float[8]{
+
+			 x , 1 - (y + frameH),
+			 x , 1 - y ,
+			(x + frameW) , 1 - (y + frameH),
+			(x + frameW) , 1 - (y)
+		};
+
+		uvVector->push_back(uvArrays);
+	}
+
+}
+
+float* Tilemap::GetTile(int index) {
+	return uvVector->at(index);
+}
+
 
 void Tilemap::loatTXTTilemap(const char* txtFile, int width, int height)
 {
@@ -68,6 +77,7 @@ void Tilemap::loatTXTTilemap(const char* txtFile, int width, int height)
 	{
 		_mapWidth = width;
 		_mapHeight = height;
+		_tileAmount = _mapWidth * _mapHeight;
 	//-------------------------------
 	//leo el tilemap y lo guardo en un sting
 		std::string tile;
@@ -91,64 +101,41 @@ void Tilemap::loatTXTTilemap(const char* txtFile, int width, int height)
 		//paso el tring a un array de ints
 		num = 0;
 		
-		int mapa[MAXTILESINMAP];
-		for (int i = 0; i < MAXTILESINMAP; i++)
+		for (int i = 0; i < tile.length(); i++)
 		{
-			mapa[i] = -1;
-		}
-		for (int i = 0; i < tile.length(); i++) {
-			if (tile[i] == ',') {
-
-			}
-			else {
-				mapa[num] = int(tile[i]) - 48;
+			if ((tile[i]-48)>-2)
+			{
+				_mapGuide[num] = int(tile[i]) - 48;
 				num++;
 			}
+			
 		}
-		
-		for (size_t i = 0; i < MAXTILESINMAP; i++)
-		{
-			_mapGuide[i] = mapa[i];
-		}
-
-		//---------------------
 	}
 }
 
-void Tilemap::DrawTiles()
-{
+void Tilemap::DrawTiles(){
 	num = 0;
-	for (size_t i = 0; i < _mapWidth; i++)
-	{
-		for (size_t j = 0; j < _mapHeight; j++)
-		{
-			while (_mapGuide[num] < 0)
-			{
-				num++;
+	for (size_t i = 0; i < _mapWidth; i++){
+		for (size_t j = 0; j < _mapHeight; j++){
+			if (_mapGuide[num] < 0){
+
 			}
-			_tileArchive[_mapGuide[num]]->SetPos(_x + (2.0f * j), _y - (2.0f * i), _z);
-			_tileArchive[_mapGuide[num]]->Draw();
+			else
+			{
+				_tileArchive[_mapGuide[num]]->SetPos(_x + (2.0f * j), _y - (2.0f * i), _z);
+				_tileArchive[_mapGuide[num]]->Draw();
+
+				if (first){
+					pos.push_back(vec3(_x + (2.0f * j), _y - (2.0f * i), _z));
+				}
+			}
 			num++;
 		}
 	}
+	first = false;
 }
 
-void Tilemap::UpdateTilesAnim(float time)
-{
-	num = 0;
-	for (size_t i = 0; i < _mapWidth; i++)
-	{
-		for (size_t j = 0; j < _mapHeight; j++)
-		{
-			while (_mapGuide[num] < 0)
-			{
-				num++;
-			}
-			_tileArchive[_mapGuide[num]]->UpdAnim(time);
-			num++;
-		}
-	}
-}
+
 
 int Tilemap::GetTileAmount()
 {
@@ -165,4 +152,27 @@ Tile* Tilemap::GetTileInfo(int tileid)
 	{
 		return NULL;
 	}
+}
+
+void Tilemap::MakeColTile( Entity* A, int numTile ) {
+
+	if (!first)
+	{
+		for (int i = 0; i < _tileAmount; i++)
+		{
+			if (_mapGuide[i] == numTile)
+			{
+				_tileArchive[numTile]->SetPos(pos[i].x, pos[i].y, pos[i].z);
+				cul->MakeCollision(A, _tileArchive[numTile]);
+			}
+		}
+	}
+}
+
+
+Tilemap::~Tilemap()
+{
+	auxTile = NULL;
+	_tileArchive.clear();
+	delete uvVector;
 }

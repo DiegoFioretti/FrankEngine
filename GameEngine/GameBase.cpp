@@ -15,12 +15,16 @@ bool GameBase::Start(int h, int w, char* name) {
 	render = new Renderer();
 	if (!render->Start(window))
 		return false;
+
 	render->setClearScreenColor(0.93f, 0.0f, 0.0f, 0.0f);
+
 	render->ClearScreen();
 
+	rnzr = new Renderizer(render);
 	return OnStart();
 }
 void GameBase::Loop() {
+
 	bool loop = true;
 	while (loop && !window->ShouldClose()) {
 		_currentFrame = glfwGetTime();
@@ -41,6 +45,7 @@ bool GameBase::Stop() {
 	render->Stop();
 	window->Stop();
 
+	delete rnzr;
 	delete render;
 	delete window;
 	return true;

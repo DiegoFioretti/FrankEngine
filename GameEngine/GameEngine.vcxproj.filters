@@ -102,6 +102,9 @@
     <ClCompile Include="Window.cpp">
       <Filter>Archivos de origen\General</Filter>
     </ClCompile>
+    <ClCompile Include="Renderizer.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h">
@@ -175,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="Window.h">
       <Filter>Archivos de encabezado\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderizer.h">
+      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

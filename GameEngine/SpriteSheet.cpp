@@ -1,9 +1,7 @@
 #include "SpriteSheet.h"
 
 // divide la imagen por las columnas y filas
-SpriteSheet::SpriteSheet(int columns, int rows, int texW, int texH) :
-	textureH(texH),
-	textureW(texW)
+SpriteSheet::SpriteSheet(int columns, int rows) 
 {
 	uvVector = new vector<float*>();
 	float frameW = 1.0f / columns;
@@ -11,19 +9,22 @@ SpriteSheet::SpriteSheet(int columns, int rows, int texW, int texH) :
 	int totalSprites = columns * rows;
 
 	for (int i = 0; i < totalSprites; i++) {
-		float x = (i % columns) * frameW;
-		float y = (i / columns) * frameH;
+		//Este calculo hace un recorrido sobre los sprites
+		float x = (i % columns) * frameW; //Este va a la derecha
+		float y = (i / columns) * frameH; //Este baja 
 
+		// aca van los puntos de cada sprite
 		uvArrays = new float[8]
 		{
-			x / textureW, 1 - ((y + frameH) / textureH),
-			x / textureW, 1 - y / textureH,
-			(x + frameW) / textureW , 1 - ((y + frameH) / textureH),
-			(x + frameW) / textureW, 1 - (y / textureH)
+			 x , 1 - (y + frameH),			//minX y minY
+			 x , 1 - y ,					//minX y maxY 
+			(x + frameW) , 1 - (y + frameH),//maxX y minY
+			(x + frameW) , 1 - (y)			//maxX y maxY
 		};
 
 		uvVector->push_back(uvArrays);
 	}
+	int i;
 }
 
 SpriteSheet::~SpriteSheet()

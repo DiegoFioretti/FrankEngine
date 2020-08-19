@@ -1,9 +1,7 @@
 #pragma once
+#include "Entity.h"
 #include<list>
 #include<vector>
-#include"Sprite.h"
-#include "Tilemap.h"
-#include"BoundingBox.h"
 #include<glm/glm.hpp>
 #include<glm/gtc/matrix_transform.hpp>
 
@@ -11,21 +9,32 @@ using namespace std;
 
 class FRANKENGINE_API CollisionManager
 {
+	
 private:
 	/*Box Collision*/
+	
 
-	void VerticalCollision(Sprite * SpriteA, Sprite * SpriteB,
+	void VerticalCollision(Entity * EntityA, Entity* EntityB,
 		BoundingBox * A, BoundingBox * B, float penetrateY);
 
-	void HorizontalCollision(Sprite * SpriteA, Sprite * SpriteB,
+	void HorizontalCollision(Entity* EntityA, Entity* EntityB,
 		BoundingBox * A, BoundingBox * B, float penetrateX);
 
-	CollisionManager();
 	static CollisionManager * Instance;
+
+	void AddEntity(Entity* entidad);
+
 public:
+	CollisionManager();
+
 	static CollisionManager * GetInstance();
 	
-	void CheckColision(Sprite* a, Sprite* b);
-	void CheckTileColision(Sprite* a, Tilemap* level, int tileID);
+	void MakeCollision(Entity* a, Entity* b);
+
+	void WallCollision(Entity* a);
+
+	bool CheckCollision(Entity* a, Entity* b);
+
+	void CheckTileColision(Entity* a, Entity* level, int tileID);
 	~CollisionManager();
 };
