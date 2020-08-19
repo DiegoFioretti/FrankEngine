@@ -3,14 +3,23 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 using namespace glm;
 
 class FRANKENGINE_API Camera
 {
 private:
+	float frustum[6][4];
+	float proj[16];
+	const float* projSource;
+	float view[16];
+	const float* viewSource;
+	float clip[16];
+	float t;
 public:
 	Camera(GLFWwindow* window);
 	~Camera();
+	void ProcessFrustrum();
 	void CameraMoveForward(float speed);
 	void CameraMoveLeft(float speed);
 	void CameraTranslate(float x, float y, float z);

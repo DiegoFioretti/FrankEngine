@@ -115,7 +115,9 @@ bool Game::OnUpdate() {
 	//Samus y luz
 	if (inp->keyCall('o', 0)) {
 		//a += 0.1;
-		cout << "Zelda: " << zeldaModel->GetPos().x << " , " << zeldaModel->GetPos().y << " , " << zeldaModel->GetPos().z << " , " << endl;
+		cout << GL_PROJECTION_MATRIX << endl;
+		cout << GL_MODELVIEW_MATRIX << endl;
+		//cout << "Zelda: " << zeldaModel->GetPos().x << " , " << zeldaModel->GetPos().y << " , " << zeldaModel->GetPos().z << " , " << endl;
 	}
 	if (inp->keyCall('i', 0)) {
 		//a -= 0.1;

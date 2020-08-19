@@ -118,6 +118,7 @@ void Renderer::SwapBuffer() {
 void Renderer::UpdateWVP()
 {
 	WVP = cam->GetProjectionMatrix() *cam->GetViewMatrix()* WorldMatrix;
+	cam->ProcessFrustrum();
 }
 
 glm::mat4 & Renderer::GetWVP()
