@@ -5,7 +5,9 @@
 using namespace std;
 class FRANKENGINE_API GameBase {
 private:
-
+	float _deltaTime = 0;
+	float _lastFrame = 0;
+	float _currentFrame = 0;
 protected:
 	Renderer * render;
 	Window * window;
@@ -19,5 +21,6 @@ public:
 	void Loop();
 	GameBase();
 	~GameBase();
+	float DeltaTime();
 };
 

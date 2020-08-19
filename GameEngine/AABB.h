@@ -30,7 +30,7 @@ public:
 
 	Bounds getBounds();
 	Bounds getNewBounds();
-	glm::vec3 getVertices(int a);
+	void getAABB();
 
 private:
 	

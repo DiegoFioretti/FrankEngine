@@ -200,9 +200,12 @@ void AABB::DrawBox(){
 
 }
 
-glm::vec3 AABB::getVertices(int a) {
+void AABB::getAABB() {
 
-	return vertex[a];
+	cout << " MaxX: " << bounds.maxX << endl;
+	cout << " MaxY: " << bounds.maxY << endl;
+	cout << " MaxZ: " << bounds.maxZ << endl;
+
 }
 
 Bounds AABB::getBounds() {

@@ -23,6 +23,10 @@ bool GameBase::Start(int h, int w, char* name) {
 void GameBase::Loop() {
 	bool loop = true;
 	while (loop && !window->ShouldClose()) {
+		_currentFrame = glfwGetTime();
+		_deltaTime = _currentFrame - _lastFrame;
+		_lastFrame = _currentFrame;
+
 		loop = OnUpdate();
 		render->ClearScreen();
 		OnDraw();
@@ -40,5 +44,9 @@ bool GameBase::Stop() {
 	delete render;
 	delete window;
 	return true;
+}
+
+float GameBase::DeltaTime() {
+	return _deltaTime;
 }
 

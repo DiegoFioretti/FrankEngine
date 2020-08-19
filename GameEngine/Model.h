@@ -64,11 +64,10 @@ public:
 	Model(string const& path, bool gamma = false);
 	void Draw(Shader3D shader);
 	void Draw(Lighting shader);
-	void DrawBox(Shader3D shader);
 	~Model();
 
 	void MoveChildren(string namea,float x , float y,float z);
-	void MoveChildren1(string namea, float x, float y, float z);
+	void MoveAllChildren(string namea, float x, float y, float z);
 	void RotChildren(string namea, float x, float y, float z);
 	void ScaleChildren(string namea, vec3 num);
 	void Rotate(float x, float y, float z);
@@ -76,8 +75,6 @@ public:
 	void SetPos(vec3 newPos);
 	void SetRot(vec3 newRot);
 	void Translate(float x, float y, float z);
-	void TranslateFather(float x, float y, float z);
-	vec3 GetFatherPos();
 	void GetNames();
 	void AllSons();
 	int sonsR;
