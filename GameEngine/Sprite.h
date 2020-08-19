@@ -17,7 +17,6 @@ private:
 	bool onCollision;
 	bool ShouldDispouseTexture;
 
-	bool ShouldDispouseTexture;
 	int animB;
 	int animE;
 

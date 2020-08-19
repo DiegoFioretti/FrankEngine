@@ -28,6 +28,5 @@ public:
 	
 	GameBase();
 	~GameBase();
-	float DeltaTime();
 };
 
