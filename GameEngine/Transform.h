@@ -1,5 +1,7 @@
 #pragma once
 #include "Exports.h"
+#include "Renderizer.h"
+#include "AABB.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 

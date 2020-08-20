@@ -11,7 +11,7 @@ Model::Model(string const& path, bool gamma) : gammaCorrection(gamma), Transform
 void Model::Draw(Shader3D shader){
 	for (unsigned int i = 0; i < child.size(); i++) {
 		shader.setMat4("model",child[i].trans->GetWorldMatrix());
-		child[i].aabb->Draw(shader);
+		//child[i].aabb->Draw(shader);
 
 	}
 }
@@ -90,6 +90,7 @@ void Model::loadModel(string const& path)
 
 
 
+
 }
 
 // processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
@@ -108,10 +109,10 @@ void Model::processNode(aiNode * node, const aiScene * scene){
 		//names.push_back(name);
 
 
-
+		
 		if (first)
 		{
-			tempAABB = new AABB(processMesh(mesh, scene));
+			tempAABB = new AABB();
 			tempAABB->SetBox();
 			//tempAABB->CalculateBounds(processMesh(mesh, scene).vertices);
 
@@ -120,7 +121,7 @@ void Model::processNode(aiNode * node, const aiScene * scene){
 			tempT->SetRot(this->GetRot());
 			tempT->SetScale(this->GetScale());
 
-			totalAABB = new AABB(processMesh(mesh, scene));
+			totalAABB = new AABB();
 			totalAABB->SetBox();
 			//padre = { tempT, totalAABB };
 
@@ -137,7 +138,7 @@ void Model::processNode(aiNode * node, const aiScene * scene){
 		tempT->SetRot(this->GetRot());
 		tempT->SetScale(this->GetScale());
 
-		tempAABB = new AABB(processMesh(mesh, scene));
+		tempAABB = new AABB();
 		tempAABB->SetBox();
 		tempAABB->CalculateBounds(processMesh(mesh, scene).vertices);
 

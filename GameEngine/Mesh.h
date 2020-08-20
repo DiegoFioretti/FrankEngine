@@ -11,36 +11,18 @@
 #include "Exports.h"
 #include "Shader3D.h"
 #include "Lighting.h"
+#include "Vertexx.h"
 
 using namespace std;
 
-struct Vertex {
-	// position
-	glm::vec3 Position;
-	// normal
-	glm::vec3 Normal;
-	// texCoords
-	glm::vec2 TexCoords;
-	// tangent
-	glm::vec3 Tangent;
-	// bitangent
-	glm::vec3 Bitangent;
-};
+
 struct Texture {
 	unsigned int id;
 	string type;
 	string path;
 };
 
-struct Bounds
-{
-	float maxX = INT32_MIN;
-	float maxY = INT32_MIN;
-	float maxZ = INT32_MIN;
-	float minX = INT32_MAX;
-	float minY = INT32_MAX;
-	float minZ = INT32_MAX;
-};
+
 
 class FRANKENGINE_API Mesh
 {

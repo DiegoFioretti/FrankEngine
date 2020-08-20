@@ -334,8 +334,6 @@ void Camera::setCameraRot(float yaw, float pitch){
 	_cameraDir.y = sin(radians(_pitch));
 	_cameraDir.z = sin(radians(_yaw)) * cos(radians(_pitch));
 
-
-
 	UpdateViewMatrix();
 }
 

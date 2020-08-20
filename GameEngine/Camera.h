@@ -1,12 +1,13 @@
 #pragma once
 #include "Exports.h"
+//#include "Transform.h"
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 using namespace glm;
 
-class FRANKENGINE_API Camera
+class FRANKENGINE_API Camera//: public Transform
 {
 private:
 	float frustum[6][4];
@@ -28,7 +29,6 @@ public:
 	void CameraTranslateZ(float z);
 	void CameraRotate(float pitch, float yaw);
 	void UpdateViewMatrix();
-	void UpdateProyectionMatrix();
 	vec3 GetCameraDir();
 	float GetCameraYaw();
 	float GetCameraPitch();

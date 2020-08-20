@@ -3,17 +3,26 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/glm.hpp>
 #include <GL/glew.h>
-#include <string>
-#include <fstream>
-#include <sstream>
+
 #include <iostream>
-
+#include <vector>
 #include "Exports.h"
-#include "Mesh.h"
+#include "Vertexx.h"
 
-class FRANKENGINE_API AABB : public Mesh {
+using namespace std;
+
+struct Bounds
+{
+	float maxX = INT32_MIN;
+	float maxY = INT32_MIN;
+	float maxZ = INT32_MIN;
+	float minX = INT32_MAX;
+	float minY = INT32_MAX;
+	float minZ = INT32_MAX;
+};
+
+class FRANKENGINE_API AABB {
 public:
-	AABB(Mesh msh);
 	AABB();
 	Bounds bounds;
 	void CalculateBoundingBox(Bounds bounds);

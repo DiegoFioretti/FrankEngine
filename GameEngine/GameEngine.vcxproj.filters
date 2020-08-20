@@ -182,5 +182,8 @@
     <ClInclude Include="Renderizer.h">
       <Filter>Archivos de encabezado\General</Filter>
     </ClInclude>
+    <ClInclude Include="Vertexx.h">
+      <Filter>Archivos de encabezado\3D</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

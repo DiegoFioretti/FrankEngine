@@ -1,10 +1,6 @@
 #include "AABB.h"
 
 
-AABB::AABB(Mesh msh):Mesh( msh.vertices,  msh.indices, msh.textures, msh.layer){
-
-}
-
 AABB::AABB() {
 
 
@@ -40,15 +36,16 @@ void AABB::SetBox() {
 	for (int i = 0; i < 36; i++)
 		cIndices.push_back(cubeIndices[i]);
 	
-	glGenVertexArrays(1, &VAO);
+	/*glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
+	glGenBuffers(1, &EBO);*/
 	Setup();
 
 }
 
 void AABB::Setup()
 {
+	/*
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -61,7 +58,7 @@ void AABB::Setup()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
-	glBindVertexArray(0);
+	glBindVertexArray(0);*/
 
 	
 }
@@ -94,8 +91,6 @@ void AABB::CalculateBounds(vector<Vertex> vertices)
 
 void AABB::CalculateAllBounds(vector<Bounds> allBounds)
 {
-	if (!vertices.empty())
-	{
 		Bounds resetBounds;
 		bounds = resetBounds;
 		for (int i = 0; i < allBounds.size(); i++)
@@ -119,7 +114,6 @@ void AABB::CalculateAllBounds(vector<Bounds> allBounds)
 				bounds.minZ = allBounds[i].minZ;
 			
 		}
-	}
 
 	CalculateBoundingBox(bounds);
 }
@@ -187,7 +181,7 @@ void AABB::RezBound(float x, float y, float z) {
 
 void AABB::DrawBox(){
 	
-	//shader.use();
+	/*//shader.use();
 	glBindVertexArray(VAO);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -196,7 +190,7 @@ void AABB::DrawBox(){
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	glBindVertexArray(0);
+	glBindVertexArray(0);*/
 
 }
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Exports.h"
-#include "AABB.h"
+#include "Mesh.h"
 #include "Transform.h"
 
 #include <glm/glm.hpp>
