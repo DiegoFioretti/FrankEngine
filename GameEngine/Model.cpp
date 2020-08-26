@@ -12,18 +12,32 @@ void Model::Draw(Shader3D shader){
 	for (unsigned int i = 0; i < child.size(); i++) {
 		shader.setMat4("model",child[i].trans->GetWorldMatrix());
 		//child[i].aabb->Draw(shader);
-
 	}
 }
 
 void Model::Draw(Lighting shader){
 	for (unsigned int i = 0; i < child.size(); i++) {
-		shader.modelLight(child[i].trans->GetWorldMatrix());
-		child[i].meshes.Draw(shader);
-		//child[i].aabb->DrawBox(); 
+		render->SetWMatrix(child[i].trans->GetWorldMatrix());
+		if (AABBInFrustrum(child[i].aabb))
+		{
+			shader.modelLight(child[i].trans->GetWorldMatrix());
+			child[i].meshes.Draw(shader);
+		}
+		child[i].aabb->DrawBox(); 
 	}
 }
 
+void Model::Db_CheckIfInFrustrum() 
+{
+	cout << "0 / 0 " << render->MainCamera()->frustum[0][0] << endl;
+	/*for (unsigned int i = 0; i < child.size(); i++) 
+	{
+		if (AABBInFrustrum(child[i].aabb))
+			cout << child[i].name << " is in frustrum." << endl;
+		else
+			cout << child[i].name << " is not in frustrum." << endl;
+	}*/
+}
 
 // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
 void Model::loadModel(string const& path)
@@ -87,10 +101,6 @@ void Model::loadModel(string const& path)
 	{
 		child[i].hijo = &child[i + 1];
 	}
-
-
-
-
 }
 
 // processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
@@ -108,8 +118,6 @@ void Model::processNode(aiNode * node, const aiScene * scene){
 		cout << name << endl;
 		//names.push_back(name);
 
-
-		
 		if (first)
 		{
 			tempAABB = new AABB();
@@ -330,6 +338,31 @@ unsigned int TextureFromFile(const char* path, const string & directory, bool ga
 	}
 
 	return textureID;
+}
+
+bool Model::AABBInFrustrum(AABB* box) {
+
+	for (int p= 0; p < 6; p++)
+	{
+		if (render->MainCamera()->frustum[p][0] * box->bounds.minX + render->MainCamera()->frustum[p][1] * box->bounds.minY + render->MainCamera()->frustum[p][2] * box->bounds.minZ + render->MainCamera()->frustum[p][3] > 0)
+			continue;
+		if (render->MainCamera()->frustum[p][0] * box->bounds.maxX + render->MainCamera()->frustum[p][1] * box->bounds.minY + render->MainCamera()->frustum[p][2] * box->bounds.minZ + render->MainCamera()->frustum[p][3] > 0)
+			continue;
+		if (render->MainCamera()->frustum[p][0] * box->bounds.minX + render->MainCamera()->frustum[p][1] * box->bounds.maxY + render->MainCamera()->frustum[p][2] * box->bounds.minZ + render->MainCamera()->frustum[p][3] > 0)
+			continue;
+		if (render->MainCamera()->frustum[p][0] * box->bounds.maxX + render->MainCamera()->frustum[p][1] * box->bounds.maxY + render->MainCamera()->frustum[p][2] * box->bounds.minZ + render->MainCamera()->frustum[p][3] > 0)
+			continue;
+		if (render->MainCamera()->frustum[p][0] * box->bounds.minX + render->MainCamera()->frustum[p][1] * box->bounds.minY + render->MainCamera()->frustum[p][2] * box->bounds.maxZ + render->MainCamera()->frustum[p][3] > 0)
+			continue;
+		if (render->MainCamera()->frustum[p][0] * box->bounds.maxX + render->MainCamera()->frustum[p][1] * box->bounds.minY + render->MainCamera()->frustum[p][2] * box->bounds.maxZ + render->MainCamera()->frustum[p][3] > 0)
+			continue;
+		if (render->MainCamera()->frustum[p][0] * box->bounds.minX + render->MainCamera()->frustum[p][1] * box->bounds.maxY + render->MainCamera()->frustum[p][2] * box->bounds.maxZ + render->MainCamera()->frustum[p][3] > 0)
+			continue;
+		if (render->MainCamera()->frustum[p][0] * box->bounds.maxX + render->MainCamera()->frustum[p][1] * box->bounds.maxY + render->MainCamera()->frustum[p][2] * box->bounds.maxZ + render->MainCamera()->frustum[p][3] > 0)
+			continue;
+		return false;
+	}
+	return true;
 }
 
 //-----------------------------------TRANSFORMACIONES--------------------------------------

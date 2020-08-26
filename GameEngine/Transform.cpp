@@ -2,6 +2,8 @@
 
 Transform::Transform()
 {
+	render = Renderizer::GetInstance()->rnd;
+
 	WorldMatrix = mat4(1.0f);
 	TranslateMatrix = mat4(1.0f);
 	RotMatrix = mat4(1.0f);

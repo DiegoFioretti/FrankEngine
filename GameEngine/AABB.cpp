@@ -45,7 +45,10 @@ void AABB::SetBox() {
 
 void AABB::Setup()
 {
-	/*
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -58,7 +61,7 @@ void AABB::Setup()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
-	glBindVertexArray(0);*/
+	glBindVertexArray(0);
 
 	
 }
@@ -181,7 +184,7 @@ void AABB::RezBound(float x, float y, float z) {
 
 void AABB::DrawBox(){
 	
-	/*//shader.use();
+	//shader.use();
 	glBindVertexArray(VAO);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -190,7 +193,7 @@ void AABB::DrawBox(){
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	glBindVertexArray(0);*/
+	glBindVertexArray(0);
 
 }
 

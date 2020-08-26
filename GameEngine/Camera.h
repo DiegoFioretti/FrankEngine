@@ -10,7 +10,6 @@ using namespace glm;
 class FRANKENGINE_API Camera//: public Transform
 {
 private:
-	float frustum[6][4];
 	float proj[16];
 	const float* projSource;
 	float view[16];
@@ -18,6 +17,7 @@ private:
 	float clip[16];
 	float t;
 public:
+	float frustum[6][4];
 	Camera(GLFWwindow* window);
 	~Camera();
 	void ProcessFrustrum();

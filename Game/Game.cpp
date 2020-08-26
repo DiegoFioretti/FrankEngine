@@ -92,7 +92,8 @@ bool Game::OnUpdate() {
 
 	//Samus y luz
 	if (inp->keyCall('o', 0)) {
-		cout << "Zelda: " << zeldaModel->GetPos().x << " , " << zeldaModel->GetPos().y << " , " << zeldaModel->GetPos().z << " , " << endl;
+		//cout << "Zelda: " << zeldaModel->GetPos().x << " , " << zeldaModel->GetPos().y << " , " << zeldaModel->GetPos().z << " , " << endl;
+		zeldaModel->Db_CheckIfInFrustrum();
 	}
 
 	//zelda hijo

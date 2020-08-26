@@ -47,13 +47,11 @@ public:
 	Transform * tempT;
 	AABB* tempAABB;
 
-
 	AABB* totalAABB;
 	Mesh* tempMesh;
 	vector<vector<Vertex>> *verticesTemp;
 	vector<unsigned int> indicesTemp;
 	vector<Texture> texturesTemp;
-
 
 	int currentLayer;
 	string directory;
@@ -77,6 +75,7 @@ public:
 	void Translate(float x, float y, float z);
 	void GetNames();
 	void AllSons();
+	void Db_CheckIfInFrustrum();
 	int sonsR;
 
 
@@ -88,6 +87,7 @@ private:
 
 	Mesh processMesh(aiMesh* mesh, const aiScene* scene);
 
+	bool AABBInFrustrum(AABB* box);
 	// checks all material textures of a given type and loads the textures if they're not loaded yet.
 	// the required info is returned as a Texture struct.
 	vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName);

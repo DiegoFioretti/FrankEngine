@@ -220,6 +220,7 @@ Camera::Camera(GLFWwindow* window)
 	std::cout << "Fov:" << fov;
 	std::cout << "_getAspectRatio:" << _getAspectRatio;
 
+	ProcessFrustrum();
 }
 
 

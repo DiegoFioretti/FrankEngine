@@ -9,10 +9,6 @@
 using namespace std;
 using namespace glm;
 
-
-
-
-
 class FRANKENGINE_API Transform
 {
 private:
@@ -20,6 +16,7 @@ private:
 	vec3 rot;
 	vec3 scale;
 protected:
+	Renderer* render;
 	mat4 WorldMatrix;
 	mat4 TranslateMatrix;
 	mat4 RotMatrix;

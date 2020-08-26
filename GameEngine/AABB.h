@@ -44,6 +44,7 @@ public:
 private:
 	
 	~AABB();
+	unsigned int VAO, VBO, EBO;
 	glm::vec3 vertex[8];
 
 };
