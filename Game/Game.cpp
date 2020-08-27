@@ -104,10 +104,10 @@ bool Game::OnUpdate() {
  
 	// todo Zelda
 	if (inp->keyCall('j', 0)) {
-		zeldaModel->Translate(0.1f,0,0);
+		zeldaModel->Translate(0,10.f * DeltaTime(),0);
 	}
-	if (inp->keyCall('v', 0)) {
-		zeldaModel->Rotate(0.1f, 0, 0);
+	if (inp->keyCall('n', 0)) {
+		zeldaModel->Translate(0, -10.f * DeltaTime(), 0);
 	}
 
 	return true;

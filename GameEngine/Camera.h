@@ -7,9 +7,11 @@
 #include <glm/gtc/type_ptr.hpp>
 using namespace glm;
 
+
 class FRANKENGINE_API Camera//: public Transform
 {
 private:
+
 	float proj[16];
 	const float* projSource;
 	float view[16];

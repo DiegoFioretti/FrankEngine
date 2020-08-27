@@ -4,32 +4,35 @@
 
 
 // constructor, expects a filepath to a 3D model.
-Model::Model(string const& path, bool gamma) : gammaCorrection(gamma), Transform(){
+Model::Model(string const& path){
 	loadModel(path);
 }
 // draws the model, and thus all its meshes
 void Model::Draw(Shader3D shader){
 	for (unsigned int i = 0; i < child.size(); i++) {
-		shader.setMat4("model",child[i].trans->GetWorldMatrix());
+		shader.setMat4("model",child[i].aabb->GetWorldMatrix());
 		//child[i].aabb->Draw(shader);
 	}
 }
 
 void Model::Draw(Lighting shader){
-	for (unsigned int i = 0; i < child.size(); i++) {
-		render->SetWMatrix(child[i].trans->GetWorldMatrix());
-		if (AABBInFrustrum(child[i].aabb))
-		{
-			shader.modelLight(child[i].trans->GetWorldMatrix());
-			child[i].meshes.Draw(shader);
+	if (AABBInFrustrum(this))
+	{
+		for (unsigned int i = 0; i < child.size(); i++) {
+			render->SetWMatrix(child[i].aabb->GetWorldMatrix());
+			if (AABBInFrustrum(child[i].aabb))
+			{
+				shader.modelLight(child[i].aabb->GetWorldMatrix());
+				child[i].meshes.Draw(shader);
+			}
+			child[i].aabb->DrawBox();
 		}
-		child[i].aabb->DrawBox(); 
 	}
 }
 
 void Model::Db_CheckIfInFrustrum() 
 {
-	cout << "0 / 0 " << render->MainCamera()->frustum[0][0] << endl;
+	//cout << "0 / 0 " << render->MainCamera()->frustum[0][0] << endl;
 	/*for (unsigned int i = 0; i < child.size(); i++) 
 	{
 		if (AABBInFrustrum(child[i].aabb))
@@ -37,6 +40,10 @@ void Model::Db_CheckIfInFrustrum()
 		else
 			cout << child[i].name << " is not in frustrum." << endl;
 	}*/
+	cout << "0 / 0 : " << render->MainCamera()->frustum[0][0] << endl;
+	cout << "0 / 1 : " << render->MainCamera()->frustum[0][1] << endl;
+	cout << "0 / 2 : " << render->MainCamera()->frustum[0][2] << endl;
+	cout << "0 / 3 : " << render->MainCamera()->frustum[0][3] << endl;
 }
 
 // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
@@ -124,18 +131,18 @@ void Model::processNode(aiNode * node, const aiScene * scene){
 			tempAABB->SetBox();
 			//tempAABB->CalculateBounds(processMesh(mesh, scene).vertices);
 
-			tempT = new Transform();
-			tempT->SetPos(this->GetPos());
-			tempT->SetRot(this->GetRot());
-			tempT->SetScale(this->GetScale());
+			//tempT = new Transform();
+			tempAABB->SetPos(this->GetPos());
+			tempAABB->SetRot(this->GetRot());
+			tempAABB->SetScale(this->GetScale());
 
-			totalAABB = new AABB();
-			totalAABB->SetBox();
+			//this. = new AABB();
+			this->SetBox();
 			//padre = { tempT, totalAABB };
 
 			tempMesh = new Mesh();
 
-			Node pad= { "padre", tempT, *tempMesh, tempAABB };
+			Node pad= { "padre", *tempMesh, tempAABB };
 
 			child.push_back(pad);
 			first = false;
@@ -150,7 +157,7 @@ void Model::processNode(aiNode * node, const aiScene * scene){
 		tempAABB->SetBox();
 		tempAABB->CalculateBounds(processMesh(mesh, scene).vertices);
 
-		Node hijo = { name, tempT, processMesh(mesh, scene), tempAABB};
+		Node hijo = { name, processMesh(mesh, scene), tempAABB};
 		//hijo
 		child.push_back(hijo);
 		if (node->mNumChildren > 0) {
@@ -341,7 +348,6 @@ unsigned int TextureFromFile(const char* path, const string & directory, bool ga
 }
 
 bool Model::AABBInFrustrum(AABB* box) {
-
 	for (int p= 0; p < 6; p++)
 	{
 		if (render->MainCamera()->frustum[p][0] * box->bounds.minX + render->MainCamera()->frustum[p][1] * box->bounds.minY + render->MainCamera()->frustum[p][2] * box->bounds.minZ + render->MainCamera()->frustum[p][3] > 0)
@@ -372,14 +378,14 @@ void Model::SetScale(vec3 newScale)
 {
 	for (size_t i = 0; i < child.size(); i++)
 	{
-		child[i].trans->SetScale(newScale);
+		child[i].aabb->SetScale(newScale);
 	}
 }
 void Model::SetPos(vec3 newPos)
 {
 	for (size_t i = 0; i < child.size(); i++)
 	{
-		child[i].trans->SetPos(newPos);
+		child[i].aabb->SetPos(newPos);
 	}
 }
 
@@ -387,7 +393,7 @@ void Model::SetRot(vec3 newRot)
 {
 	for (size_t i = 0; i < child.size(); i++)
 	{
-		child[i].trans->SetRot(newRot);
+		child[i].aabb->SetRot(newRot);
 	}
 }
 
@@ -395,7 +401,7 @@ void Model::Translate(float x, float y, float z) {
 
 	for (size_t i = 0; i < child.size(); i++)
 	{
-		child[i].trans->Translate(x, y, z);
+		child[i].aabb->Translate(x, y, z);
 	}
 }
 
@@ -403,7 +409,7 @@ void Model::Rotate(float x, float y, float z)
 {
 	for (size_t i = 0; i < child.size(); i++)
 	{
-		child[i].trans->Rotate(x, y, z);
+		child[i].aabb->Rotate(x, y, z);
 	}
 }
 
@@ -413,7 +419,7 @@ void Model::MoveAllChildren(string namea, float x, float y, float z) {
 	sonsR = 0;
 	for (size_t i = 0; i < child.size(); i++) {
 		if (child[i].name == namea) {
-			child[i].trans->Translate(0.1, 0, 0);
+			child[i].aabb->Translate(0.1, 0, 0);
 			child[i].aabb->RezBound(0.1, 0, 0);
 			sonsR = i;
 			AllSons();
@@ -434,7 +440,7 @@ void Model::MoveAllChildren(string namea, float x, float y, float z) {
 void Model::AllSons() {
 	if (child[sonsR].hijo != nullptr){
 		child[sonsR].hijo->aabb->RezBound(0.1, 0, 0);
-		child[sonsR].hijo->trans->Translate(0.1, 0, 0);
+		child[sonsR].hijo->aabb->Translate(0.1, 0, 0);
 		sonsR++;
 		AllSons();
 	}
@@ -444,14 +450,14 @@ void Model::AllSons() {
 void Model::ScaleChildren(string namea, vec3 num){
 	for (size_t i = 0; i < child.size(); i++) {
 		if (child[i].name == namea) {
-			child[i].trans->SetScale(num);
+			child[i].aabb->SetScale(num);
 		}
 	}
 }
 void Model::RotChildren(string namea, float x, float y, float z) {
 	for (size_t i = 0; i < child.size(); i++) {
 		if (child[i].name == namea) {
-			child[i].trans->Rotate(x, y, z);
+			child[i].aabb->Rotate(x, y, z);
 		}
 	}
 }
@@ -459,7 +465,7 @@ void Model::RotChildren(string namea, float x, float y, float z) {
 void Model::MoveChildren(string namea, float x, float y, float z) {
 	for (size_t i = 0; i < child.size(); i++) {
 		if (child[i].name == namea) {
-			child[i].trans->Translate(x,y,z);
+			child[i].aabb->Translate(x,y,z);
 		}
 	}
 }

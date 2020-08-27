@@ -3,6 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/glm.hpp>
 #include <GL/glew.h>
+#include "Transform.h"
 
 #include <iostream>
 #include <vector>
@@ -21,9 +22,10 @@ struct Bounds
 	float minZ = INT32_MAX;
 };
 
-class FRANKENGINE_API AABB {
+class FRANKENGINE_API AABB : public Transform {
 public:
 	AABB();
+	~AABB();
 	Bounds bounds;
 	void CalculateBoundingBox(Bounds bounds);
 	void CalculateBounds(vector<Vertex> vertices);
@@ -42,8 +44,6 @@ public:
 	void getAABB();
 
 private:
-	
-	~AABB();
 	unsigned int VAO, VBO, EBO;
 	glm::vec3 vertex[8];
 

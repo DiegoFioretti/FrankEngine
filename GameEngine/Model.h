@@ -2,7 +2,7 @@
 
 #include "Exports.h"
 #include "Mesh.h"
-#include "Transform.h"
+#include "AABB.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -23,18 +23,16 @@ unsigned int TextureFromFile(const char* path, const string& directory, bool gam
 
 struct Node {
 	string name;
-	Transform* trans;
 	Mesh meshes;
 	AABB* aabb;
 	Node *hijo= nullptr;
 };
 
 struct FatherNode {
-	Transform* trans;
 	AABB* aabb;
 };
 
-class FRANKENGINE_API Model : public Transform
+class FRANKENGINE_API Model : public AABB
 {
 public:
 	/*  Model Data */
@@ -47,7 +45,7 @@ public:
 	Transform * tempT;
 	AABB* tempAABB;
 
-	AABB* totalAABB;
+	//AABB* totalAABB;
 	Mesh* tempMesh;
 	vector<vector<Vertex>> *verticesTemp;
 	vector<unsigned int> indicesTemp;
@@ -59,7 +57,7 @@ public:
 	bool first = true;
 	/*  Functions   */
 
-	Model(string const& path, bool gamma = false);
+	Model(string const& path);
 	void Draw(Shader3D shader);
 	void Draw(Lighting shader);
 	~Model();

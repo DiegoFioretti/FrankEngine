@@ -35,19 +35,18 @@ void AABB::SetBox() {
 
 	for (int i = 0; i < 36; i++)
 		cIndices.push_back(cubeIndices[i]);
-	
-	/*glGenVertexArrays(1, &VAO);
+
+	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);*/
+	glGenBuffers(1, &EBO);
+
 	Setup();
 
 }
 
 void AABB::Setup()
 {
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
+	
 
 	glBindVertexArray(VAO);
 

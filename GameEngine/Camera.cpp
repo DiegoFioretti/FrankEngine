@@ -170,6 +170,21 @@ void Camera::ProcessFrustrum()
 	frustum[5][1] /= t;
 	frustum[5][2] /= t;
 	frustum[5][3] /= t;
+//----------------------------------------------------------------------------------------------------------------------------------------
+	/*glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), vertex, GL_DYNAMIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, cIndices.size() * sizeof(unsigned int), &cIndices[0], GL_DYNAMIC_DRAW);
+
+	// vertex Positions
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+	glBindVertexArray(0);*/
+
 }
 
 //Da informacion del scroll de mouse cada vez que se mueve, se usa para hacer "Zoom"
@@ -216,7 +231,7 @@ Camera::Camera(GLFWwindow* window)
 		_cameraUp									// Up Vector
 	);
 
-	_projectionMatrix = glm::perspective(fov, _getAspectRatio, 1.0f, 1900.0f);
+	_projectionMatrix = glm::perspective(glm::radians(fov), _getAspectRatio, 1.0f, 1900.0f);
 	std::cout << "Fov:" << fov;
 	std::cout << "_getAspectRatio:" << _getAspectRatio;
 
