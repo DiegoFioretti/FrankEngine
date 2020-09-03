@@ -5,6 +5,7 @@
 
 // constructor, expects a filepath to a 3D model.
 Model::Model(string const& path){
+	this->GetPos();
 	loadModel(path);
 }
 // draws the model, and thus all its meshes
@@ -16,34 +17,41 @@ void Model::Draw(Shader3D shader){
 }
 
 void Model::Draw(Lighting shader){
-	if (AABBInFrustrum(this))
+	if (render->BoundsInFrustrum(this->getVertexPointer()))
 	{
 		for (unsigned int i = 0; i < child.size(); i++) {
-			render->SetWMatrix(child[i].aabb->GetWorldMatrix());
-			if (AABBInFrustrum(child[i].aabb))
+			//render->SetWMatrix(child[i].aabb->GetWorldMatrix());
+			if (render->BoundsInFrustrum(child[i].aabb->getVertexPointer()))
 			{
 				shader.modelLight(child[i].aabb->GetWorldMatrix());
 				child[i].meshes.Draw(shader);
 			}
 			child[i].aabb->DrawBox();
 		}
+		this->DrawBox();
 	}
 }
 
 void Model::Db_CheckIfInFrustrum() 
 {
 	//cout << "0 / 0 " << render->MainCamera()->frustum[0][0] << endl;
-	/*for (unsigned int i = 0; i < child.size(); i++) 
+	if (render->BoundsInFrustrum(this->getVertexPointer()))
 	{
-		if (AABBInFrustrum(child[i].aabb))
+		cout << " model is in frustrum." << endl;
+	}
+	else
+	{
+		cout << " model is not in frustrum." << endl;
+	}
+	/*
+	for (unsigned int i = 0; i < child.size(); i++) 
+	{
+		if (render->BoundsInFrustrum(child[i].aabb->getVertexPointer()))
 			cout << child[i].name << " is in frustrum." << endl;
 		else
 			cout << child[i].name << " is not in frustrum." << endl;
-	}*/
-	cout << "0 / 0 : " << render->MainCamera()->frustum[0][0] << endl;
-	cout << "0 / 1 : " << render->MainCamera()->frustum[0][1] << endl;
-	cout << "0 / 2 : " << render->MainCamera()->frustum[0][2] << endl;
-	cout << "0 / 3 : " << render->MainCamera()->frustum[0][3] << endl;
+	}
+	*/
 }
 
 // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
@@ -101,7 +109,7 @@ void Model::loadModel(string const& path)
 		{
 			allBounds.push_back(child[i].aabb->getBounds());
 		}
-		child[0].aabb->CalculateAllBounds(allBounds);
+		this->CalculateAllBounds(allBounds);
 	}
 	
 	for (size_t i = 0; i < child.size()-1; i++)
@@ -346,7 +354,7 @@ unsigned int TextureFromFile(const char* path, const string & directory, bool ga
 
 	return textureID;
 }
-
+/*
 bool Model::AABBInFrustrum(AABB* box) {
 	for (int p= 0; p < 6; p++)
 	{
@@ -370,7 +378,7 @@ bool Model::AABBInFrustrum(AABB* box) {
 	}
 	return true;
 }
-
+*/
 //-----------------------------------TRANSFORMACIONES--------------------------------------
 
 //					de todo el modelo
@@ -397,8 +405,8 @@ void Model::SetRot(vec3 newRot)
 	}
 }
 
-void Model::Translate(float x, float y, float z) {
-
+void Model::MTranslate(float x, float y, float z) {
+	this->Translate(x, y, z);
 	for (size_t i = 0; i < child.size(); i++)
 	{
 		child[i].aabb->Translate(x, y, z);
@@ -420,7 +428,6 @@ void Model::MoveAllChildren(string namea, float x, float y, float z) {
 	for (size_t i = 0; i < child.size(); i++) {
 		if (child[i].name == namea) {
 			child[i].aabb->Translate(0.1, 0, 0);
-			child[i].aabb->RezBound(0.1, 0, 0);
 			sonsR = i;
 			AllSons();
 		}
@@ -439,7 +446,6 @@ void Model::MoveAllChildren(string namea, float x, float y, float z) {
 
 void Model::AllSons() {
 	if (child[sonsR].hijo != nullptr){
-		child[sonsR].hijo->aabb->RezBound(0.1, 0, 0);
 		child[sonsR].hijo->aabb->Translate(0.1, 0, 0);
 		sonsR++;
 		AllSons();

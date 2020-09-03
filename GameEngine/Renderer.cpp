@@ -143,6 +143,25 @@ void Renderer::MultiplyWMatrix(glm::mat4 matrix)
 	UpdateWVP();
 }
 
+bool Renderer::BoundsInFrustrum(glm::vec3* vertex)
+{
+	glm::vec3* aux;
+	bool inF = false;
+	for (size_t j = 0; j < PCANT; j++) // Recorrer cada plano (son 6)
+	{
+		aux = vertex;
+		for (size_t k = 0; k < 8; k++) // Recorrer cada punto (son 8)
+		{
+			if ((cam->frustum[j].normal.x * aux->x + cam->frustum[j].normal.y * aux->y + cam->frustum[j].normal.z * aux->z + cam->frustum[j].d) > 0)
+			{
+				inF = true;
+			}
+			aux++;
+		}
+	}
+	return inF;
+}
+
 Camera* Renderer::MainCamera()
 {
 	return cam;

@@ -28,10 +28,6 @@ struct Node {
 	Node *hijo= nullptr;
 };
 
-struct FatherNode {
-	AABB* aabb;
-};
-
 class FRANKENGINE_API Model : public AABB
 {
 public:
@@ -41,7 +37,6 @@ public:
 	vector <string> names;
 	vector <Node> child;
 	vector <Bounds> allBounds;
-	FatherNode padre;
 	Transform * tempT;
 	AABB* tempAABB;
 
@@ -70,7 +65,7 @@ public:
 	void SetScale(vec3 newScale);
 	void SetPos(vec3 newPos);
 	void SetRot(vec3 newRot);
-	void Translate(float x, float y, float z);
+	void MTranslate(float x, float y, float z);
 	void GetNames();
 	void AllSons();
 	void Db_CheckIfInFrustrum();
@@ -85,7 +80,7 @@ private:
 
 	Mesh processMesh(aiMesh* mesh, const aiScene* scene);
 
-	bool AABBInFrustrum(AABB* box);
+	//bool AABBInFrustrum(AABB* box);
 	// checks all material textures of a given type and loads the textures if they're not loaded yet.
 	// the required info is returned as a Texture struct.
 	vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName);

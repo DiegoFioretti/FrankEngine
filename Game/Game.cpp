@@ -34,7 +34,7 @@ bool Game::OnStart()
 //	clonSamus->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
 //	clonSamus->SetPos(glm::vec3(20.0f, 0.0f, 0.0f));
 
-
+	cam = render->MainCamera();
 
 	cam->setCameraPos(10.0f, 7.0f, 31.0f);
 	cam->setCameraRot(-90.0f, 5.5f);
@@ -91,7 +91,7 @@ bool Game::OnUpdate() {
 
 
 	//Samus y luz
-	if (inp->keyCall('o', 0)) {
+	if (inp->keyCall('o', 1)) {
 		//cout << "Zelda: " << zeldaModel->GetPos().x << " , " << zeldaModel->GetPos().y << " , " << zeldaModel->GetPos().z << " , " << endl;
 		zeldaModel->Db_CheckIfInFrustrum();
 	}
@@ -104,10 +104,10 @@ bool Game::OnUpdate() {
  
 	// todo Zelda
 	if (inp->keyCall('j', 0)) {
-		zeldaModel->Translate(0,10.f * DeltaTime(),0);
+		zeldaModel->MTranslate(0,10.f * DeltaTime(),0);
 	}
 	if (inp->keyCall('n', 0)) {
-		zeldaModel->Translate(0, -10.f * DeltaTime(), 0);
+		zeldaModel->MTranslate(0, -10.f * DeltaTime(), 0);
 	}
 
 	return true;

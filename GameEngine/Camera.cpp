@@ -15,6 +15,22 @@ float _pitch;
 float fov;
 float _getAspectRatio;
 
+float nearDist; // Distancia de plano cercano
+float Hnear; // Altura del plano cercano
+float Wnear; // Ancho del plano cercano
+float farDist; // Distancia de plano lejano
+float Hfar; // Altura del plano lejano
+float Wfar; // Ancho del plano lejano
+
+vec3 ntl, // Punto cercano|top|izquierda
+	 ntr, // Punto cercano|top|derecha
+	 nbl, // Punto cercano|bottom|izquierda
+	 nbr, // Punto cercano|bottom|derecha
+	 ftl, // Punto lejano|top|izquierda
+	 ftr, // Punto lejano|top|derecha
+	 fbl, // Punto lejano|bottom|izquierda
+	 fbr; // Punto lejano|bottom|derecha
+
 vec3 _cameraPos;
 vec3 _cameraDir;
 vec3 _cameraUp;
@@ -22,7 +38,29 @@ vec3 _cameraUp;
 mat4 _viewMatrix;
 mat4 _projectionMatrix;
 
+void updatePlanes() 
+{
+	// Plano cercano
+	Hnear = 2 * tan(fov / 2) * nearDist;
+	Wnear = Hnear * _getAspectRatio;
+	// Plano lejano
+	Hfar = 2 * tan(fov / 2) * farDist;
+	Wfar = Hfar * _getAspectRatio;
+}
 
+void Camera::MeasurePlanes(int plane,vec3 v1, vec3 v2, vec3 v3)
+{
+	vec3 aux1, aux2;
+
+	aux1 = v1 - v2;
+	aux2 = v3 - v2;
+
+	frustum[plane].normal = aux2 * aux1;
+
+	glm::normalize(frustum[plane].normal);
+	frustum[plane].point = v2;
+	frustum[plane].d = -(frustum[plane].normal.x * frustum[plane].point.x + frustum[plane].normal.y * frustum[plane].point.y + frustum[plane].normal.z * frustum[plane].point.z);
+}
 
 //Da informacion del movimiento del mouse cada vez que se mueve
 void mouse_callback(GLFWwindow* win, double xpos, double ypos)
@@ -60,131 +98,60 @@ void mouse_callback(GLFWwindow* win, double xpos, double ypos)
 		_cameraPos + glm::normalize(_cameraDir),
 		_cameraUp
 	);
+
+	updatePlanes();
 }
 
-void Camera::ProcessFrustrum() 
+void Camera::ProcessFrustrum()
 {
-	projSource = (const float*) glm::value_ptr(_projectionMatrix);
-	viewSource = (const float*)glm::value_ptr(_viewMatrix);
-	for (size_t i = 0; i < 16; i++)
-	{
-		proj[i] = projSource[i];
-		view[i] = viewSource[i];
-	}
+	updatePlanes();
 
-	/* Combine the two matrices (multiply projection by modelview) */
-	clip[0] = view[0] * proj[0] + view[1] * proj[4] + view[2] * proj[8] + view[3] * proj[12];
-	clip[1] = view[0] * proj[1] + view[1] * proj[5] + view[2] * proj[9] + view[3] * proj[13];
-	clip[2] = view[0] * proj[2] + view[1] * proj[6] + view[2] * proj[10] + view[3] * proj[14];
-	clip[3] = view[0] * proj[3] + view[1] * proj[7] + view[2] * proj[11] + view[3] * proj[15];
+	vec3 nc, fc, X, Y, Z;
 
-	clip[4] = view[4] * proj[0] + view[5] * proj[4] + view[6] * proj[8] + view[7] * proj[12];
-	clip[5] = view[4] * proj[1] + view[5] * proj[5] + view[6] * proj[9] + view[7] * proj[13];
-	clip[6] = view[4] * proj[2] + view[5] * proj[6] + view[6] * proj[10] + view[7] * proj[14];
-	clip[7] = view[4] * proj[3] + view[5] * proj[7] + view[6] * proj[11] + view[7] * proj[15];
+	// compute the Z axis of camera
+	// this axis points in the opposite direction from 
+	// the looking direction
+	Z = _cameraPos - _cameraDir;
+	glm::normalize(Z);
 
-	clip[8] = view[8] * proj[0] + view[9] * proj[4] + view[10] * proj[8] + view[11] * proj[12];
-	clip[9] = view[8] * proj[1] + view[9] * proj[5] + view[10] * proj[9] + view[11] * proj[13];
-	clip[10] = view[8] * proj[2] + view[9] * proj[6] + view[10] * proj[10] + view[11] * proj[14];
-	clip[11] = view[8] * proj[3] + view[9] * proj[7] + view[10] * proj[11] + view[11] * proj[15];
+	// X axis of camera with given "up" vector and Z axis
+	X = _cameraUp * Z;
+	glm::normalize(X);
 
-	clip[12] = view[12] * proj[0] + view[13] * proj[4] + view[14] * proj[8] + view[15] * proj[12];
-	clip[13] = view[12] * proj[1] + view[13] * proj[5] + view[14] * proj[9] + view[15] * proj[13];
-	clip[14] = view[12] * proj[2] + view[13] * proj[6] + view[14] * proj[10] + view[15] * proj[14];
-	clip[15] = view[12] * proj[3] + view[13] * proj[7] + view[14] * proj[11] + view[15] * proj[15];
+	// the real "up" vector is the cross product of Z and X
+	Y = Z * X;
 
-	/* Extract the numbers for the RIGHT plane */
-	frustum[0][0] = clip[3] - clip[0];
-	frustum[0][1] = clip[7] - clip[4];
-	frustum[0][2] = clip[11] - clip[8];
-	frustum[0][3] = clip[15] - clip[12];
+	// compute the centers of the near and far planes
+	nc = _cameraPos - Z * nearDist;
+	fc = _cameraPos - Z * farDist;
 
-	/* Normalize the result */
-	t = sqrt(frustum[0][0] * frustum[0][0] + frustum[0][1] * frustum[0][1] + frustum[0][2] * frustum[0][2]);
-	frustum[0][0] /= t;
-	frustum[0][1] /= t;
-	frustum[0][2] /= t;
-	frustum[0][3] /= t;
+	// compute the 4 corners of the frustum on the near plane
+	ntl = nc + Y * Hnear - X * Wnear;
+	ntr = nc + Y * Hnear + X * Wnear;
+	nbl = nc - Y * Hnear - X * Wnear;
+	nbr = nc - Y * Hnear + X * Wnear;
 
-	/* Extract the numbers for the LEFT plane */
-	frustum[1][0] = clip[3] + clip[0];
-	frustum[1][1] = clip[7] + clip[4];
-	frustum[1][2] = clip[11] + clip[8];
-	frustum[1][3] = clip[15] + clip[12];
+	// compute the 4 corners of the frustum on the far plane
+	ftl = fc + Y * Hfar - X * Wfar;
+	ftr = fc + Y * Hfar + X * Wfar;
+	fbl = fc - Y * Hfar - X * Wfar;
+	fbr = fc - Y * Hfar + X * Wfar;
 
-	/* Normalize the result */
-	t = sqrt(frustum[1][0] * frustum[1][0] + frustum[1][1] * frustum[1][1] + frustum[1][2] * frustum[1][2]);
-	frustum[1][0] /= t;
-	frustum[1][1] /= t;
-	frustum[1][2] /= t;
-	frustum[1][3] /= t;
-
-	/* Extract the BOTTOM plane */
-	frustum[2][0] = clip[3] + clip[1];
-	frustum[2][1] = clip[7] + clip[5];
-	frustum[2][2] = clip[11] + clip[9];
-	frustum[2][3] = clip[15] + clip[13];
-
-	/* Normalize the result */
-	t = sqrt(frustum[2][0] * frustum[2][0] + frustum[2][1] * frustum[2][1] + frustum[2][2] * frustum[2][2]);
-	frustum[2][0] /= t;
-	frustum[2][1] /= t;
-	frustum[2][2] /= t;
-	frustum[2][3] /= t;
-
-	/* Extract the TOP plane */
-	frustum[3][0] = clip[3] - clip[1];
-	frustum[3][1] = clip[7] - clip[5];
-	frustum[3][2] = clip[11] - clip[9];
-	frustum[3][3] = clip[15] - clip[13];
-
-	/* Normalize the result */
-	t = sqrt(frustum[3][0] * frustum[3][0] + frustum[3][1] * frustum[3][1] + frustum[3][2] * frustum[3][2]);
-	frustum[3][0] /= t;
-	frustum[3][1] /= t;
-	frustum[3][2] /= t;
-	frustum[3][3] /= t;
-
-	/* Extract the FAR plane */
-	frustum[4][0] = clip[3] - clip[2];
-	frustum[4][1] = clip[7] - clip[6];
-	frustum[4][2] = clip[11] - clip[10];
-	frustum[4][3] = clip[15] - clip[14];
-
-	/* Normalize the result */
-	t = sqrt(frustum[4][0] * frustum[4][0] + frustum[4][1] * frustum[4][1] + frustum[4][2] * frustum[4][2]);
-	frustum[4][0] /= t;
-	frustum[4][1] /= t;
-	frustum[4][2] /= t;
-	frustum[4][3] /= t;
-
-	/* Extract the NEAR plane */
-	frustum[5][0] = clip[3] + clip[2];
-	frustum[5][1] = clip[7] + clip[6];
-	frustum[5][2] = clip[11] + clip[10];
-	frustum[5][3] = clip[15] + clip[14];
-
-	/* Normalize the result */
-	t = sqrt(frustum[5][0] * frustum[5][0] + frustum[5][1] * frustum[5][1] + frustum[5][2] * frustum[5][2]);
-	frustum[5][0] /= t;
-	frustum[5][1] /= t;
-	frustum[5][2] /= t;
-	frustum[5][3] /= t;
-//----------------------------------------------------------------------------------------------------------------------------------------
-	/*glBindVertexArray(VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), vertex, GL_DYNAMIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, cIndices.size() * sizeof(unsigned int), &cIndices[0], GL_DYNAMIC_DRAW);
-
-	// vertex Positions
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-
-	glBindVertexArray(0);*/
-
+	// compute the six planes
+	// the function set3Points assumes that the points
+	// are given in counter clockwise order
+	// TOP PANEL
+	MeasurePlanes(0, ntr, ntl, ftl);
+	//BOTTOM PANEL
+	MeasurePlanes(1, nbl, nbr, fbr);
+	// LEFT PANEL
+	MeasurePlanes(2, ntl, nbl, fbl);
+	// RIGHT PANEL
+	MeasurePlanes(3, nbr, ntr, fbr);
+	// NEAR PANEL
+	MeasurePlanes(4, ntl, ntr, nbr);
+	// FAR PANEL
+	MeasurePlanes(5, ftr, ftl, fbl);
 }
 
 //Da informacion del scroll de mouse cada vez que se mueve, se usa para hacer "Zoom"
@@ -197,18 +164,18 @@ void scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
 	else if (fov >= 90.0f)
 		fov = 89.0f;
 	
-	_projectionMatrix = glm::perspective(glm::radians(fov), _getAspectRatio, 1.0f, 1900.0f);
+	_projectionMatrix = glm::perspective(glm::radians(fov), _getAspectRatio, nearDist, farDist);
+
+	updatePlanes();
 }
 
 
 Camera::Camera(GLFWwindow* window)
 {
-
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
-
 
 	_firstMouse = true;
 	_lastX = 0.0f;
@@ -220,6 +187,8 @@ Camera::Camera(GLFWwindow* window)
 	_pitch = 0.0f;
 	_getAspectRatio = 1024.f / 768.f;
 	fov = 45.f;
+	nearDist = 1.0f;
+	farDist = 1900.0f;
 
 	_cameraPos = vec3(0.0f, 0.0f, 0.0f);
 	_cameraDir = vec3(0.00001f, 0.000001f, 0.000001f);
@@ -231,21 +200,29 @@ Camera::Camera(GLFWwindow* window)
 		_cameraUp									// Up Vector
 	);
 
-	_projectionMatrix = glm::perspective(glm::radians(fov), _getAspectRatio, 1.0f, 1900.0f);
-	std::cout << "Fov:" << fov;
-	std::cout << "_getAspectRatio:" << _getAspectRatio;
+	_projectionMatrix = glm::perspective(glm::radians(fov), _getAspectRatio, nearDist, farDist);
+	std::cout << "Fov: " << fov;
+	std::cout << " | _getAspectRatio: " << _getAspectRatio << std::endl;
+	
+	for (size_t i = 0; i < PCANT; i++)
+	{
+		frustum[i].normal.x = 0.0f;
+		frustum[i].normal.y = 0.0f;
+		frustum[i].normal.z = 0.0f;
+		frustum[i].point.x = 0.0f;
+		frustum[i].point.y = 0.0f;
+		frustum[i].point.z = 0.0f;
+		frustum[i].d = 0.0f;
+	}
 
 	ProcessFrustrum();
 }
-
 
 Camera::~Camera()
 {
 	delete projSource;
 	delete viewSource;
 }
-
-
 
 void Camera::UpdateViewMatrix()
 {
@@ -254,6 +231,8 @@ void Camera::UpdateViewMatrix()
 		_cameraPos + glm::normalize(_cameraDir),
 		_cameraUp
 	);
+
+	ProcessFrustrum();
 }
 
 void Camera::CameraMoveForward(float speed)

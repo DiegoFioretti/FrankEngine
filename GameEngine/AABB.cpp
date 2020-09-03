@@ -2,8 +2,7 @@
 
 
 AABB::AABB() {
-
-
+	auxPointer = vertex;
 }
 
 AABB::~AABB() {
@@ -136,49 +135,14 @@ void AABB::CalculateBoundingBox(Bounds bounds)
 	};
 
 	for (int i = 0; i < 8; i++)
-		vertex[i] = glm::vec4(boundingBoxVertex[i], 1.f);
+		vertex[i] = WorldMatrix * glm::vec4(boundingBoxVertex[i], 1.f);
 
 	Setup();
 }
 
-void AABB::RezBound(float x, float y, float z) {
-
-	if (x>0.0f)
-	{
-		newBound.maxX += (x * 10.001f);
-		newBound.minX += (x * 10.001f);
-	}
-	if (x < 0.0f)
-	{
-		newBound.maxX += (x * 10);
-		newBound.minX += (x * 10);
-	}
-
-	if (y > 0.0f)
-	{
-		newBound.maxY += (y * 10);
-		newBound.minY += (y * 10);
-	}
-	if (y < 0.0f)
-	{
-		newBound.maxY += (y * 10);
-		newBound.minY += (y * 10);
-	}
-
-	if (z > 0.0f)
-	{
-		newBound.maxZ += (z * 10);
-		newBound.minZ += (z * 10);
-	}
-	if (z < 0.0f)
-	{
-		newBound.maxZ += (z * 10);
-		newBound.minZ += (z * 10);
-	}
-
-
-	CalculateBoundingBox(bound);
-
+glm::vec3* AABB::getVertexPointer() 
+{
+	return auxPointer;
 }
 
 void AABB::DrawBox(){

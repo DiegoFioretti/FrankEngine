@@ -9,6 +9,7 @@
 
 using namespace std;
 using namespace glm;
+
 class FRANKENGINE_API Renderer
 {
 private:
@@ -20,7 +21,6 @@ private:
 	glm::mat4 ViewMatrix;
 	glm::mat4 ProjectionMatrix;
 	glm::mat4 WVP;
-public:
 public:
 	bool Start(Window* wnd);
 	bool Stop();
@@ -40,6 +40,7 @@ public:
 	void LoadIMatrix();
 	void SetWMatrix(glm::mat4 matrix);
 	void MultiplyWMatrix(glm::mat4 matrix);
+	bool BoundsInFrustrum(glm::vec3* vertex);
 
 	Camera* MainCamera();
 

@@ -7,19 +7,23 @@
 #include <glm/gtc/type_ptr.hpp>
 using namespace glm;
 
+#define PCANT 6
+
+struct PlanePoints
+{
+	vec3 normal;
+	vec3 point;
+	float d;
+};
 
 class FRANKENGINE_API Camera//: public Transform
 {
 private:
-
-	float proj[16];
 	const float* projSource;
-	float view[16];
 	const float* viewSource;
-	float clip[16];
-	float t;
+	void MeasurePlanes(int plane, vec3 v1, vec3 v2, vec3 v3);
 public:
-	float frustum[6][4];
+	PlanePoints frustum[PCANT];
 	Camera(GLFWwindow* window);
 	~Camera();
 	void ProcessFrustrum();
