@@ -100,10 +100,33 @@ void mouse_callback(GLFWwindow* win, double xpos, double ypos)
 	);
 
 	updatePlanes();
+
 }
 
 void Camera::ProcessFrustrum()
 {
+	vec3 frontCenter = _cameraPos + _cameraDir * nearDist;
+	vec3 backCenter = _cameraPos + _cameraDir * farDist;
+
+	vec3 leftPlaneVec = (frontCenter - (vec3)right * nearWidht) - _cameraPos;
+	vec3 rightPlaneVec = (frontCenter + (vec3)right * nearWidht) - _cameraPos;
+	vec3 topPlaneVec = (frontCenter + _cameraUp * nearHeight) - _cameraPos;
+	vec3 bottomPlaneVec = (frontCenter - _cameraUp * nearHeight) - _cameraPos;
+
+	vec3 normalLeft = normalize(cross(leftPlaneVec, _cameraUp));
+	vec3 normalRight = -normalize(cross(rightPlaneVec, _cameraUp));
+	vec3 normalTop = normalize(cross(topPlaneVec, right));
+	vec3 normalBottom = -normalize(cross(bottomPlaneVec, right));
+
+	frustumPlanes[NEAR] = GeneratePlane(-_cameraDir, frontCenter);
+	frustumPlanes[FAR] = GeneratePlane(_cameraDir, backCenter);
+	frustumPlanes[LEFT] = GeneratePlane(normalLeft, _cameraPos);
+	frustumPlanes[RIGHT] = GeneratePlane(normalRight, _cameraPos);
+	frustumPlanes[TOP] = GeneratePlane(normalTop, _cameraPos);
+	frustumPlanes[BOTTOM] = GeneratePlane(normalBottom, _cameraPos);
+
+
+	/*
 	updatePlanes();
 
 	vec3 nc, fc, X, Y, Z;
@@ -151,7 +174,40 @@ void Camera::ProcessFrustrum()
 	// NEAR PANEL
 	MeasurePlanes(4, ntl, ntr, nbr);
 	// FAR PANEL
-	MeasurePlanes(5, ftr, ftl, fbl);
+	MeasurePlanes(5, ftr, ftl, fbl);*/
+}
+
+vec4 Camera::GeneratePlane(vec3 _normal, vec3 _point) {
+	vec4 plane;
+
+	plane.x = _normal.x;
+	plane.y = _normal.y;
+	plane.z = _normal.z;
+	plane.w = -dot(_normal, _point);
+
+	return plane;
+}
+
+bool Camera::FrustumCheck(vec3 boundingBox)
+{
+
+	bool isInsideFrustum = true;
+	bool allOutsideFrustum = false;
+	float distance;
+	for (int i = 0; i < (int)FrustumPlanesEnums::CANT; i++)
+	{
+		allOutsideFrustum = false;
+			distance = dot(vec3(frustumPlanes[i]), boundingBox + frustumPlanes[i].w);
+			if (distance < 0.0f)
+				break;
+		
+		if (allOutsideFrustum)
+		{
+			isInsideFrustum = false;
+			break;
+		}
+	}
+	return isInsideFrustum;
 }
 
 //Da informacion del scroll de mouse cada vez que se mueve, se usa para hacer "Zoom"
@@ -186,12 +242,19 @@ Camera::Camera(GLFWwindow* window)
 	_yaw = 0.0f;
 	_pitch = 0.0f;
 	_getAspectRatio = 1024.f / 768.f;
+	aspectRatioWidth = 16.0f;
+	aspectRatioHeight = 9.0f;
 	fov = 45.f;
+	tang = tan(radians(fov) * 0.5f);
+	right = vec3(1.0f, 0.0f, 0.0f);
 	nearDist = 1.0f;
-	farDist = 1900.0f;
+	farDist = 1050.0f;
+	nearHeight = nearDist * tang;
+	nearWidht = nearHeight * (aspectRatioWidth / aspectRatioHeight);
+
 
 	_cameraPos = vec3(0.0f, 0.0f, 0.0f);
-	_cameraDir = vec3(0.00001f, 0.000001f, 0.000001f);
+	_cameraDir = vec3(0.f, 0.f, 1.f);
 	_cameraUp = vec3(0.0f, 1.0f, 0.0f);
 
 	_viewMatrix = glm::lookAt(

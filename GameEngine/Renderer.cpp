@@ -162,6 +162,21 @@ bool Renderer::BoundsInFrustrum(glm::vec3* vertex)
 	return inF;
 }
 
+bool Renderer::PointInFrustum(vec3 point)
+{
+	bool inF = true;
+	for (size_t j = 0; j < PCANT; j++) // Recorrer cada plano (son 6)
+	{
+
+		if ((cam->frustum[j].normal.x * point.x + cam->frustum[j].normal.y * point.y + cam->frustum[j].normal.z * point.z + cam->frustum[j].d) < 0)
+		{
+			inF = false;
+		}
+		
+	}
+	return inF;
+}
+
 Camera* Renderer::MainCamera()
 {
 	return cam;

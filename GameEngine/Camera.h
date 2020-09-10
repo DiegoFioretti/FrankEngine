@@ -16,11 +16,30 @@ struct PlanePoints
 	float d;
 };
 
+enum FrustumPlanesEnums
+{
+	NEAR,
+	FAR,
+	LEFT,
+	TOP,
+	RIGHT,
+	BOTTOM,
+	CANT = 6
+};
+
 class FRANKENGINE_API Camera//: public Transform
 {
 private:
 	const float* projSource;
 	const float* viewSource;
+	float tang;
+	float nearHeight;
+	float nearWidht;
+	float aspectRatioWidth;
+	float aspectRatioHeight;
+	vec4 frustumPlanes[CANT];
+	glm::vec3 right;
+
 	void MeasurePlanes(int plane, vec3 v1, vec3 v2, vec3 v3);
 public:
 	PlanePoints frustum[PCANT];
@@ -44,6 +63,8 @@ public:
 	mat4 GetProjectionMatrix();
 	void setCameraRot(float yaw, float pitch);
 	void setCameraPos(float x, float y, float z);
+	vec4 GeneratePlane(vec3 _normal, vec3 _point);
+	bool FrustumCheck(vec3 boundingBox);
 
 };
 

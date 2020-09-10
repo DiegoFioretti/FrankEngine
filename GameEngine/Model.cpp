@@ -17,25 +17,25 @@ void Model::Draw(Shader3D shader){
 }
 
 void Model::Draw(Lighting shader){
-	if (render->BoundsInFrustrum(this->getVertexPointer()))
-	{
+	//if (render->BoundsInFrustrum(this->getVertexPointer()))
+	//{
 		for (unsigned int i = 0; i < child.size(); i++) {
 			//render->SetWMatrix(child[i].aabb->GetWorldMatrix());
-			if (render->BoundsInFrustrum(child[i].aabb->getVertexPointer()))
-			{
+			//if (render->BoundsInFrustrum(child[i].aabb->getVertexPointer()))
+			//{
 				shader.modelLight(child[i].aabb->GetWorldMatrix());
 				child[i].meshes.Draw(shader);
-			}
+			//}
 			child[i].aabb->DrawBox();
 		}
 		this->DrawBox();
-	}
+	//}
 }
 
 void Model::Db_CheckIfInFrustrum() 
 {
 	//cout << "0 / 0 " << render->MainCamera()->frustum[0][0] << endl;
-	if (render->BoundsInFrustrum(this->getVertexPointer()))
+	if (render->PointInFrustum(vec3(7.4f,1.1f,5.8f)))
 	{
 		cout << " model is in frustrum." << endl;
 	}

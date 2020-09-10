@@ -41,6 +41,7 @@ public:
 	void SetWMatrix(glm::mat4 matrix);
 	void MultiplyWMatrix(glm::mat4 matrix);
 	bool BoundsInFrustrum(glm::vec3* vertex);
+	bool PointInFrustum(vec3 point);
 
 	Camera* MainCamera();
 

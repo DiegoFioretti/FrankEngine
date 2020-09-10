@@ -93,7 +93,12 @@ bool Game::OnUpdate() {
 	//Samus y luz
 	if (inp->keyCall('o', 1)) {
 		//cout << "Zelda: " << zeldaModel->GetPos().x << " , " << zeldaModel->GetPos().y << " , " << zeldaModel->GetPos().z << " , " << endl;
-		zeldaModel->Db_CheckIfInFrustrum();
+		//zeldaModel->Db_CheckIfInFrustrum();
+		if (cam->FrustumCheck(vec3(70000.4f, 10000.1f, 50000.8f)))
+			cout << " model is in frustrum." << endl;
+		else
+			cout << " model is not in frustrum." << endl;
+	
 	}
 
 	//zelda hijo
