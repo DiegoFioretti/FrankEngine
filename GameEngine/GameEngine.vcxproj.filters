@@ -105,6 +105,9 @@
     <ClCompile Include="Renderizer.cpp">
       <Filter>Archivos de origen\General</Filter>
     </ClCompile>
+    <ClCompile Include="Frustum.cpp">
+      <Filter>Archivos de origen\3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h">
@@ -183,6 +186,9 @@
       <Filter>Archivos de encabezado\General</Filter>
     </ClInclude>
     <ClInclude Include="Vertexx.h">
+      <Filter>Archivos de encabezado\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Frustum.h">
       <Filter>Archivos de encabezado\3D</Filter>
     </ClInclude>
   </ItemGroup>

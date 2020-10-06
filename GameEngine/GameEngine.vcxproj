@@ -25,6 +25,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GameBase.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Lighting.cpp" />
@@ -52,6 +53,7 @@
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Exports.h" />
+    <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameBase.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Lighting.h" />

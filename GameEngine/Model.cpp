@@ -35,7 +35,7 @@ void Model::Draw(Lighting shader){
 void Model::Db_CheckIfInFrustrum() 
 {
 	//cout << "0 / 0 " << render->MainCamera()->frustum[0][0] << endl;
-	if (render->PointInFrustum(vec3(7.4f,1.1f,5.8f)))
+	if (render->PointInFrustum(this->GetPos()))
 	{
 		cout << " model is in frustrum." << endl;
 	}
@@ -43,15 +43,14 @@ void Model::Db_CheckIfInFrustrum()
 	{
 		cout << " model is not in frustrum." << endl;
 	}
-	/*
-	for (unsigned int i = 0; i < child.size(); i++) 
+	
+	/*for (unsigned int i = 0; i < child.size(); i++) 
 	{
-		if (render->BoundsInFrustrum(child[i].aabb->getVertexPointer()))
+		if (render->PointInFrustum(child[i].aabb->GetPos()))
 			cout << child[i].name << " is in frustrum." << endl;
 		else
 			cout << child[i].name << " is not in frustrum." << endl;
-	}
-	*/
+	}*/
 }
 
 // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
@@ -391,6 +390,7 @@ void Model::SetScale(vec3 newScale)
 }
 void Model::SetPos(vec3 newPos)
 {
+
 	for (size_t i = 0; i < child.size(); i++)
 	{
 		child[i].aabb->SetPos(newPos);

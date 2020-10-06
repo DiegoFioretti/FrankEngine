@@ -25,6 +25,8 @@ bool Renderer::Start(Window* wnd) {
 
 	WorldMatrix = glm::mat4(1.0f);
 
+	viewFrustum = new Frustum(cam->GetViewMatrix() * cam->GetProjectionMatrix());
+
 	UpdateWVP();
 
 	return true;
@@ -118,7 +120,11 @@ void Renderer::SwapBuffer() {
 void Renderer::UpdateWVP()
 {
 	WVP = cam->GetProjectionMatrix() *cam->GetViewMatrix()* WorldMatrix;
-	cam->ProcessFrustrum();
+}
+
+void Renderer::UpdateFrustum() 
+{
+	viewFrustum->UpdateFrustum(ProjectionMatrix * cam->GetViewMatrix());
 }
 
 glm::mat4 & Renderer::GetWVP()
@@ -145,36 +151,12 @@ void Renderer::MultiplyWMatrix(glm::mat4 matrix)
 
 bool Renderer::BoundsInFrustrum(glm::vec3* vertex)
 {
-	glm::vec3* aux;
-	bool inF = false;
-	for (size_t j = 0; j < PCANT; j++) // Recorrer cada plano (son 6)
-	{
-		aux = vertex;
-		for (size_t k = 0; k < 8; k++) // Recorrer cada punto (son 8)
-		{
-			if ((cam->frustum[j].normal.x * aux->x + cam->frustum[j].normal.y * aux->y + cam->frustum[j].normal.z * aux->z + cam->frustum[j].d) > 0)
-			{
-				inF = true;
-			}
-			aux++;
-		}
-	}
-	return inF;
+	return true;
 }
 
 bool Renderer::PointInFrustum(vec3 point)
 {
-	bool inF = true;
-	for (size_t j = 0; j < PCANT; j++) // Recorrer cada plano (son 6)
-	{
-
-		if ((cam->frustum[j].normal.x * point.x + cam->frustum[j].normal.y * point.y + cam->frustum[j].normal.z * point.z + cam->frustum[j].d) < 0)
-		{
-			inF = false;
-		}
-		
-	}
-	return inF;
+	return viewFrustum->IsPointVisible(point);
 }
 
 Camera* Renderer::MainCamera()

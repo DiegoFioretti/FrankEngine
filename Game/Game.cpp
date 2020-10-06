@@ -26,7 +26,7 @@ bool Game::OnStart()
 	cout << "zelda" << endl;
 	//mesh_terrain
 	zeldaModel = new Model("Link/source/zeldaPosed001.fbx");
-	zeldaModel->SetPos(glm::vec3(10.0f, 0.0f, 0.0f));
+	zeldaModel->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
 	zeldaModel->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
 
 
@@ -37,7 +37,7 @@ bool Game::OnStart()
 	cam = render->MainCamera();
 
 	cam->setCameraPos(10.0f, 7.0f, 31.0f);
-	cam->setCameraRot(-90.0f, 5.5f);
+	cam->setCameraRot(-90.0f, 0.0f);
 	inp = new Input(window);
 
 	return true;
@@ -54,7 +54,6 @@ bool Game::OnUpdate() {
 		glm::vec3(-4.0f,  2.0f, -12.0f),
 		glm::vec3(0.0f,  0.0f, -3.0f)
 	};
-
 	
 	looz->use();
 	looz->viewPosition(cam->GetCameraPos());
@@ -93,11 +92,7 @@ bool Game::OnUpdate() {
 	//Samus y luz
 	if (inp->keyCall('o', 1)) {
 		//cout << "Zelda: " << zeldaModel->GetPos().x << " , " << zeldaModel->GetPos().y << " , " << zeldaModel->GetPos().z << " , " << endl;
-		//zeldaModel->Db_CheckIfInFrustrum();
-		if (cam->FrustumCheck(vec3(70000.4f, 10000.1f, 50000.8f)))
-			cout << " model is in frustrum." << endl;
-		else
-			cout << " model is not in frustrum." << endl;
+		zeldaModel->Db_CheckIfInFrustrum();
 	
 	}
 

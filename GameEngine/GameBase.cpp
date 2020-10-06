@@ -32,6 +32,7 @@ void GameBase::Loop() {
 		_lastFrame = _currentFrame;
 
 		loop = OnUpdate();
+		render->UpdateFrustum();
 		render->ClearScreen();
 		OnDraw();
 		render->SwapBuffer();
