@@ -30,6 +30,7 @@ public:
 	void CalculateBoundingBox(Bounds bounds);
 	void CalculateBounds(vector<Vertex> vertices);
 	void CalculateAllBounds(vector<Bounds> vertices);
+	void UpdateBounds();
 	void SetBox();
 	void Setup();
 	void DrawBox();
@@ -37,7 +38,9 @@ public:
 	Bounds bound;
 	Bounds newBound;
 	bool first = true;
-
+	void GenerateBoundingBox(Bounds b);
+	void SetBounds(int boundIndex, vec3 newBoundValue);
+	glm::vec3 boxVertex[8];
 	Bounds getBounds();
 	Bounds getNewBounds();
 	glm::vec3* getVertexPointer();
@@ -45,7 +48,8 @@ public:
 
 private:
 	unsigned int VAO, VBO, EBO;
-	glm::vec3 vertex[8];
+	vec3 min;
+	vec3 max;
 	glm::vec3* auxPointer;
 
 };

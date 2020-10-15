@@ -29,6 +29,7 @@ private:
 	Model* samusModel;
 	Model* clonSamus;
 	Model* zeldaModel;
+	Model* zeldaModelt;
 
 	glm::vec3 offset;
 
@@ -38,7 +39,7 @@ private:
 	glm::vec3 holdPosition;
 
 	glm::vec3 dirDirection = glm::vec3(-0.2f, -1.0f, -0.3f);
-	glm::vec3 dirAmbient = glm::vec3 (0.005f, 0.005f, 0.005f);
+	glm::vec3 dirAmbient = glm::vec3 (0.05f, 0.05f, 0.05f);
 	glm::vec3 dirDiffuse = glm::vec3(0.04f, 0.04f, 0.04f);
 	glm::vec3 dirSpecular = glm::vec3(0.5f, 0.5f, 0.5f);
 

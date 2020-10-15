@@ -9,6 +9,7 @@ public:
 	Renderer* rnd;
 	static Renderizer* GetInstance();
 	Renderizer(Renderer* render);
+	mat4 MultiverseWolrdMatrix = mat4(1.0f);
 	~Renderizer();
 };
 

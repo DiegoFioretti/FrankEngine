@@ -40,6 +40,8 @@ public:
 	Transform * tempT;
 	AABB* tempAABB;
 
+	Bounds bon;
+
 	//AABB* totalAABB;
 	Mesh* tempMesh;
 	vector<vector<Vertex>> *verticesTemp;
@@ -49,7 +51,7 @@ public:
 	int currentLayer;
 	string directory;
 	bool gammaCorrection;
-	bool first = true;
+	bool first = false;
 	/*  Functions   */
 
 	Model(string const& path);
@@ -62,15 +64,16 @@ public:
 	void RotChildren(string namea, float x, float y, float z);
 	void ScaleChildren(string namea, vec3 num);
 	void Rotate(float x, float y, float z);
-	void SetScale(vec3 newScale);
-	void SetPos(vec3 newPos);
+	void SetScaleChilden(vec3 newScale);
+	void SetPosM(vec3 newPos);
 	void SetRot(vec3 newRot);
 	void MTranslate(float x, float y, float z);
 	void GetNames();
 	void AllSons();
+	void GetChildPos(int num);
 	void Db_CheckIfInFrustrum();
 	int sonsR;
-
+	mat4 MultiverseWorld = mat4(1.0);
 
 private:
 	// loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
@@ -80,6 +83,10 @@ private:
 
 	Mesh processMesh(aiMesh* mesh, const aiScene* scene);
 
+	Bounds GenerateBounds(vec3 v[], mat4 mat);
+	Bounds GenerateBoundsByVertex(vec3 v[]);
+
+	glm::mat4 AssimpTransformToGlm(aiMatrix4x4* from);
 	//bool AABBInFrustrum(AABB* box);
 	// checks all material textures of a given type and loads the textures if they're not loaded yet.
 	// the required info is returned as a Texture struct.

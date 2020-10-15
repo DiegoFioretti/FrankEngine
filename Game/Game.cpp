@@ -19,16 +19,19 @@ bool Game::OnStart()
 	
 	cout << endl;
 	//cout << "samus" << endl;
-	samusModel = new Model("Metroid/DolSzerosuitR1.obj");
-	samusModel->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
-	samusModel->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
+	//samusModel = new Model("Nano/nanosuit.obj");
+	//samusModel->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
+	//samusModel->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
 
 	cout << "zelda" << endl;
 	//mesh_terrain
 	zeldaModel = new Model("Link/source/zeldaPosed001.fbx");
-	zeldaModel->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
-	zeldaModel->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	zeldaModel->SetPosM(glm::vec3(1.0f, 5.0f, 8.0f));
+	zeldaModel->SetScaleChilden(glm::vec3(0.3f, 0.3f, 0.3f));
 
+	zeldaModelt = new Model("Link/source/zeldaPosed001.fbx");
+	zeldaModelt->SetPosM(glm::vec3(6.0f, 5.0f, 8.0f));
+	zeldaModelt->SetScaleChilden(glm::vec3(0.3f, 0.3f, 0.3f));
 
 //	clonSamus = new Model("box5.fbx");
 //	clonSamus->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
@@ -93,12 +96,19 @@ bool Game::OnUpdate() {
 	if (inp->keyCall('o', 1)) {
 		//cout << "Zelda: " << zeldaModel->GetPos().x << " , " << zeldaModel->GetPos().y << " , " << zeldaModel->GetPos().z << " , " << endl;
 		zeldaModel->Db_CheckIfInFrustrum();
-	
+		cout << zeldaModel->GetPos().x << endl;
+		cout << zeldaModel->GetPos().y << endl;
+		cout << zeldaModel->GetPos().z << endl;
+		for (size_t i = 0; i < 6; i++)
+		{
+			zeldaModel->GetChildPos(i);
+		}
+		
 	}
 
 	//zelda hijo
 	if (inp->keyCall('b', 0)) {
-		zeldaModel->MoveChildren("mesh_torch",0.01f,0.f,0.f);
+		zeldaModel->MoveChildren("mesh_torch", 1.01f * DeltaTime(),0.f,0.f);
 		//cout << "aaa" << endl;
 	}
  
@@ -118,6 +128,7 @@ void Game::OnDraw(){
 
 	//looz->modelLight(zeldaModel->GetWorldMatrix());
 	zeldaModel->Draw(*looz);
+	zeldaModelt->Draw(*looz);
 	//zeldaModel->DrawBox(*shader);
 
 	//looz->modelLight(samusModel->GetWorldMatrix());

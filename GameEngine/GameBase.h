@@ -15,6 +15,7 @@ private:
 protected:
 	Renderer * render;
 	Window * window;
+
 	virtual bool OnStart() = 0;
 	virtual bool OnStop() = 0;
 	virtual bool OnUpdate() = 0;
@@ -25,7 +26,7 @@ public:
 	bool Stop();
 	void Loop();
 	float DeltaTime();
-	
+
 	GameBase();
 	~GameBase();
 };

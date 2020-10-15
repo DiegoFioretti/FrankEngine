@@ -17,25 +17,19 @@ void Model::Draw(Shader3D shader){
 }
 
 void Model::Draw(Lighting shader){
-	//if (render->BoundsInFrustrum(this->getVertexPointer()))
-	//{
+
 		for (unsigned int i = 0; i < child.size(); i++) {
-			//render->SetWMatrix(child[i].aabb->GetWorldMatrix());
-			//if (render->BoundsInFrustrum(child[i].aabb->getVertexPointer()))
-			//{
 				shader.modelLight(child[i].aabb->GetWorldMatrix());
 				child[i].meshes.Draw(shader);
-			//}
-			child[i].aabb->DrawBox();
+				child[i].aabb->DrawBox();
 		}
 		this->DrawBox();
-	//}
 }
 
 void Model::Db_CheckIfInFrustrum() 
 {
 	//cout << "0 / 0 " << render->MainCamera()->frustum[0][0] << endl;
-	if (render->PointInFrustum(this->GetPos()))
+	if (render->PointInFrustum(vec3(6.0f, 5.0f, 8.0f)))
 	{
 		cout << " model is in frustrum." << endl;
 	}
@@ -127,44 +121,26 @@ void Model::processNode(aiNode * node, const aiScene * scene){
 		// the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
 		
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		//meshes.push_back(processMesh(mesh, scene));
 		string name = node->mName.C_Str();
 		cout << name << endl;
-		//names.push_back(name);
-
-		if (first)
-		{
-			tempAABB = new AABB();
-			tempAABB->SetBox();
-			//tempAABB->CalculateBounds(processMesh(mesh, scene).vertices);
-
-			//tempT = new Transform();
-			tempAABB->SetPos(this->GetPos());
-			tempAABB->SetRot(this->GetRot());
-			tempAABB->SetScale(this->GetScale());
-
-			//this. = new AABB();
-			this->SetBox();
-			//padre = { tempT, totalAABB };
-
-			tempMesh = new Mesh();
-
-			Node pad= { "padre", *tempMesh, tempAABB };
-
-			child.push_back(pad);
-			first = false;
-		}
-
-		tempT = new Transform();
-		tempT->SetPos(this->GetPos());
-		tempT->SetRot(this->GetRot());
-		tempT->SetScale(this->GetScale());
 
 		tempAABB = new AABB();
 		tempAABB->SetBox();
 		tempAABB->CalculateBounds(processMesh(mesh, scene).vertices);
 
 		Node hijo = { name, processMesh(mesh, scene), tempAABB};
+		vec3 sonPos;
+		for (size_t i = 0; i < hijo.meshes.vertices.size(); i++)
+		{
+			sonPos += hijo.meshes.vertices[i].Position;
+		}
+		sonPos.x = sonPos.x / hijo.meshes.vertices.size();
+		sonPos.y = sonPos.y / hijo.meshes.vertices.size();
+		sonPos.z = sonPos.z / hijo.meshes.vertices.size();
+
+		hijo.aabb->SetPos(sonPos);
+		hijo.aabb->SetWorldMatrix(this->GetWorldMatrix() * hijo.aabb->GetWorldMatrix());
+
 		//hijo
 		child.push_back(hijo);
 		if (node->mNumChildren > 0) {
@@ -181,6 +157,18 @@ void Model::processNode(aiNode * node, const aiScene * scene){
 		currentLayer--;
 	}
 	
+}
+
+glm::mat4 Model::AssimpTransformToGlm(aiMatrix4x4* from)
+{
+	glm::mat4 to;
+
+	to[0][0] = (float)from->a1; to[0][1] = (float)from->b1;  to[0][2] = (float)from->c1; to[0][3] = (float)from->d1;
+	to[1][0] = (float)from->a2; to[1][1] = (float)from->b2;  to[1][2] = (float)from->c2; to[1][3] = (float)from->d2;
+	to[2][0] = (float)from->a3; to[2][1] = (float)from->b3;  to[2][2] = (float)from->c3; to[2][3] = (float)from->d3;
+	to[3][0] = (float)from->a4; to[3][1] = (float)from->b4;  to[3][2] = (float)from->c4; to[3][3] = (float)from->d4;
+
+	return to;
 }
 
 Mesh Model::processMesh(aiMesh * mesh, const aiScene * scene)
@@ -274,7 +262,7 @@ Mesh Model::processMesh(aiMesh * mesh, const aiScene * scene)
 
 	// return a mesh object created from the extracted mesh data
 	return Mesh(vertices, indices, textures,currentLayer);
-}
+} 
 
 // checks all material textures of a given type and loads the textures if they're not loaded yet.
 // the required info is returned as a Texture struct.
@@ -379,21 +367,49 @@ bool Model::AABBInFrustrum(AABB* box) {
 }
 */
 //-----------------------------------TRANSFORMACIONES--------------------------------------
+Bounds Model::GenerateBounds(vec3 v[], mat4 mat)
+{
+	vec3 v2[8];
+	for (int i = 0; i < 8; i++)
+	{
+		v2[i] = mat * vec4(v[i], 1.f);
+	}
+
+	return GenerateBoundsByVertex(v2);
+}
+
+Bounds Model::GenerateBoundsByVertex(vec3 v[])
+{
+	Bounds returnBounds;
+	for (int i = 0; i < 8; i++)
+	{
+		returnBounds.minX = v[i].x < returnBounds.minX ? v[i].x : returnBounds.minX;
+		returnBounds.minY = v[i].y < returnBounds.minY ? v[i].y : returnBounds.minY;
+		returnBounds.minZ = v[i].z < returnBounds.minZ ? v[i].z : returnBounds.minZ;
+		returnBounds.maxX = v[i].x > returnBounds.maxX ? v[i].x : returnBounds.maxX;
+		returnBounds.maxY = v[i].y > returnBounds.maxY ? v[i].y : returnBounds.maxY;
+		returnBounds.maxZ = v[i].z > returnBounds.maxZ ? v[i].z : returnBounds.maxZ;
+	}
+	return returnBounds;
+}
 
 //					de todo el modelo
-void Model::SetScale(vec3 newScale)
+void Model::SetScaleChilden(vec3 newScale)
 {
-	for (size_t i = 0; i < child.size(); i++)
-	{
-		child[i].aabb->SetScale(newScale);
+	this->SetScale(newScale);
+	for (size_t i = 0; i < child.size(); i++){
+		child[i].aabb->SetScaleChild(newScale, this->GetWorldMatrix());
+		//bon = GenerateBounds(child[i].aabb->boxVertex, GetWorldMatrix());
+		//child[i].aabb->GenerateBoundingBox(bon);
 	}
 }
-void Model::SetPos(vec3 newPos)
-{
-
-	for (size_t i = 0; i < child.size(); i++)
-	{
-		child[i].aabb->SetPos(newPos);
+void Model::SetPosM(vec3 newPos){
+	
+	this->SetPos(newPos);
+	for (size_t i = 0; i < child.size(); i++){
+		child[i].aabb->SetPosChild(newPos,this->GetWorldMatrix());
+		//bon = GenerateBounds(child[i].aabb->boxVertex, GetWorldMatrix());
+		//child[i].aabb->GenerateBoundingBox(bon);
 	}
 }
 
@@ -452,6 +468,13 @@ void Model::AllSons() {
 	}
 }
 
+void Model::GetChildPos(int num)
+{
+	cout << child[num].aabb->GetPos().x << endl;
+	cout << child[num].aabb->GetPos().y << endl;
+	cout << child[num].aabb->GetPos().z << endl;
+}
+
 //						mueve solo un hijo
 void Model::ScaleChildren(string namea, vec3 num){
 	for (size_t i = 0; i < child.size(); i++) {
@@ -471,7 +494,8 @@ void Model::RotChildren(string namea, float x, float y, float z) {
 void Model::MoveChildren(string namea, float x, float y, float z) {
 	for (size_t i = 0; i < child.size(); i++) {
 		if (child[i].name == namea) {
-			child[i].aabb->Translate(x,y,z);
+			child[i].aabb->TranslateChildren(x,y,z, this->GetWorldMatrix());
+			MultiverseWorld = this->GetWorldMatrix() * child[i].aabb->GetWorldMatrix();
 		}
 	}
 }
@@ -479,7 +503,8 @@ void Model::MoveChildren(string namea, float x, float y, float z) {
 // Devuelve todos los nombres del modelo
 void Model::GetNames() {
 	for (size_t i = 0; i < child.size(); i++) {
-		cout << child[i].name << endl;
+		cout << i << ": " <<endl;
+		child[i].aabb->getAABB();
 	}
 }
 

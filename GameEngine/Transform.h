@@ -26,11 +26,15 @@ public:
 	void SetPos(vec3 newPos);
 	void SetRot(vec3 newRot);
 	void SetScale(vec3 newScale);
+	void SetScaleChild(vec3 newScale, mat4 fatherMatrix);
+	void SetPosChild(vec3 newPos, mat4 fatherMatrix);
 	void Translate(float x, float y, float z);
+	void TranslateChildren(float x, float y, float z, mat4 fatherMatrix);
 	void Rotate(float x, float y, float z);
 	vec3 GetPos();
 	vec3 GetRot();
 	vec3 GetScale();
 	mat4 GetWorldMatrix();
+	void SetWorldMatrix(mat4 wolrd);
 };
 

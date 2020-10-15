@@ -2,7 +2,7 @@
 
 
 AABB::AABB() {
-	auxPointer = vertex;
+	auxPointer = boxVertex;
 }
 
 AABB::~AABB() {
@@ -50,7 +50,7 @@ void AABB::Setup()
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), vertex, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(boxVertex), boxVertex, GL_DYNAMIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, cIndices.size() * sizeof(unsigned int), &cIndices[0], GL_DYNAMIC_DRAW);
@@ -64,8 +64,38 @@ void AABB::Setup()
 	
 }
 
+
+void AABB::UpdateBounds() {
+
+	for (int i = 0; i < 8; i++)
+	{
+		boxVertex[i] = GetWorldMatrix() * vec4(boxVertex[i], 1.f);
+	}
+		for (int i = 0; i < 8; i++)
+		{
+			if (boxVertex[i].x < bounds.minX)
+				bounds.minX = boxVertex[i].x;
+			if (boxVertex[i].x > bounds.maxX)
+				bounds.maxX = boxVertex[i].x;
+			if (boxVertex[i].y < bounds.minY)
+				bounds.minY = boxVertex[i].y;
+			if (boxVertex[i].y > bounds.maxY)
+				bounds.maxY = boxVertex[i].y;
+			if (boxVertex[i].z < bounds.minZ)
+				bounds.minZ = boxVertex[i].z;
+			if (boxVertex[i].z > bounds.maxZ)
+				bounds.maxZ = boxVertex[i].z;
+		}
+	
+
+	CalculateBoundingBox(bounds);
+
+}
+
+
 void AABB::CalculateBounds(vector<Vertex> vertices)
 {
+
 	if (!vertices.empty())
 	{
 		Bounds resetBounds;
@@ -135,7 +165,7 @@ void AABB::CalculateBoundingBox(Bounds bounds)
 	};
 
 	for (int i = 0; i < 8; i++)
-		vertex[i] = WorldMatrix * glm::vec4(boundingBoxVertex[i], 1.f);
+		boxVertex[i] = WorldMatrix * glm::vec4(boundingBoxVertex[i], 1.f);
 
 	Setup();
 }
@@ -162,9 +192,9 @@ void AABB::DrawBox(){
 
 void AABB::getAABB() {
 
-	cout << " MaxX: " << bounds.maxX << endl;
-	cout << " MaxY: " << bounds.maxY << endl;
-	cout << " MaxZ: " << bounds.maxZ << endl;
+	cout << " MaxX: " << max.x << endl;
+	cout << " MaxY: " << max.y << endl;
+	cout << " MaxZ: " << max.z << endl;
 
 }
 
@@ -179,4 +209,31 @@ Bounds AABB::getNewBounds() {
 		first = false;
 	}
 	return newBound;
+}
+
+void AABB::GenerateBoundingBox(Bounds b)
+{
+	SetBounds(0, vec3(b.minX, b.minY, b.minZ));
+	SetBounds(1, vec3(b.maxX, b.minY, b.minZ));
+	SetBounds(2, vec3(b.maxX, b.maxY, b.minZ));
+	SetBounds(3, vec3(b.minX, b.maxY, b.minZ));
+	SetBounds(4, vec3(b.minX, b.minY, b.maxZ));
+	SetBounds(5, vec3(b.maxX, b.minY, b.maxZ));
+	SetBounds(6, vec3(b.minX, b.maxY, b.maxZ));
+	SetBounds(7, vec3(b.maxX, b.maxY, b.maxZ));
+
+	min.x = b.minX;
+	min.y = b.minY;
+	min.z = b.minZ;
+
+	max.x = b.maxX;
+	max.y = b.maxY;
+	max.z = b.maxZ;
+
+	Setup();
+}
+
+void AABB::SetBounds(int boundIndex, vec3 newBoundValue)
+{
+	boxVertex[boundIndex] = newBoundValue;
 }
