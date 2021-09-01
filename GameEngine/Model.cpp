@@ -29,7 +29,7 @@ void Model::Draw(Lighting shader){
 void Model::Db_CheckIfInFrustrum() 
 {
 	//cout << "0 / 0 " << render->MainCamera()->frustum[0][0] << endl;
-	if (render->PointInFrustum(vec3(6.0f, 5.0f, 8.0f)))
+	if (render->PointInFrustum(this->GetPos()))
 	{
 		cout << " model is in frustrum." << endl;
 	}
@@ -122,8 +122,9 @@ void Model::processNode(aiNode * node, const aiScene * scene){
 		
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 		string name = node->mName.C_Str();
-		cout << name << endl;
-
+		cout << name << " loaded." << endl;
+		//node->mTransformation.
+			
 		tempAABB = new AABB();
 		tempAABB->SetBox();
 		tempAABB->CalculateBounds(processMesh(mesh, scene).vertices);
@@ -139,7 +140,7 @@ void Model::processNode(aiNode * node, const aiScene * scene){
 		sonPos.z = sonPos.z / hijo.meshes.vertices.size();
 
 		hijo.aabb->SetPos(sonPos);
-		hijo.aabb->SetWorldMatrix(this->GetWorldMatrix() * hijo.aabb->GetWorldMatrix());
+		hijo.aabb->SetWorldMatrix(hijo.aabb->GetWorldMatrix() * this->GetWorldMatrix());
 
 		//hijo
 		child.push_back(hijo);
@@ -470,9 +471,9 @@ void Model::AllSons() {
 
 void Model::GetChildPos(int num)
 {
-	cout << child[num].aabb->GetPos().x << endl;
-	cout << child[num].aabb->GetPos().y << endl;
-	cout << child[num].aabb->GetPos().z << endl;
+	cout << child[num].name << " X: " << child[num].aabb->GetPos().x << endl;
+	cout << child[num].name << " Y: " << child[num].aabb->GetPos().y << endl;
+	cout << child[num].name << " Z: " << child[num].aabb->GetPos().z << endl;
 }
 
 //						mueve solo un hijo
