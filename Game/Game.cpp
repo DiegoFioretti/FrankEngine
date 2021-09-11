@@ -23,15 +23,21 @@ bool Game::OnStart()
 	//samusModel->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
 	//samusModel->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
 
-	cout << "zelda" << endl;
+	cout << "Zelda load..." << endl;
 	//mesh_terrain
 	zeldaModel = new Model("Link/source/zeldaPosed001.fbx");
-	zeldaModel->SetPosM(glm::vec3(1.0f, 5.0f, 8.0f));
+	zeldaModel->SetPosM(glm::vec3(5.0f, 0.0f, 0.0f));
 	zeldaModel->SetScaleChilden(glm::vec3(0.3f, 0.3f, 0.3f));
 
+	cout << "Zeldat load..." << endl;
 	zeldaModelt = new Model("Link/source/zeldaPosed001.fbx");
-	zeldaModelt->SetPosM(glm::vec3(6.0f, 5.0f, 8.0f));
+	zeldaModelt->SetPosM(glm::vec3(-5.0f, 0.0f, 0.0f));
 	zeldaModelt->SetScaleChilden(glm::vec3(0.3f, 0.3f, 0.3f));
+
+	cout << "Plane load..." << endl;
+	planeModel = new Model("singlePlane.obj");
+	planeModel->SetPosM(glm::vec3(0.0f, 0.0f, 0.0f));
+	planeModel->SetScaleChilden(glm::vec3(3.0f, 3.0f, 3.0f));
 
 //	clonSamus = new Model("box5.fbx");
 //	clonSamus->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
@@ -39,7 +45,7 @@ bool Game::OnStart()
 
 	cam = render->MainCamera();
 
-	cam->setCameraPos(10.0f, 7.0f, 31.0f);
+	cam->setCameraPos(0.0f, 7.0f, 31.0f);
 	cam->setCameraRot(-90.0f, 0.0f);
 	inp = new Input(window);
 
@@ -73,17 +79,18 @@ bool Game::OnUpdate() {
 
 	//Inputs (letra a tocar, 0 const y 1 una sola vez)
 	//Movimiento
+
 	if (inp->keyCall('a', 0)) {
-		cam->CameraMoveLeft(10.f * DeltaTime());
+		cam->CameraMoveLeft(15.f * DeltaTime());
 	}
 	if (inp->keyCall('d', 0)) {
-		cam->CameraMoveLeft(-10.f * DeltaTime());
+		cam->CameraMoveLeft(-15.f * DeltaTime());
 	}
 	if (inp->keyCall('w', 0)) {
-		cam->CameraMoveForward(10.f * DeltaTime());
+		cam->CameraMoveForward(15.f * DeltaTime());
 	}
 	if (inp->keyCall('s', 0)) {
-		cam->CameraMoveForward(-10.f * DeltaTime());
+		cam->CameraMoveForward(-15.f * DeltaTime());
 	}
 
 
@@ -91,33 +98,38 @@ bool Game::OnUpdate() {
 		zeldaModel->GetNames();
 	}
 
-
 	//Samus y luz
 	if (inp->keyCall('o', 1)) {
 		//cout << "Zelda: " << zeldaModel->GetPos().x << " , " << zeldaModel->GetPos().y << " , " << zeldaModel->GetPos().z << " , " << endl;
 		zeldaModel->Db_CheckIfInFrustrum();
-		cout << zeldaModel->GetPos().x << endl;
-		cout << zeldaModel->GetPos().y << endl;
-		cout << zeldaModel->GetPos().z << endl;
-		for (size_t i = 0; i < 6; i++)
-		{
-			zeldaModel->GetChildPos(i);
-		}
+		
+		//cout << zeldaModel->GetPos().x << endl;
+		//cout << zeldaModel->GetPos().y << endl;
+		//cout << zeldaModel->GetPos().z << endl;
+		//for (size_t i = 0; i < 6; i++)
+		//{
+		//	zeldaModel->GetChildPos(i);
+		//}
 		
 	}
 
 	//zelda hijo
-	if (inp->keyCall('b', 0)) {
+	if (inp->keyCall('p', 0)) {
 		zeldaModel->MoveChildren("mesh_torch", 1.01f * DeltaTime(),0.f,0.f);
-		//cout << "aaa" << endl;
 	}
  
-	// todo Zelda
+	// Movimiento Zelda
+	if (inp->keyCall('m', 0)) {
+		zeldaModel->MTranslate(10.f * DeltaTime(), 0, 0);
+	}
+	if (inp->keyCall('b', 0)) {
+		zeldaModel->MTranslate(-10.f * DeltaTime(), 0, 0);
+	}
 	if (inp->keyCall('j', 0)) {
-		zeldaModel->MTranslate(0,10.f * DeltaTime(),0);
+		zeldaModel->MTranslate( 0, 0, 10.f * DeltaTime());
 	}
 	if (inp->keyCall('n', 0)) {
-		zeldaModel->MTranslate(0, -10.f * DeltaTime(), 0);
+		zeldaModel->MTranslate( 0, 0, -10.f * DeltaTime());
 	}
 
 	return true;
@@ -129,7 +141,8 @@ void Game::OnDraw(){
 	//looz->modelLight(zeldaModel->GetWorldMatrix());
 	zeldaModel->Draw(*looz);
 	zeldaModelt->Draw(*looz);
-	//zeldaModel->DrawBox(*shader);
+	planeModel->Draw(*looz);
+	//zeldaModel->DrawBox();
 
 	//looz->modelLight(samusModel->GetWorldMatrix());
 	//samusModel->Draw(*looz);
@@ -147,7 +160,9 @@ bool Game::OnStop() {
 	delete looz;
 	delete samusModel;
 	delete zeldaModel;
+	delete zeldaModelt;
 	delete clonSamus;
+	delete planeModel;
 
 	return false;
 }

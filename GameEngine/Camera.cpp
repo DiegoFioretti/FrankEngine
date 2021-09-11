@@ -93,7 +93,7 @@ Camera::Camera(GLFWwindow* window)
 	_getAspectRatio = 1024.f / 768.f;
 	fov = 45.f;
 	nearDist = 1.0f;
-	farDist = 150.0f;
+	farDist = 300.0f;
 
 	_cameraPos = vec3(0.0f, 0.0f, 0.0f);
 	_cameraDir = vec3(0.f, 0.f, 1.f);

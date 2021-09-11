@@ -45,8 +45,6 @@ void AABB::SetBox() {
 
 void AABB::Setup()
 {
-	
-
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -60,8 +58,6 @@ void AABB::Setup()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
 	glBindVertexArray(0);
-
-	
 }
 
 
@@ -89,7 +85,6 @@ void AABB::UpdateBounds() {
 	
 
 	CalculateBoundingBox(bounds);
-
 }
 
 
@@ -192,10 +187,12 @@ void AABB::DrawBox(){
 
 void AABB::getAABB() {
 
-	cout << " MaxX: " << max.x << endl;
-	cout << " MaxY: " << max.y << endl;
-	cout << " MaxZ: " << max.z << endl;
-
+	cout << " MaxX: " << bounds.maxX * GetScale().x << endl;
+	cout << " MinX: " << bounds.minX * GetScale().x << endl;
+	cout << " MaxY: " << bounds.maxY * GetScale().y << endl;
+	cout << " MinY: " << bounds.minY * GetScale().y << endl;
+	cout << " MaxZ: " << bounds.maxZ * GetScale().z << endl;
+	cout << " MinZ: " << bounds.minZ * GetScale().z << endl;
 }
 
 Bounds AABB::getBounds() {

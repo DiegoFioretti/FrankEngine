@@ -30,6 +30,7 @@ private:
 	Model* clonSamus;
 	Model* zeldaModel;
 	Model* zeldaModelt;
+	Model* planeModel;
 
 	glm::vec3 offset;
 
@@ -54,8 +55,6 @@ private:
 	float pointConstant = 1.0f;
 	float pointLinear = 0.09f;
 	float pointQuadratic = 0.032f;
-
-
 
 	//LUZ: 7.4 , 14.7 , 5.8 ,
 	float a = -0.2f;

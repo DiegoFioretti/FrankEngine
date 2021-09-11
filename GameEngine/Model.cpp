@@ -23,13 +23,13 @@ void Model::Draw(Lighting shader){
 				child[i].meshes.Draw(shader);
 				child[i].aabb->DrawBox();
 		}
-		this->DrawBox();
+		//this->DrawBox();
 }
 
 void Model::Db_CheckIfInFrustrum() 
 {
 	//cout << "0 / 0 " << render->MainCamera()->frustum[0][0] << endl;
-	if (render->PointInFrustum(this->GetPos()))
+	/*if (render->PointInFrustum(this->GetPos()))
 	{
 		cout << " model is in frustrum." << endl;
 	}
@@ -38,13 +38,20 @@ void Model::Db_CheckIfInFrustrum()
 		cout << " model is not in frustrum." << endl;
 	}
 	
-	/*for (unsigned int i = 0; i < child.size(); i++) 
+	for (unsigned int i = 0; i < child.size(); i++) 
 	{
 		if (render->PointInFrustum(child[i].aabb->GetPos()))
 			cout << child[i].name << " is in frustrum." << endl;
 		else
 			cout << child[i].name << " is not in frustrum." << endl;
 	}*/
+
+	for (unsigned int i = 0; i < child.size(); i++)
+	{
+		cout << "-----------------------" << endl;
+		cout << child[i].name << endl;
+		child[i].aabb->getAABB();
+	}
 }
 
 // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
@@ -426,7 +433,8 @@ void Model::MTranslate(float x, float y, float z) {
 	this->Translate(x, y, z);
 	for (size_t i = 0; i < child.size(); i++)
 	{
-		child[i].aabb->Translate(x, y, z);
+		child[i].aabb->TranslateChildren(x, y, z, this->GetWorldMatrix());
+		MultiverseWorld = this->GetWorldMatrix() * child[i].aabb->GetWorldMatrix();
 	}
 }
 
